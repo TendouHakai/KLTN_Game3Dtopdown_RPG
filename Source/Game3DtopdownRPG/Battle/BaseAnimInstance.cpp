@@ -25,7 +25,7 @@ bool UBaseAnimInstance::IsAnimHitState()
 
 bool UBaseAnimInstance::IsStateAvailableToCombo()
 {
-	return IsAnimMovable() || IsAnimAttackState() || (AnimState == EChrAnimState::ExtraCombo);
+	return IsAnimMovable() || IsAnimAttackState();
 }
 
 bool UBaseAnimInstance::IsAnimRangeAtkState()
