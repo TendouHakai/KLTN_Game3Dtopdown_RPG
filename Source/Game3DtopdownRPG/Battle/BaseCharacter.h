@@ -36,4 +36,21 @@ public:
 		}
 	}
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
+	// Stat function
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, BlueprintPure, Category = "Character")
+	float getHP();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, BlueprintPure, Category = "Character")
+	float getMaxHP();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Character")
+	void SetHP(float HP);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Character")
+	void SetMaxHP(float MaxHP); 
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character")
+	float GetHealthRatio();
 };

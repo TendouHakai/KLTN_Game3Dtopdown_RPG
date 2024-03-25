@@ -38,3 +38,9 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+float ABaseCharacter::GetHealthRatio()
+{
+	float Ratio = getHP() / getMaxHP();
+	return FMath::Clamp<float>(Ratio, 0.0f, 1.0f);
+}
+
