@@ -2,3 +2,15 @@
 
 
 #include "Game3DtopdownRPG/GameMode/BaseGameMode.h"
+
+void ABaseGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	InitInitialUI();
+}
+
+void ABaseGameMode::InitInitialUI()
+{
+	OnInitInitialUI();
+}
