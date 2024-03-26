@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "../Util/Managers/UIBaseMgr.h"
 #include "BaseGameMode.generated.h"
 
 /**
@@ -14,8 +15,12 @@ class GAME3DTOPDOWNRPG_API ABaseGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 public: 
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	virtual void BeginPlay() override;
 	virtual void InitInitialUI();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UUIBaseMgr* UIMgr;
 
 protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "UI Manager")
