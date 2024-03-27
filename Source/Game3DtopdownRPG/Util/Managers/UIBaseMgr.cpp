@@ -1,9 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#include "UIBaseMgr.h"
 
 #include "Game3DtopdownRPG/Game3DtopdownRPG.h"
 
-#include "UIBaseMgr.h"
 #include "AssetMgr.h"
 #include "Game3DtopdownRPG/RPGGameInstance.h"
 

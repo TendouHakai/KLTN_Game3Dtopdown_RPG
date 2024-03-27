@@ -27,6 +27,13 @@ enum class ECharacterParam : uint8
 	Max
 };
 
+UENUM(BlueprintType)
+enum class ECharTeam : uint8
+{
+	Ally,
+	Enemy,
+};
+
 UCLASS()
 class GAME3DTOPDOWNRPG_API ABaseCharacter : public ACharacter
 {
@@ -75,11 +82,29 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character")
 	float GetHealthRatio();
 
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	ECharTeam GetCharTeam() { return CharTeam; }
+
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	bool GetEnemyTeam(ECharTeam& OutEnemyTeam);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character")
+	bool IsCharacterDamageable();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character")
+	TArray<int32> GetBaseArrayParams() { return BaseArrayPrameter; }
+
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = true))
+	ECharTeam CharTeam;
+
 	UPROPERTY(EditAnywhere, Category = "Stat") uint8 level;
 	UPROPERTY(EditAnywhere, Category = "Stat") uint8 CurExp;
 
 	UPROPERTY(EditAnywhere, Category = "Stat") TArray<int32> BaseArrayStat;
 	UPROPERTY(EditAnywhere, Category = "Stat") TArray<int32> BaseArrayPrameter;
 	UPROPERTY(EditAnywhere, Category = "Stat") TArray<int32> CurArrayPrameter;
+
+private:
+	UPROPERTY() USkeletalMeshComponent* SkeletalMesh;
 };

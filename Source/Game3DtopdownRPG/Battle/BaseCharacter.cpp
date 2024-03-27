@@ -14,6 +14,8 @@ ABaseCharacter::ABaseCharacter()
 void ABaseCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+	SkeletalMesh = Cast<USkeletalMeshComponent>(GetComponentByClass(USkeletalMeshComponent::StaticClass()));
 }
 
 void ABaseCharacter::BeginPlay()
@@ -42,5 +44,32 @@ float ABaseCharacter::GetHealthRatio()
 {
 	float Ratio = getHP() / getMaxHP();
 	return FMath::Clamp<float>(Ratio, 0.0f, 1.0f);
+}
+
+bool ABaseCharacter::GetEnemyTeam(ECharTeam& OutEnemyTeam)
+{
+	bool bFindEnemyTeam = false;
+	switch (CharTeam)
+	{
+	case ECharTeam::Ally:
+		OutEnemyTeam = ECharTeam::Enemy;
+		bFindEnemyTeam = true;
+		break;
+	case ECharTeam::Enemy:
+		OutEnemyTeam = ECharTeam::Ally;
+		bFindEnemyTeam = true;
+		break;
+	}
+	return bFindEnemyTeam;
+}
+
+bool ABaseCharacter::IsCharacterDamageable()
+{
+	if (false == IsValid(SkeletalMesh))
+		return false;
+
+	if (SkeletalMesh->IsVisible()) return true;
+
+	return false;
 }
 
