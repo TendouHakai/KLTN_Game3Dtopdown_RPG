@@ -6,6 +6,27 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+UENUM(BlueprintType)
+enum class ECharacterStat : uint8
+{
+	STR = 0,
+	INT,
+	VIT,
+	AGI,
+	Max
+};
+
+UENUM(BlueprintType)
+enum class ECharacterParam : uint8
+{
+	PhysicDamage = 0,
+	MagicDamage,
+	HP,
+	MovementSpeed,
+	AttackSpeed,
+	Max
+};
+
 UCLASS()
 class GAME3DTOPDOWNRPG_API ABaseCharacter : public ACharacter
 {
@@ -53,4 +74,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character")
 	float GetHealthRatio();
+
+public:
+	UPROPERTY(EditAnywhere, Category = "Stat") uint8 level;
+	UPROPERTY(EditAnywhere, Category = "Stat") uint8 CurExp;
+
+	UPROPERTY(EditAnywhere, Category = "Stat") TArray<int32> BaseArrayStat;
+	UPROPERTY(EditAnywhere, Category = "Stat") TArray<int32> BaseArrayPrameter;
+	UPROPERTY(EditAnywhere, Category = "Stat") TArray<int32> CurArrayPrameter;
 };
