@@ -95,12 +95,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = true))
 	ECharTeam CharTeam;
 
-	UPROPERTY(EditAnywhere, Category = "Stat") uint8 level;
-	UPROPERTY(EditAnywhere, Category = "Stat") uint8 CurExp;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") uint8 level;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") uint8 CurExp;
 
-	UPROPERTY(EditAnywhere, Category = "Stat") TArray<int32> BaseArrayStat;
-	UPROPERTY(EditAnywhere, Category = "Stat") TArray<int32> BaseArrayPrameter;
-	UPROPERTY(EditAnywhere, Category = "Stat") TArray<int32> CurArrayPrameter;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") TArray<int32> BaseArrayStat;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") TArray<int32> BaseArrayPrameter;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") TArray<int32> CurArrayPrameter;
 
 private:
 	UPROPERTY() USkeletalMeshComponent* SkeletalMesh;
