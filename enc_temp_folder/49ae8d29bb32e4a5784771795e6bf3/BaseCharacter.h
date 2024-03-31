@@ -91,6 +91,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character")
 	bool IsCharacterDamageable();
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character")
+	TArray<int32> GetBaseArrayParams() { return BaseArrayPrameter; }
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = true))
 	ECharTeam CharTeam;
