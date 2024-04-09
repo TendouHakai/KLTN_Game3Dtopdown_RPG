@@ -16,6 +16,7 @@ void ABaseCharacter::PostInitializeComponents()
 	Super::PostInitializeComponents();
 
 	SkeletalMesh = Cast<USkeletalMeshComponent>(GetComponentByClass(USkeletalMeshComponent::StaticClass()));
+	HitFreezer = Cast<UHitFreezer>(GetComponentByClass(UHitFreezer::StaticClass()));
 }
 
 void ABaseCharacter::BeginPlay()
@@ -71,5 +72,11 @@ bool ABaseCharacter::IsCharacterDamageable()
 	if (SkeletalMesh->IsVisible()) return true;
 
 	return false;
+}
+
+void ABaseCharacter::HitFreeze(float FreezeDuration, bool bApplyColor)
+{
+	if (IsValid(HitFreezer))
+		HitFreezer->HitFreeze(FreezeDuration, bApplyColor);
 }
 

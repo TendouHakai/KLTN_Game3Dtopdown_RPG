@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "HitFreezer.h"
 #include "BaseCharacter.generated.h"
 
 UENUM(BlueprintType)
@@ -91,6 +92,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character")
 	bool IsCharacterDamageable();
 
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	void HitFreeze(float FreezeDuration, bool bApplyColor);
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = true))
 	ECharTeam CharTeam;
@@ -104,4 +108,5 @@ public:
 
 private:
 	UPROPERTY() USkeletalMeshComponent* SkeletalMesh;
+	UPROPERTY() UHitFreezer* HitFreezer;
 };
