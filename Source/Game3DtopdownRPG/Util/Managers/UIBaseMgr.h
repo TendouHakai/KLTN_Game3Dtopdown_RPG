@@ -9,6 +9,8 @@
 
 #include "UIBaseMgr.generated.h"
 
+#define INVALID_WIDGET_ID 0
+
 USTRUCT(BlueprintType)
 struct FUIWidgetData
 {
@@ -54,6 +56,7 @@ class GAME3DTOPDOWNRPG_API UUIBaseMgr : public USingleton
 	GENERATED_BODY()
 public: 
 	virtual void Init() override;
+	void Init(class ABaseGameMode* CurGameMode);
 
 	virtual void EndPlay() override;
 	virtual void Tick();
@@ -119,18 +122,18 @@ public:
 			return nullptr;
 		}
 		Widget->SetWidgetId(WidgetId);
-		//Widget->Init(CurGameMode);
+		Widget->Init(CurGameMode);
 
 		_OpenUI(Widget, WidgetData, Immediately, bPreScene);
 		return Widget;
 	}
 
-	//UFUNCTION(BlueprintCallable, Category = "UIMgr")
-	//bool CloseUI(EUIName UIName, bool Immediately = false, bool isRemoveStack = true);
-	//bool CloseUI(UUIWidget* Widget, bool bImmediately = false, bool bRemoveStack = true);
+	UFUNCTION(BlueprintCallable, Category = "UIMgr")
+	bool CloseUI(EUIName UIName, bool Immediately = false, bool isRemoveStack = true);
+	bool CloseUI(UUIWidget* Widget, bool bImmediately = false, bool bRemoveStack = true);
 
-	//UFUNCTION(BlueprintCallable, Category = "UIMgr")
-	//bool CloseWidget(UUIWidget* Widget, bool bImmediately = false, bool bRemoveStack = true);
+	UFUNCTION(BlueprintCallable, Category = "UIMgr")
+	bool CloseWidget(UUIWidget* Widget, bool bImmediately = false, bool bRemoveStack = true);
 
 // OPEN SCENE
 	UFUNCTION(BlueprintCallable, Category = "UIMgr")
@@ -151,18 +154,56 @@ public:
 
 		CurSceneId = WidgetId;
 
+		uint16 PrevSceneId = (ScenesStack.Num() > 0) ? ScenesStack.Top() : 0;
+		UISceneData* PrevSceneData = GetSceneData(PrevSceneId);
+
+		if (PrevSceneId != 0 && WidgetId != PrevSceneData->WidgetId)
+			CloseScene(PrevSceneData->WidgetId, false, false);
+
 		// xữ lý childwidgets 
 
-		ScenesStack.Push(CurSceneId);
-		OpenUI<WidgetType>(CurSceneData->WidgetId, true);
+		if (0 < CurSceneData->ChildWidgetIds.Num())
+		{
+			if (NeedRestore)
+			{
+				for (int32 i = 0; i < CurSceneData->ChildWidgetIds.Num(); ++i)
+				{
+					FUIWidgetData* WidgetData = WidgetDatas.Find(CurSceneData->ChildWidgetIds[i]);
+					if (WidgetData)
+					{
+						UUIWidget* Widget = WidgetData->GetOrCreateWidget();
+						if (Widget)
+						{
+							//Widget->RestoreFromForceHidden();
+							Widget->Update();
+						}
+					}
+				}
+			}
+			else
+			{
+				while (CurSceneData->ChildWidgetIds.Num() > 1)
+				{
+					CloseUI(CurSceneData->ChildWidgetIds.Last());
+				}
+			}
+		}
+		else {
+			ScenesStack.Push(CurSceneId);
+			OpenUI<WidgetType>(CurSceneData->WidgetId, true);
+		}
 
 		return GetUI<WidgetType>(CurSceneData->WidgetId);
 	}
 
-	//UFUNCTION(BlueprintCallable, Category = "UIMgr")
-	//void CloseScene(bool bBackButton = false);
+	UFUNCTION(BlueprintCallable, Category = "UIMgr")
+	void CloseScene(bool bBackButton = false);
+
+	void CloseAllUI();
 protected:
+	bool CloseUI(uint16 WidgetId, bool Immediately = false, bool isRemoveStack = true);
 	void _OpenUI(class UUIWidget* Widget, FUIWidgetData* WidgetData, bool Immediately = false, bool bPreScene = false);
+	void CloseScene(uint16 WidgetId, bool bStack = false, bool bBackButton = false);
 
 	FUIWidgetData* GetWidgetData(uint16 WidgetId);
 	UISceneData* GetSceneData(uint16 WidgetId);
@@ -188,4 +229,7 @@ protected:
 
 	//TArray<FMsgBoxInfo> MsgBoxInfos;
 	bool bActive = false;
+
+protected:
+	class ABaseGameMode* CurGameMode;
 };

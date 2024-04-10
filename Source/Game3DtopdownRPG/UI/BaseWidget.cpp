@@ -28,3 +28,14 @@ void UBaseWidget::NativeDestruct()
 {
 	Super::NativeDestruct();
 }
+
+void UBaseWidget::Destroy(UUIBaseMgr* InUIManager)
+{
+	RemoveFromParent();
+	RemoveFromViewport();
+}
+
+void UBaseWidget::Update()
+{
+
+}

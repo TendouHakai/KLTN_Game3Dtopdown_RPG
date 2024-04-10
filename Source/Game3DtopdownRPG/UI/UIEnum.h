@@ -6,6 +6,10 @@ UENUM(BlueprintType)
 enum class EUIName : uint8 
 {
 	None = 0,
+	// Page 
+	LoginPage,
+	SettingMenu,
+
 	// Battle
 	BattleWidget,
 	Max,

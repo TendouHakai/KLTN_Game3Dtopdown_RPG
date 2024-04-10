@@ -37,6 +37,11 @@ void UUIBaseMgr::Init()
 	InitWidgetData(GetMgr(UAssetMgr)->GetDerivedWidgetPaths(), WidgetDatas, SceneDatas, 1);
 }
 
+void UUIBaseMgr::Init(ABaseGameMode* InGameMode)
+{
+	this->CurGameMode = InGameMode;
+}
+
 void UUIBaseMgr::EndPlay()
 {
 	Super::EndPlay();
@@ -54,6 +59,7 @@ void UUIBaseMgr::Destroy()
 
 void UUIBaseMgr::Update()
 {
+
 }
 
 FUIWidgetData* UUIBaseMgr::GetWidgetData(UUIWidget* Widget)
@@ -69,6 +75,43 @@ FUIWidgetData* UUIBaseMgr::GetWidgetData(EUIName UIName)
 UUIWidget* UUIBaseMgr::OpenUI(EUIName UIName, bool Immediately, bool bPreScene)
 {
 	return OpenUI<UUIWidget>(UIName, Immediately, bPreScene);;
+}
+
+bool UUIBaseMgr::CloseUI(EUIName UIName, bool Immediately /*= false*/, bool isRemoveStack /*= true*/)
+{
+	return CloseUI((uint16)UIName, Immediately, isRemoveStack);
+}
+
+bool UUIBaseMgr::CloseUI(UUIWidget* Widget, bool bImmediately /*= false*/, bool bRemoveStack /*= true*/)
+{
+	return CloseUI(Widget->GetWidgetId(), bImmediately, bRemoveStack);
+}
+
+bool UUIBaseMgr::CloseUI(uint16 WidgetId, bool Immediately /*= false*/, bool isRemoveStack /*= true*/)
+{
+	UUIWidget* Widget = GetUI<UUIWidget>(WidgetId);
+	if (nullptr == Widget)
+	{
+		return false;
+	}
+
+	Widget->OnClose(Immediately);
+
+	if (true == isRemoveStack)
+	{
+		UISceneData* CurSceneData = GetSceneData(CurSceneId);
+		if (CurSceneData)
+		{
+			CurSceneData->ChildWidgetIds.Remove(WidgetId);
+		}
+	}
+
+	return true;
+}
+
+bool UUIBaseMgr::CloseWidget(UUIWidget* Widget, bool bImmediately /*= false*/, bool bRemoveStack /*= true*/)
+{
+	return CloseUI(Widget, bImmediately, bRemoveStack);
 }
 
 UUIWidget* UUIBaseMgr::GetUI(EUIName UIName)
@@ -91,9 +134,96 @@ UUIWidget* UUIBaseMgr::OpenScene(EUIName SceneName)
 	return OpenScene<UUIWidget>(SceneName);
 }
 
+void UUIBaseMgr::CloseScene(bool bBackButton /*= false*/)
+{
+	CloseScene(CurSceneId, true, bBackButton);
+}
+
+void UUIBaseMgr::CloseScene(uint16 WidgetId, bool bStack /*= false*/, bool bBackButton /*= false*/)
+{
+	auto CurSceneData = GetSceneData(WidgetId);
+	if (!CurSceneData)
+		return;
+
+	for (int32 i = 0; i < CurSceneData->ChildWidgetIds.Num(); ++i)
+	{
+		FUIWidgetData* UIWidgetData = WidgetDatas.Find(CurSceneData->ChildWidgetIds[i]);
+		if (UIWidgetData && UIWidgetData->IsWidgetValid())
+		{
+			if (bStack)
+				CloseUI(UIWidgetData->WidgetId, true, false);
+		}
+	}
+
+	if (bStack)
+		CurSceneData->ChildWidgetIds.Empty();
+
+	if (bStack)
+	{
+		if (0 < ScenesStack.Num())
+		{
+			ScenesStack.Pop();
+			if (ScenesStack.Num() > 0)
+			{
+				OpenScene<UUIWidget>(ScenesStack.Top());
+			}
+		}
+	}
+}
+
+void UUIBaseMgr::CloseAllUI()
+{
+	for (auto& WidgetPair : WidgetDatas)
+	{
+		FUIWidgetData& UIWidgetData = WidgetPair.Value;
+
+		if (UIWidgetData.IsWidgetValid())
+		{
+			UUIWidget* UIWidget = UIWidgetData.GetWidget();
+
+			//UE_LOG(LogClass, Warning, TEXT("CloseAllUI(%s)"), *UIWidget->GetName());
+
+			UIWidget->RemoveFromParent();
+			UIWidgetData.ResetInstance();
+		}
+	}
+
+	for (auto& kv : SceneDatas)
+	{
+		kv.Value.ChildWidgetIds.Empty();
+	}
+
+	ScenesStack.Empty();
+	CurSceneId = INVALID_WIDGET_ID;
+}
+
 void UUIBaseMgr::_OpenUI(UUIWidget* Widget, FUIWidgetData* WidgetData, bool Immediately, bool bPreScene)
 {
+	if (!WidgetData->bStayInViewport)
+	{
+		auto CurSceneData = GetSceneData(CurSceneId);
+		if (!CurSceneData)
+		{
+			ensureMsgf(false, TEXT("UUIBaseMgr::_OpenUI CurScene = nullpointerexception"));
+			return;
+		}
+
+		if (!CurSceneData->ChildWidgetIds.Contains(WidgetData->WidgetId))
+		{
+			if (0 < CurSceneData->ChildWidgetIds.Num())
+			{
+				uint16 ChildWidgetId = CurSceneData->ChildWidgetIds.Last();
+
+				/*if (UUIWidget* PreWidget = GetUI<UUIWidget>(ChildWidgetId))
+					PreWidget->OnCoveredUI();*/
+			}
+
+			CurSceneData->ChildWidgetIds.Add(WidgetData->WidgetId);
+		}
+	}
+
 	Widget->AddToViewport((int32)WidgetData->Layer);
+	Widget->OnOpen(Immediately);
 }
 
 UUIWidget* FUIWidgetData::GetOrCreateWidget()
