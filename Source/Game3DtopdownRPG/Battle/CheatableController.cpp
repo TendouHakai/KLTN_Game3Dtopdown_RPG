@@ -3,3 +3,7 @@
 
 #include "Game3DtopdownRPG/Battle/CheatableController.h"
 
+void ACheatableController::ExcuteAdditionProcDelegate()
+{
+	AdditionProc_Delegate.Broadcast();
+}

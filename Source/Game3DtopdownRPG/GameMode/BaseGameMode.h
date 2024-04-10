@@ -3,16 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameModeBase.h"
+#include "GameFramework/GameMode.h"
 #include "BaseGameMode.generated.h"
 
-/**
- * 
- */
+UENUM(BlueprintType)
+enum class EGameModeType : uint8
+{
+	None,
+	Login,
+	Lobby,
+	Battle
+};
+
 class UUIBaseMgr;
 
 UCLASS()
-class GAME3DTOPDOWNRPG_API ABaseGameMode : public AGameModeBase
+class GAME3DTOPDOWNRPG_API ABaseGameMode : public AGameMode
 {
 	GENERATED_BODY()
 public: 

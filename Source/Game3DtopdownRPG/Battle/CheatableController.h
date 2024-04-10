@@ -9,9 +9,20 @@
 /**
  * 
  */
+
+
 UCLASS()
 class GAME3DTOPDOWNRPG_API ACheatableController : public APlayerController
 {
 	GENERATED_BODY()
 	
+public:
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAdditionProc);
+
+	UPROPERTY(BlueprintAssignable)
+	FAdditionProc AdditionProc_Delegate;
+
+	UFUNCTION(BlueprintCallable)
+	void ExcuteAdditionProcDelegate();
 };
+	

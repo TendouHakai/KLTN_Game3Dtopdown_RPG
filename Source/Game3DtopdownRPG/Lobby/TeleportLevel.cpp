@@ -2,26 +2,36 @@
 
 
 #include "TeleportLevel.h"
+#include "Game3DtopdownRPG/Game3DtopdownRPG.h"
+#include "Game3DtopdownRPG/GameMode/BaseGameMode.h"
 
-// Sets default values
 ATeleportLevel::ATeleportLevel()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 }
 
-// Called when the game starts or when spawned
 void ATeleportLevel::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
-void ATeleportLevel::Tick(float DeltaTime)
+void ATeleportLevel::SetIsPlayerInRange(bool isPlayerInRange)
 {
-	Super::Tick(DeltaTime);
-
+	this->IsPlayerInRange = isPlayerInRange;
 }
+
+void ATeleportLevel::OnEnterLevel()
+{
+	if (IsPlayerInRange)
+	{
+		ABaseGameMode* gamemode = GetGameModeAs(ABaseGameMode);
+		if (gamemode != nullptr)
+		{
+			gamemode->OpenReservedLevel(FName("Map01"), FString("?Game=/Game/Blueprints/Battle/BattleGameModeBP.BattleGameModeBP_C"));
+		}
+	}
+}
+
 

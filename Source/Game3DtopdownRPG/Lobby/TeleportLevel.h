@@ -12,15 +12,17 @@ class GAME3DTOPDOWNRPG_API ATeleportLevel : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	ATeleportLevel();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetIsPlayerInRange(bool isPlayerInRange);
 
+	UFUNCTION(BlueprintCallable)
+	void OnEnterLevel();
+private:
+	bool IsPlayerInRange = false;
 };
