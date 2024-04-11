@@ -22,7 +22,7 @@ public:
 	void SetIsPlayerInRange(bool isPlayerInRange);
 
 	UFUNCTION(BlueprintCallable)
-	void OnEnterLevel();
+	virtual void OnEnterLevel();
 private:
 	bool IsPlayerInRange = false;
 };

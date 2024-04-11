@@ -4,6 +4,8 @@
 #include "TeleportLevel.h"
 #include "Game3DtopdownRPG/Game3DtopdownRPG.h"
 #include "Game3DtopdownRPG/GameMode/BaseGameMode.h"
+#include "Game3DtopdownRPG/UI/WaitingWidget/LoadingWidget.h"
+#include "Game3DtopdownRPG/Util/Managers/UIBaseMgr.h"
 
 ATeleportLevel::ATeleportLevel()
 {
@@ -26,11 +28,9 @@ void ATeleportLevel::OnEnterLevel()
 {
 	if (IsPlayerInRange)
 	{
-		ABaseGameMode* gamemode = GetGameModeAs(ABaseGameMode);
-		if (gamemode != nullptr)
-		{
-			gamemode->OpenReservedLevel(FName("Map01"), FString("?Game=/Game/Blueprints/Battle/BattleGameModeBP.BattleGameModeBP_C"));
-		}
+		ULoadingWidget* loadingWidget = Cast<ULoadingWidget>(GetMgr(UUIBaseMgr)->OpenUI(EUIName::LoadingWidget));
+		if(loadingWidget != nullptr)
+			loadingWidget->SetInfoScene(FName("Map01"), FString("?Game=/Game/Blueprints/Battle/BattleGameModeBP.BattleGameModeBP_C"));
 	}
 }
 

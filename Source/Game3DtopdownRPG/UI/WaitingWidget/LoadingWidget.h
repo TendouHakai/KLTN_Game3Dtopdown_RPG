@@ -28,6 +28,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "LoadingWidget")
 	void StartChangeScene();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "LoadingWidget")
+	void SetInfoScene(const FName& NameLevel, const FString& Options);
+
 private:
 	UProgressBar* ProgressBar;
 	class UTextBlock* TextPercent;

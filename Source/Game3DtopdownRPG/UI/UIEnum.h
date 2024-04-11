@@ -9,6 +9,7 @@ enum class EUIName : uint8
 	// Page 
 	LoginPage,
 	SettingMenu,
+	LoadingWidget,
 
 	// Battle
 	BattleWidget,

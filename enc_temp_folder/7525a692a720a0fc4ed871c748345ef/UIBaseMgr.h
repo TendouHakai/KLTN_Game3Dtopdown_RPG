@@ -11,9 +11,6 @@
 
 #define INVALID_WIDGET_ID 0
 
-
-class ULoadingWidget;
-
 USTRUCT(BlueprintType)
 struct FUIWidgetData
 {
@@ -217,8 +214,8 @@ protected:
 	uint16 CurSceneId;
 	TArray<uint16> ScenesStack;
 
-	UPROPERTY()
-	ULoadingWidget* LoadingWidget;
+	//UPROPERTY()
+	//UCWaitingWidget* WaitingWidget;
 
 	UPROPERTY()
 	TMap<uint16, FUIWidgetData> WidgetDatas;

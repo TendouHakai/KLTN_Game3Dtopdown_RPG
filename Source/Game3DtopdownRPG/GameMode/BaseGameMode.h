@@ -26,7 +26,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void InitInitialUI();
 
-	UFUNCTION() void OpenReservedLevel(const FName NameLevel, const FString Options);
+	UFUNCTION(BlueprintCallable) void OpenReservedLevel(const FName NameLevel, const FString Options);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UUIBaseMgr* UIMgr;

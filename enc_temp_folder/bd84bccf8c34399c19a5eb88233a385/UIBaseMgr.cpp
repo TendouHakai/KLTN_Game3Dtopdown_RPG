@@ -5,7 +5,6 @@
 
 #include "AssetMgr.h"
 #include "Game3DtopdownRPG/RPGGameInstance.h"
-#include "Game3DtopdownRPG/UI/WaitingWidget/LoadingWidget.h"
 
 void InitWidgetData(const TArray<FDerivedWidgetPath>& DerivedWidgetPaths,
 	TMap<uint16, FUIWidgetData>& WidgetDatas,
@@ -183,8 +182,6 @@ void UUIBaseMgr::CloseAllUI()
 			UUIWidget* UIWidget = UIWidgetData.GetWidget();
 
 			//UE_LOG(LogClass, Warning, TEXT("CloseAllUI(%s)"), *UIWidget->GetName());
-			if(UIWidgetData.WidgetId == (uint8)EUIName::LoadingWidget)
-				continue;
 
 			UIWidget->RemoveFromParent();
 			UIWidgetData.ResetInstance();
@@ -227,11 +224,6 @@ void UUIBaseMgr::_OpenUI(UUIWidget* Widget, FUIWidgetData* WidgetData, bool Imme
 
 	Widget->AddToViewport((int32)WidgetData->Layer);
 	Widget->OnOpen(Immediately);
-
-	if (WidgetData->WidgetId == (uint8)EUIName::LoadingWidget)
-	{
-		LoadingWidget = Cast<ULoadingWidget>(Widget);
-	}
 }
 
 UUIWidget* FUIWidgetData::GetOrCreateWidget()
