@@ -22,7 +22,6 @@ enum class ECharacterParam : uint8
 {
 	PhysicDamage = 0,
 	MagicDamage,
-	HP,
 	MovementSpeed,
 	AttackSpeed,
 	Max

@@ -14,4 +14,10 @@ class GAME3DTOPDOWNRPG_API ABattleGameMode : public ABaseGameMode
 {
 	GENERATED_BODY()
 	
+public:
+	UFUNCTION(BlueprintCallable)
+	void RepeatBattle();
+
+	UFUNCTION(BlueprintCallable)
+	void BackToStartZone();
 };
