@@ -21,7 +21,7 @@ void UHitFreezer::HitFreeze(float FreezeDuration, bool bApplyColor)
 		UHitFlash* HitFlash = Cast<UHitFlash>(GetOwner()->GetComponentByClass(UHitFlash::StaticClass()));
 
 		if (HitFlash)
-			HitFlash->Flash(HitFreezeColor, FMath::Max(FreezeDuration, 1.0f / 60.0f));
+			HitFlash->Flash(HitFreezeColor, FMath::Max(FreezeDuration, 1.0f / 30.0f));
 	}
 
 	if (FreezeDuration <= 0) return;

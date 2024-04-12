@@ -24,7 +24,7 @@ void ATeleportLevel::SetIsPlayerInRange(bool isPlayerInRange)
 	this->IsPlayerInRange = isPlayerInRange;
 }
 
-void ATeleportLevel::OnEnterLevel()
+void ATeleportLevel::OnEnterLevel_Implementation()
 {
 	if (IsPlayerInRange)
 	{

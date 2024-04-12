@@ -14,6 +14,7 @@ enum class EUIName : uint8
 	// Battle
 	BattleWidget,
 	BattleFailWidget,
+	BattleVictoryWidget,
 	Max,
 };
 

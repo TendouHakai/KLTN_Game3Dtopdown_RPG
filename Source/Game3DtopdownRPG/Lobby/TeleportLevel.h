@@ -21,8 +21,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetIsPlayerInRange(bool isPlayerInRange);
 
-	UFUNCTION(BlueprintCallable)
-	virtual void OnEnterLevel();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "TeleportLevel")
+	void OnEnterLevel();
 private:
 	bool IsPlayerInRange = false;
 };
