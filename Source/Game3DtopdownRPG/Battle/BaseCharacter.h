@@ -85,7 +85,7 @@ public:
 	void SetMovementSpeedRate(float MovementSpeed);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Character")
-	void healHP();
+	void CharacterHealHpPerSecond();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = true))
@@ -100,7 +100,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float ReduceCoolDownSkillRatio;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float HealHPPerSecond;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float DebuffResistanceRatio;
-
+		
 	
 
 private:
