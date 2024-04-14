@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "HitFreezer.h"
+#include "Game3DtopdownRPG/Battle/BaseAnimInstance.h"
 #include "BaseCharacter.generated.h"
 
 UENUM(BlueprintType)
@@ -74,18 +75,29 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	void HitFreeze(float FreezeDuration, bool bApplyColor);
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Character")
+	UBaseAnimInstance* GetAnimInstance();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character")
+	float GetMovementSpeedRate() { return MovementSpeedRate; }
+
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	void SetMovementSpeedRate(float MovementSpeed);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Character")
+	void healHP();
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = true))
 	ECharTeam CharTeam;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") FName HeroID;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") uint8 Level;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") uint8 CurExp;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") uint8 CurExp;	
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float AttackSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float MovementSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float AttackSpeedRate;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float MovementSpeedRate;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float ReduceCoolDownSkillRatio;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float CriticalRatio;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float HealHPPerSecond;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float DebuffResistanceRatio;
 

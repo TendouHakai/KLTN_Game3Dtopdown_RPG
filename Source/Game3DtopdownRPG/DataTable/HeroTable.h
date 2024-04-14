@@ -47,13 +47,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) float HP;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) float Def;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) float MagicDef;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) float AttackSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) float MovementSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) float AttackSpeedRate;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) float MovementSpeedRate;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) float ReduceCoolDownRatio;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) float CriticalRatio;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) float HealHP;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) float PierceDef;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) float PiercingMagicDef;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) float PierceMagicDef;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) float DebuffResistanceRatio;
 };
 

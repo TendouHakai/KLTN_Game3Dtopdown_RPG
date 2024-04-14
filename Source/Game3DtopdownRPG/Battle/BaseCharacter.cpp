@@ -2,6 +2,7 @@
 
 
 #include "Game3DtopdownRPG/Battle/BaseCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -34,6 +35,16 @@ void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!SkeletalMesh->IsVisible())
+	{
+		GetMesh()->GlobalAnimRateScale = 0.0f;
+		return;
+	}
+
+	if (GetAnimInstance() && GetAnimInstance()->IsAnimAttackState())
+	{
+		GetMesh()->GlobalAnimRateScale = AttackSpeedRate;
+	}
 }
 
 void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -78,5 +89,15 @@ void ABaseCharacter::HitFreeze(float FreezeDuration, bool bApplyColor)
 {
 	if (IsValid(HitFreezer))
 		HitFreezer->HitFreeze(FreezeDuration, bApplyColor);
+}
+
+void ABaseCharacter::SetMovementSpeedRate(float MovementSpeed)
+{
+	this->MovementSpeedRate = MovementSpeed;
+	
+	if (GetCharacterMovement() != nullptr)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = MovementSpeedRate;
+	}
 }
 
