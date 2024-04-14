@@ -8,26 +8,6 @@
 #include "BaseCharacter.generated.h"
 
 UENUM(BlueprintType)
-enum class ECharacterStat : uint8
-{
-	STR = 0,
-	INT,
-	VIT,
-	AGI,
-	Max
-};
-
-UENUM(BlueprintType)
-enum class ECharacterParam : uint8
-{
-	PhysicDamage = 0,
-	MagicDamage,
-	MovementSpeed,
-	AttackSpeed,
-	Max
-};
-
-UENUM(BlueprintType)
 enum class ECharTeam : uint8
 {
 	Ally,
@@ -98,12 +78,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = true))
 	ECharTeam CharTeam;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") uint8 level;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") uint8 CurExp;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") FName HeroID;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") uint8 Level;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") uint8 CurExp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") TArray<int32> BaseArrayStat;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") TArray<int32> BaseArrayPrameter;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") TArray<int32> CurArrayPrameter;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float AttackSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float MovementSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float ReduceCoolDownSkillRatio;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float CriticalRatio;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float HealHPPerSecond;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float DebuffResistanceRatio;
+
+	
 
 private:
 	UPROPERTY() USkeletalMeshComponent* SkeletalMesh;

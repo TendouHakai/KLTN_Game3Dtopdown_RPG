@@ -3,6 +3,7 @@
 
 #include "Game3DtopdownRPG.h"
 #include "Util/Managers/UIBaseMgr.h"
+#include "Util/Managers/TableMgr.h"
 
 URPGGameInstance* URPGGameInstance::_instance = nullptr;
 
@@ -14,6 +15,7 @@ void URPGGameInstance::Init()
 
 	CreateInstance<UAssetMgr>();
 	CreateInstance<UUIBaseMgr>();
+	CreateInstance<UTableMgr>();
 }
 
 void URPGGameInstance::Shutdown()
