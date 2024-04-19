@@ -14,6 +14,7 @@ UENUM(BlueprintType)
 enum class EChrAnimState : uint8
 {
 	StandRun				UMETA(DisplayName = "StandRun"),
+	StartRun				UMETA(DisplayName = "StartRun"),
 	Die						UMETA(DisplayName = "Die"),
 	Hit1					UMETA(DisplayName = "Hit1"),
 	Hit2					UMETA(DisplayName = "Hit2"),
