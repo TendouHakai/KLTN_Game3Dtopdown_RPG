@@ -64,6 +64,9 @@ public:
 	float GetHealthRatio();
 
 	UFUNCTION(BlueprintCallable, Category = "Character")
+	void SetCharTeam(ECharTeam InCharTeam) { this->CharTeam = InCharTeam; }
+
+	UFUNCTION(BlueprintCallable, Category = "Character")
 	ECharTeam GetCharTeam() { return CharTeam; }
 
 	UFUNCTION(BlueprintCallable, Category = "Character")

@@ -25,4 +25,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "AssetMgr Singleton")
 	static UAssetMgr* GetAssetMgr();
+
+	UFUNCTION(BlueprintCallable, Category = "CppFunctionLibrary")
+	static UObject* GetDefaultObject(TSubclassOf<UObject> ObjectClass);
 };
