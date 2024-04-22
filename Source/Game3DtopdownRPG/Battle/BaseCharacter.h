@@ -103,9 +103,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float ReduceCoolDownSkillRatio;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float HealHPPerSecond;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float DebuffResistanceRatio;
-		
 	
-
 private:
 	UPROPERTY() USkeletalMeshComponent* SkeletalMesh;
 	UPROPERTY() UHitFreezer* HitFreezer;
