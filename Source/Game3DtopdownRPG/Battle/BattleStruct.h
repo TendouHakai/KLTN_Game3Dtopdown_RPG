@@ -13,3 +13,21 @@ enum class EBattleClearStep : uint8
 	Failed,
 	Victory,
 };
+
+
+UENUM(BlueprintType)
+enum class EBattleSkillState : uint8
+{
+	Available,
+	Using,
+	Cooldown,
+	Max,
+};
+
+UENUM(BlueprintType)
+enum class EBattleSkillProcResult : uint8
+{
+	Success,
+	Failed,
+	Max,
+};

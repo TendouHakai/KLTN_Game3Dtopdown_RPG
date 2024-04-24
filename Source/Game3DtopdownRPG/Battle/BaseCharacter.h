@@ -90,6 +90,13 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Character")
 	void CharacterHealHpPerSecond();
 
+	// Skill
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	void StartSkillAdditionalProcess(int32 SkillIdx);
+
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	void EndSkillAdditionalProcess();
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = true))
 	ECharTeam CharTeam;

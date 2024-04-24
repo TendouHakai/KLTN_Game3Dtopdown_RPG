@@ -101,3 +101,11 @@ void ABaseCharacter::SetMovementSpeedRate(float MovementSpeed)
 	}
 }
 
+void ABaseCharacter::StartSkillAdditionalProcess(int32 SkillIdx)
+{
+}
+
+void ABaseCharacter::EndSkillAdditionalProcess()
+{
+}
+
