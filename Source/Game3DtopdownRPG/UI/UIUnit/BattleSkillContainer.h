@@ -26,7 +26,6 @@ public:
 
 protected:
 	uint8 SkillIndex = -1;
-	ABaseCharacter* OwnerCharacter;
 
 	UProgressBar* ProgressBarCooldown;
 	UTextBlock* TextNumberCooldown;
