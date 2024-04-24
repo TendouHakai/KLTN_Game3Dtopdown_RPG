@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "HitFreezer.h"
 #include "Game3DtopdownRPG/Battle/BaseAnimInstance.h"
+#include "BattleStruct.h"
 #include "BaseCharacter.generated.h"
 
 UENUM(BlueprintType)
@@ -96,6 +97,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	void EndSkillAdditionalProcess();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Character")
+	FNativeSkillInfo GetNativeSkillInfo(int32 InIndex);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = true))

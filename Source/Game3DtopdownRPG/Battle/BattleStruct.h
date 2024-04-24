@@ -31,3 +31,19 @@ enum class EBattleSkillProcResult : uint8
 	Failed,
 	Max,
 };
+
+USTRUCT(BlueprintType)
+struct FNativeSkillInfo
+{
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float CoolDownDuration;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float CoolDownTime;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) EBattleSkillState state;
+
+	GENERATED_USTRUCT_BODY()
+
+	FNativeSkillInfo()
+		: CoolDownDuration(0.0f)
+		, CoolDownTime(0.0f)
+		, state(EBattleSkillState::Available)
+	{}
+};
