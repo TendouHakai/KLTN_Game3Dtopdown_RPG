@@ -29,7 +29,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "BaseWidget")
 	virtual void Update();
 
+	UFUNCTION(BlueprintCallable, Category = "BaseWidget")
+	virtual void SetOwner(UBaseWidget* owner) {}
+
+	UFUNCTION(BlueprintNativeEvent, Category = "BaseWidget")
+	void OnInitialize();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "BaseWidget")
+	void OnUpdateWidget();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "BaseWidget")
+	void OnWidgetPushed();
+
 protected:
+	virtual void CacheOwnUI() { }
+
 	template<class T>
 	T* GetOwnUI(const FString& InWidgetName, bool bValidCheck = true)
 	{

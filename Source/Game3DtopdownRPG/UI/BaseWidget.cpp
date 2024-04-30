@@ -11,12 +11,20 @@ UBaseWidget::UBaseWidget(const FObjectInitializer& objectInitializer)
 
 bool UBaseWidget::Initialize()
 {
-	return Super::Initialize();;
+	bool IsInitialized = Super::Initialize();
+	if (IsInitialized)
+	{
+	
+	}
+
+	return IsInitialized;
 }
 
 void UBaseWidget::Init()
 {
+	OnInitialize();
 
+	CacheOwnUI();
 }
 
 void UBaseWidget::NativeConstruct()
@@ -38,4 +46,8 @@ void UBaseWidget::Destroy(UUIBaseMgr* InUIManager)
 void UBaseWidget::Update()
 {
 
+}
+
+void UBaseWidget::OnInitialize_Implementation()
+{
 }

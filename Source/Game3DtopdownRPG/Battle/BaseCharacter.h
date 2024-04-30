@@ -9,6 +9,8 @@
 #include "BattleStruct.h"
 #include "BaseCharacter.generated.h"
 
+class UBuffControllerComponent;
+
 UENUM(BlueprintType)
 enum class ECharTeam : uint8
 {
@@ -16,7 +18,7 @@ enum class ECharTeam : uint8
 	Enemy,
 };
 
-UCLASS()
+UCLASS(Blueprintable, BlueprintType)
 class GAME3DTOPDOWNRPG_API ABaseCharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -101,10 +103,33 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Character")
 	FNativeSkillInfo GetNativeSkillInfo(int32 InIndex);
 
+	// buff
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	void AddBuffToAttacker(ABaseCharacter* Attacker, const FHeroBuffInfo& HeroBuffInfo);
+
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	void AddBuffToDefender(ABaseCharacter* Attacker, const FHeroBuffInfo& HeroBuffInfo);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character")
+	bool IsCharacterAlive();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintPure, Category = "Character")
+	EChrAnimState GetAnimState();
+
+protected:
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	bool IsValidBuff(const FHeroBuffInfo& HeroBuffInfo);
+
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	bool IsEnemyBuff(const FHeroBuffInfo& HeroBuffInfo);
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = true))
 	ECharTeam CharTeam;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) UBuffControllerComponent* HeroBuffController;
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") FName HeroID;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") uint8 Level;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") uint8 CurExp;	

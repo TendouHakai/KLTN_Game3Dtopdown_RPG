@@ -3,6 +3,17 @@
 
 #include "UIUnitWidget.h"
 
+void UUIUnitWidget::InitUnit(ABaseGameMode* gameMode)
+{
+	if (gameMode)
+	{
+		GameMode = gameMode;
+		UIMgr = gameMode->UIMgr;
+	}
+
+	CacheOwnUI();
+}
+
 bool UUIUnitWidget::IsValidWidget()
 {
 	return bValidWidget;

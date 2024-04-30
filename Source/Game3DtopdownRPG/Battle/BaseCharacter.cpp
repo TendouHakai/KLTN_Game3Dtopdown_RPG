@@ -3,6 +3,7 @@
 
 #include "Game3DtopdownRPG/Battle/BaseCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Buff/BuffControllerComponent.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -15,6 +16,8 @@ ABaseCharacter::ABaseCharacter()
 void ABaseCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+	HeroBuffController = Cast<UBuffControllerComponent>(GetComponentByClass(UBuffControllerComponent::StaticClass()));
 
 	SkeletalMesh = Cast<USkeletalMeshComponent>(GetComponentByClass(USkeletalMeshComponent::StaticClass()));
 	HitFreezer = Cast<UHitFreezer>(GetComponentByClass(UHitFreezer::StaticClass()));
@@ -107,5 +110,45 @@ void ABaseCharacter::StartSkillAdditionalProcess(int32 SkillIdx)
 
 void ABaseCharacter::EndSkillAdditionalProcess()
 {
+}
+
+void ABaseCharacter::AddBuffToAttacker(ABaseCharacter* Attacker, const FHeroBuffInfo& HeroBuffInfo)
+{
+	if (false == IsValidBuff(HeroBuffInfo))
+		return;
+
+	if (true == IsEnemyBuff(HeroBuffInfo))
+		return;
+
+	HeroBuffController->CreateBuff(Attacker, HeroBuffInfo);
+}
+
+void ABaseCharacter::AddBuffToDefender(ABaseCharacter* Attacker, const FHeroBuffInfo& HeroBuffInfo)
+{
+	if (false == IsCharacterAlive())
+		return;
+
+	if (false == IsValidBuff(HeroBuffInfo))
+		return;
+
+	if (false == IsEnemyBuff(HeroBuffInfo))
+		return;
+
+	HeroBuffController->CreateBuff(Attacker, HeroBuffInfo);
+}
+
+bool ABaseCharacter::IsCharacterAlive()
+{
+	return (GetAnimState() != EChrAnimState::Die) ? true : false;
+}
+
+bool ABaseCharacter::IsValidBuff(const FHeroBuffInfo& HeroBuffInfo)
+{
+	return (EHeroBuffType::None_Buff <= HeroBuffInfo.BuffType) ? false : true;
+}
+
+bool ABaseCharacter::IsEnemyBuff(const FHeroBuffInfo& HeroBuffInfo)
+{
+	return (EBuffTargetType::Enemy == HeroBuffInfo.BuffTarget) ? true : false;
 }
 
