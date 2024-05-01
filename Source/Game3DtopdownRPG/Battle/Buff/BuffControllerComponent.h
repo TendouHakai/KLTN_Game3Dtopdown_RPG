@@ -9,6 +9,8 @@
 
 class ABaseCharacter;
 class UBaseBuff;
+class ABuffStateActor;
+class ABaseBuffActor;
 
 UCLASS(Blueprintable)
 class GAME3DTOPDOWNRPG_API UBuffControllerComponent : public UActorComponent
@@ -48,13 +50,27 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "BuffController")
 	void FindHaveBuff(const UClass* ClassType, TArray<UBaseBuff*>& BuffArray);
 
+	UFUNCTION(BlueprintCallable, Category = "BuffController")
+	void ClearBuffStateActor();
+
+	UFUNCTION(BlueprintCallable, Category = "BuffController")
+	void ShowBuffEffects();
+
+	UFUNCTION(BlueprintCallable, Category = "BuffController")
+	void HideBuffEffects();
+
 private:
 	void UpdateBuffInfo();
 	void TickBuff(float DeltaTime);
 
+	bool IsNecessaryBuffActor(UBaseBuff* CheckBuff);
+
 protected:
 	UBaseBuff* CreateBuff_Implementation(ABaseCharacter* Caster, const FHeroBuffInfo& HeroBuffInfo, bool bAllowedDuplicate = false);
 	UBaseBuff* CreateInstance(const EHeroBuffType& type, const FHeroBuffInfo& HeroBuffInfo);
+
+	ABaseBuffActor* SpawnBuffActor(EBuffActorType BuffActorType, UBaseBuff* BaseBuff);
+	void DestroyBuffStateActor(ABaseBuffActor* BaseBuffActor);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) ABaseCharacter* OwnerCharacter;
@@ -66,4 +82,6 @@ private:
 private:
 	DECLARE_DYNAMIC_DELEGATE(FUpdateBuffInfo);
 	FUpdateBuffInfo UpdateBuffInfoCallBack;
+
+	UPROPERTY()	ABuffStateActor* BuffStateActor;
 };

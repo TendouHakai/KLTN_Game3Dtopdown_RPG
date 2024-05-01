@@ -37,13 +37,30 @@ struct FHeroBuffInfo
 
 	GENERATED_USTRUCT_BODY() 
 public:
-	//FHeroBuffInfo()
-	//	: BuffType(EHeroBuffType::Damage_Increase)
-	//	, BuffCondition(0)
-	//	, BuffTarget(EBuffTargetType::Self)
-	//	, Duration(0.0f)
-	//	, BuffMaxStack(1)
-	//	, bForcedBuff(false)
-	//{
-	//}
+	FHeroBuffInfo()
+		: BuffType(EHeroBuffType::None_Buff)
+		, BuffCondition(0)
+		, BuffTarget(EBuffTargetType::Self)
+		, Duration(0.0f)
+		, BuffMaxStack(1)
+		, bForcedBuff(false)
+	{
+	}
+};
+
+
+UENUM(BlueprintType)
+enum class EBuffActorType : uint8
+{
+	eBuffStateActor = 0,
+	eDeBuffAreaActor,
+	eDeBuffBoxAreaActor,
+	Max,
+};
+
+UENUM(BlueprintType)
+enum class EBuffEffectType : uint8
+{
+	Flame = 0,
+	Max
 };

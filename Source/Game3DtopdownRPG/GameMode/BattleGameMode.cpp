@@ -19,3 +19,71 @@ void ABattleGameMode::BackToStartZone()
 	if (loadingWidget != nullptr)
 		loadingWidget->SetInfoScene(FName("StartZone"), FString("?Game=/Game/Blueprints/Battle/BattleGameModeBP.BattleGameModeBP_C"));
 }
+
+ABattleGameMode::ABattleGameMode()
+{
+
+}
+
+ABattleGameMode::~ABattleGameMode()
+{
+}
+
+void ABattleGameMode::InitGame(const FString& map_name, const FString& options, FString& error_message)
+{
+	Super::InitGame(map_name, options, error_message);
+
+	GameModeState = EBattleGameModeState::None;
+}
+
+void ABattleGameMode::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (IsMatchInProgress())
+	{
+		switch (GameModeState)
+		{
+		case EBattleGameModeState::None:
+			break;
+		case EBattleGameModeState::BattleStart:
+		{
+			OnBeginProduction();
+			
+			GameModeState = EBattleGameModeState::PlayingBattle;
+		}
+			break;
+		case EBattleGameModeState::PlayingBattle:
+		{
+
+		}
+			break;
+		case EBattleGameModeState::Max:
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+void ABattleGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+}
+
+void ABattleGameMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+}
+
+void ABattleGameMode::StartPlay()
+{
+	Super::StartPlay();
+
+	GameModeState = EBattleGameModeState::BattleStart;
+}
+
+void ABattleGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+}

@@ -40,6 +40,8 @@ protected:
 
 	virtual int32 GetMaxBuffComponent() const { return MAX_BUFF_COMP; }
 
+	void AttachBuffController();
+
 protected:
 	UPROPERTY() AActor* BattleActor;
 	UPROPERTY()	ABaseCharacter* BattleCharacter;
@@ -51,6 +53,6 @@ protected:
 private:
 	enum
 	{
-		MAX_BUFF_COMP = 15,
+		MAX_BUFF_COMP = 10,
 	};
 };

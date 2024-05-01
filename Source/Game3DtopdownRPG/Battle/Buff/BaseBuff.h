@@ -49,6 +49,12 @@ public:
 	FORCEINLINE virtual const float GetDuration() { return Duration; }
 	FORCEINLINE virtual const float GetElapseTime() { return ElapseTime; }
 
+	bool IsNecessaryBuffActor();
+	virtual EBuffActorType GetSpawnActorType() { return EBuffActorType::eBuffStateActor; }
+	virtual bool IsPassiveBuff() { return bIsPassiveBuff; }
+	virtual int32 BuffStateIndex() { return -1; }
+	virtual FName GetAttachedBoneName() { return HeroBuffInfo.AttachedBoneName; }
+
 protected:
 	void SetBuffInfoText();
 	void UpdateBuffInfo();

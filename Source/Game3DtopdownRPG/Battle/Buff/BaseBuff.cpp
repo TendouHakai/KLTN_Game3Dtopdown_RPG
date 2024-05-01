@@ -110,6 +110,11 @@ const int32 UBaseBuff::GetRemainTime()
 	return FMath::Clamp(RemainSecsAsInt, 0, DurationAsInt);
 }
 
+bool UBaseBuff::IsNecessaryBuffActor()
+{
+	return true;
+}
+
 void UBaseBuff::SetBuffInfoText()
 {
 	// chua co data

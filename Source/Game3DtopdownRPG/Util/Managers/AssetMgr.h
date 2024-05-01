@@ -28,6 +28,7 @@ class GAME3DTOPDOWNRPG_API UAssetMgr : public USingleton
 
 public:
 	const TArray<FDerivedWidgetPath>& GetDerivedWidgetPaths();
+	static UClass* LoadClass(const FString& ClassPath, UClass* BaseClass, UObject* Outer);
 	static UClass* FastLoadClass(const FString& FullPath, UClass* BaseClass, UObject* Outer);
 
 private:

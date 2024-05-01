@@ -4,16 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
+#include "Game3DtopdownRPG/Battle/GameModeEnum.h"
 #include "BaseGameMode.generated.h"
-
-UENUM(BlueprintType)
-enum class EGameModeType : uint8
-{
-	None,
-	Login,
-	Lobby,
-	Battle
-};
 
 class UUIBaseMgr;
 

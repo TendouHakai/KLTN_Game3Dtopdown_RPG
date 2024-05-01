@@ -4,9 +4,15 @@
 #include "BuffControllerComponent.h"
 #include "Game3DtopdownRPG/Battle/BaseCharacter.h"
 #include "BaseBuff.h"
+#include "BuffList/FlameDebuff.h"
+#include "BuffStateActor.h"
+#include "Game3DtopdownRPG/GlobalGetter.h"
+#include "Game3DtopdownRPG/GameMode/BaseGameMode.h"
+#include "Game3DtopdownRPG/Util/Managers/AssetMgr.h"
+#include "BuffStateActor.h"
 
 // Sets default values for this component's properties
-UBuffControllerComponent::UBuffControllerComponent()
+UBuffControllerComponent::UBuffControllerComponent() : BuffStateActor(nullptr)
 {
 	PrimaryComponentTick.bCanEverTick = true;
 }
@@ -17,6 +23,10 @@ void UBuffControllerComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// spawn buff state actor
+	if (nullptr != OwnerCharacter && nullptr == BuffStateActor)
+	{
+		BuffStateActor = Cast<ABuffStateActor>(SpawnBuffActor(EBuffActorType::eBuffStateActor, nullptr));
+	}
 }
 
 void UBuffControllerComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -45,6 +55,9 @@ void UBuffControllerComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 UBaseBuff* UBuffControllerComponent::CreateBuff(ABaseCharacter* Caster, const FHeroBuffInfo& HeroBuffInfo, bool bAllowedDuplicate)
 {
 	if (Caster == nullptr || OwnerCharacter == nullptr)
+		return nullptr;
+
+	if (HeroBuffInfo.BuffType == EHeroBuffType::None_Buff)
 		return nullptr;
 
 	if (EBuffTargetType::Team == HeroBuffInfo.BuffTarget)
@@ -103,6 +116,9 @@ void UBuffControllerComponent::DeleteBuffCheck()
 
 	for (UBaseBuff* deleteBuff : DeleteHeroBuffArray)
 	{
+		if (BuffStateActor)
+			BuffStateActor->RemoveBuffInfo(deleteBuff);
+
 		HeroBuffArray.Remove(deleteBuff);
 		deleteBuff->EndBuff(true);
 
@@ -127,6 +143,34 @@ void UBuffControllerComponent::FindHaveBuff(const UClass* ClassType, TArray<UBas
 	}
 }
 
+void UBuffControllerComponent::ClearBuffStateActor()
+{
+	if (nullptr != BuffStateActor)
+	{
+		DestroyBuffStateActor(BuffStateActor);
+		BuffStateActor = nullptr;
+	}
+
+	//for (auto& AdditionalBuffStateActor : AdditionalBuffStateActorMap)
+	//{
+	//	ACBaseBuffActor* BaseBuffActor = AdditionalBuffStateActor.Value;
+	//	DestroyBuffStateActor(BaseBuffActor);
+	//}
+	//AdditionalBuffStateActorMap.Empty();
+}
+
+void UBuffControllerComponent::ShowBuffEffects()
+{
+	if (IsValid(BuffStateActor))
+		BuffStateActor->ShowBuffStateActor();
+}
+
+void UBuffControllerComponent::HideBuffEffects()
+{
+	if (IsValid(BuffStateActor))
+		BuffStateActor->HideBuffStateActor();
+}
+
 void UBuffControllerComponent::UpdateBuffInfo()
 {
 	UpdateBuffInfoCallBack.ExecuteIfBound();
@@ -144,6 +188,14 @@ void UBuffControllerComponent::TickBuff(float DeltaTime)
 	{
 		HeroBuff->Tick(OriginDeltaTime);
 	}
+}
+
+bool UBuffControllerComponent::IsNecessaryBuffActor(UBaseBuff* CheckBuff)
+{
+	if (false == CheckBuff->IsNecessaryBuffActor())
+		return false;
+
+	return true;
 }
 
 UBaseBuff* UBuffControllerComponent::CreateBuff_Implementation(ABaseCharacter* Caster, const FHeroBuffInfo& HeroBuffInfo, bool bAllowedDuplicate)
@@ -165,6 +217,14 @@ UBaseBuff* UBuffControllerComponent::CreateBuff_Implementation(ABaseCharacter* C
 	//}
 
 	// Tao ra 1 actor de hien thi hieu ung (choang, troi chan, ...)
+	if (true == IsNecessaryBuffActor(BaseBuff))
+	{
+		if (EBuffActorType::eBuffStateActor == BaseBuff->GetSpawnActorType())
+		{
+			if (BuffStateActor)
+				BuffStateActor->AddBuffInfo(BaseBuff);
+		}
+	}
 	
 	HeroBuffArray.Add(BaseBuff);
 	BaseBuff->BeginBuff();
@@ -177,10 +237,39 @@ UBaseBuff* UBuffControllerComponent::CreateInstance(const EHeroBuffType& type, c
 {
 	switch (type)
 	{
-	case EHeroBuffType::Damage_Increase: return nullptr;
+	case EHeroBuffType::Damage_Increase:	return	nullptr;
+	case EHeroBuffType::Flame:				return NewObject<UFlameDebuff>();
 	default:
 		return nullptr;
 	}
 	return nullptr;
+}
+
+ABaseBuffActor* UBuffControllerComponent::SpawnBuffActor(EBuffActorType BuffActorType, UBaseBuff* BaseBuff)
+{
+	ABaseGameMode* GameMode = GetGameModeAs(ABaseGameMode);
+	if (nullptr == GameMode)
+		return nullptr;
+
+	//UBuffStateActorPool* BuffStateActorPool = Cast<UBuffStateActorPool>(GameMode->GetComponentByClass(UBuffStateActorPool::StaticClass()));
+	TSubclassOf<ABaseBuffActor> BaseBuffActorBPClass = UAssetMgr::LoadClass("/Game/Blueprints/Battle/Buff/BuffStateActorBP", ABaseBuffActor::StaticClass(), nullptr);
+	ABaseBuffActor* BaseBuffActor = GetWorld()->SpawnActor<ABaseBuffActor>(BaseBuffActorBPClass, FTransform::Identity);
+
+	if (nullptr != BaseBuffActor)
+	{
+		if (ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwner()))
+			BaseBuffActor->InitBuffStateActor(Owner, BaseBuff);
+	}
+
+	return BaseBuffActor;
+}
+
+void UBuffControllerComponent::DestroyBuffStateActor(ABaseBuffActor* BaseBuffActor)
+{
+	if (IsValid(BaseBuffActor))
+	{
+		BaseBuffActor->EndBuffStateActor();
+		BaseBuffActor->Destroy();
+	}
 }
 

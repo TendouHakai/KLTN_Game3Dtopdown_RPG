@@ -23,7 +23,7 @@ bool UBattleBuffStateWidget::Initialize()
 		BuffStateComponentArray.Empty();
 		for (int i = 0; i < GetMaxBuffComponent(); ++i)
 		{
-			UBuffStateComponent* BuffStateComponent = GetOwnUI<UBuffStateComponent>(FString::Printf(TEXT("BuffStateComponent_%d"), i + 1));
+			UBuffStateComponent* BuffStateComponent = GetOwnUI<UBuffStateComponent>(FString::Printf(TEXT("BuffStateComponentBP_%d"), i + 1));
 
 			if (nullptr == BuffStateComponent)
 				continue;
@@ -58,6 +58,8 @@ void UBattleBuffStateWidget::SetBattleCharacter(AActor* Actor)
 	ClearBuffStateComponentInfo();
 
 	CastActorToBaseCharacter();
+
+	AttachBuffController();
 
 	SetBuffInfo();
 }
@@ -143,4 +145,15 @@ bool UBattleBuffStateWidget::SetBuffStateComponentInfo(int Idx, UBaseBuff* BaseB
 
 	BaseBuff->BindUpdateBuffInfoCallback(BuffStateComponentArray[Idx], &UBuffStateComponent::UpdateBuffTimeInfo);
 	return true;
+}
+
+void UBattleBuffStateWidget::AttachBuffController()
+{
+	if (!BattleCharacter)
+		return;
+
+	if (false == IsValid(BattleCharacter))
+		return;
+
+	BattleCharacter->HeroBuffController->BindUpdateBuffInfoCallback(this);
 }

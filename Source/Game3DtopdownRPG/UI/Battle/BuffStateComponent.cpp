@@ -13,15 +13,15 @@ UBuffStateComponent::UBuffStateComponent() : bShowBuffWidget(false)
 void UBuffStateComponent::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 { 
 	Super::NativeTick(MyGeometry, InDeltaTime);
-
-	BuffTime = GetOwnUI<UTextBlock>(TEXT("text_buff_time"));
-	BuffIcon = GetOwnUI<UImage>(TEXT("img_buff_icon"));
-	BuffStateAnim = GetWidgetAnimation(TEXT("Ani_Buff"));
 }
 
 void UBuffStateComponent::CacheOwnUI()
 {
 	Super::CacheOwnUI();
+
+	BuffTime = GetOwnUI<UTextBlock>(TEXT("TextBlock_bufftime"));
+	BuffIcon = GetOwnUI<UImage>(TEXT("Image_buff"));
+	BuffStateAnim = GetWidgetAnimation(TEXT("Ani_Buff"));
 }
 
 void UBuffStateComponent::Destroy(UUIBaseMgr* InUIManager)
@@ -36,7 +36,7 @@ bool UBuffStateComponent::SetInfo(UBaseBuff* BaseBuff)
 {
 	UpdateBuffTimeInfo(BaseBuff);
 	ShowComponent(true);
-	return false;
+	return true;
 }
 
 void UBuffStateComponent::SetInfo(const FHeroBuffInfo& HeroBuffInfo)
@@ -61,7 +61,7 @@ UWidgetAnimation* UBuffStateComponent::GetWidgetAnimation(const FString& InAnima
 
 void UBuffStateComponent::UpdateBuffTimeInfo(UBaseBuff* BaseBuff)
 {
-	if (nullptr == BuffTime)
+	if (nullptr != BuffTime)
 	{
 		if (true == BaseBuff->bIsPassiveBuff)
 		{
