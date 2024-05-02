@@ -41,6 +41,8 @@ protected:
 	bool IsTimeShowException(UBaseBuff* BaseBuff);
 	bool IsBlinkException(UBaseBuff* BaseBuff);
 
+	virtual void SetBuffIcon(FString name);
+
 protected:
 	bool bShowBuffWidget;
 

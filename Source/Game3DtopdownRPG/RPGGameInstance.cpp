@@ -4,6 +4,7 @@
 #include "Game3DtopdownRPG.h"
 #include "Util/Managers/UIBaseMgr.h"
 #include "Util/Managers/TableMgr.h"
+#include "Util/Managers/HeroBuffMgr.h"
 
 URPGGameInstance* URPGGameInstance::_instance = nullptr;
 
@@ -16,6 +17,7 @@ void URPGGameInstance::Init()
 	CreateInstance<UAssetMgr>();
 	CreateInstance<UUIBaseMgr>();
 	CreateInstance<UTableMgr>();
+	CreateInstance<UHeroBuffMgr>();
 }
 
 void URPGGameInstance::Shutdown()

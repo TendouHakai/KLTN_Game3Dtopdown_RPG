@@ -5,8 +5,10 @@
 #include "Blueprint/WidgetBlueprintGeneratedClass.h"
 #include "MovieScene.h"
 #include "Game3DtopdownRPG/Battle/Buff/BaseBuff.h"
-#include "Game3DtopdownRPG/Util/Managers/TableMgr.h"
 #include "Game3DtopdownRPG/GlobalGetter.h"
+#include "Game3DtopdownRPG/Util/Managers/HeroBuffMgr.h"
+#include "Game3DtopdownRPG/Battle/Buff/BuffStruct.h"
+#include "Game3DtopdownRPG/Util/Managers/AssetMgr.h"
 #include "Game3DtopdownRPG/DataTable/HeroTable.h"
 
 UBuffStateComponent::UBuffStateComponent() : bShowBuffWidget(false)
@@ -38,9 +40,14 @@ void UBuffStateComponent::Destroy(UUIBaseMgr* InUIManager)
 bool UBuffStateComponent::SetInfo(UBaseBuff* BaseBuff)
 {
 	UpdateBuffTimeInfo(BaseBuff);
-	ShowComponent(true);
 
 	// class buff hero manager
+ 	FBuffInfoRecord* BuffInfoRecord = GetMgr(UHeroBuffMgr)->GetHeroBuffInfoRecord((int32)BaseBuff->HeroBuffInfo.BuffType, BaseBuff->HeroBuffInfo.BuffCondition);
+
+	if (BuffInfoRecord == nullptr) return false;
+	ShowComponent(true);
+
+	SetBuffIcon(BuffInfoRecord->BuffIcon);
 
 	return true;
 }
@@ -135,4 +142,14 @@ bool UBuffStateComponent::IsTimeShowException(UBaseBuff* BaseBuff)
 bool UBuffStateComponent::IsBlinkException(UBaseBuff* BaseBuff)
 {
 	return false;
+}
+
+void UBuffStateComponent::SetBuffIcon(FString name)
+{
+	UTexture2D* Tex = GetMgr(UAssetMgr)->LoadTexture2D(name, EGameTextureType::Buff);
+
+	if (nullptr == BuffIcon || nullptr == Tex)
+		return;
+
+	BuffIcon->SetBrushFromTexture(Tex);
 }

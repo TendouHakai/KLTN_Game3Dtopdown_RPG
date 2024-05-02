@@ -59,7 +59,7 @@ public:
 
 
 USTRUCT(BlueprintType)
-struct FHero : public FTableRowBase
+struct FHeroRecord : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -68,7 +68,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FHeroLevel : public FTableRowBase
+struct FHeroLevelRecord : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -78,7 +78,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FHeroParamLevel : public FTableRowBase
+struct FHeroParamLevelRecord : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -87,12 +87,12 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FBuffInfo : public FTableRowBase
+struct FBuffInfoRecord : public FTableRowBase
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) uint8 BuffType;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) uint8 BuffCondition;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 BuffType;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 BuffCondition;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString BuffText;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString BuffIcon;
 };

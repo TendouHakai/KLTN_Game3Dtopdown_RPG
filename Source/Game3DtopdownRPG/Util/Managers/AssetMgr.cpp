@@ -37,3 +37,32 @@ UClass* UAssetMgr::FastLoadClass(const FString& FullPath, UClass* BaseClass, UOb
 {
     return StaticLoadClass(BaseClass, Outer, *FullPath);
 }
+
+UTexture2D* UAssetMgr::LoadTexture2D(const FString& Name, EGameTextureType Type)
+{
+	if (Name.IsEmpty()) return nullptr;
+
+	FString filePath = "/Game/UI/Texture/";
+	FString imagePath = "";
+	switch (Type)
+	{
+	case EGameTextureType::None:
+		break;
+	case EGameTextureType::Buff:
+		imagePath = "Buff/";
+		break;
+	case EGameTextureType::Max:
+		break;
+	default:
+		break;
+	}
+
+	filePath += imagePath;
+	filePath += (Name+"."+Name);
+	
+	//filePath = "/Game/UI/Texture/Buff/Buff_10008.Buff_10008";
+
+	UTexture2D* tex = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL, *(filePath)));
+
+	return tex;
+}
