@@ -4,7 +4,10 @@
 #include "BuffStateComponent.h"
 #include "Blueprint/WidgetBlueprintGeneratedClass.h"
 #include "MovieScene.h"
-#include "Game3DtopdownRPG\Battle\Buff\BaseBuff.h"
+#include "Game3DtopdownRPG/Battle/Buff/BaseBuff.h"
+#include "Game3DtopdownRPG/Util/Managers/TableMgr.h"
+#include "Game3DtopdownRPG/GlobalGetter.h"
+#include "Game3DtopdownRPG/DataTable/HeroTable.h"
 
 UBuffStateComponent::UBuffStateComponent() : bShowBuffWidget(false)
 {
@@ -36,6 +39,9 @@ bool UBuffStateComponent::SetInfo(UBaseBuff* BaseBuff)
 {
 	UpdateBuffTimeInfo(BaseBuff);
 	ShowComponent(true);
+
+	// class buff hero manager
+
 	return true;
 }
 

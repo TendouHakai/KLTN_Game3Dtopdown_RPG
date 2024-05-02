@@ -13,6 +13,7 @@ void UTableMgr::Init()
 	Super::Init();
 
 	HeroInfoTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Hero/HeroTable.HeroTable"));
+	BuffInfoTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Buff/BuffInfoTable.BuffInfoTable"));
 }
 
 void UTableMgr::EndPlay()

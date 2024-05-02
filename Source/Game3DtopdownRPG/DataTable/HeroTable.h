@@ -85,3 +85,14 @@ struct FHeroParamLevel : public FTableRowBase
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FCharacterParam ParamUpgrape;
 };
+
+USTRUCT(BlueprintType)
+struct FBuffInfo : public FTableRowBase
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) uint8 BuffType;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) uint8 BuffCondition;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString BuffText;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString BuffIcon;
+};

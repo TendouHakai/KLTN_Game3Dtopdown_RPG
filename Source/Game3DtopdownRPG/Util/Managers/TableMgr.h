@@ -23,6 +23,7 @@ public:
 
 	virtual void Destroy() override;
 
-protected:
+public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TableMgr") UDataTable* HeroInfoTable;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TableMgr") UDataTable* BuffInfoTable;
 };
