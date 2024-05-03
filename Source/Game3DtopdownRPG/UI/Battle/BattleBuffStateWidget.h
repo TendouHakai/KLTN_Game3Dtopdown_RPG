@@ -9,6 +9,7 @@
 class ABaseCharacter;
 class UBuffStateComponent;
 class UBaseBuff;
+class UBattleBuffInfo;
 
 UCLASS()
 class GAME3DTOPDOWNRPG_API UBattleBuffStateWidget : public UUIUnitWidget
@@ -20,7 +21,7 @@ public:
 	virtual bool Initialize() override;
 
 	UFUNCTION(BlueprintCallable, Category = "BattleBuffStateWidget")
-	void SetBattleInfoContainer(/*UBattleBuffInfo* BattleBuffInfo*/);
+	void SetBattleInfoContainer(UBattleBuffInfo* BattleBuffInfo);
 
 	UFUNCTION(BlueprintCallable, Category = "BattleBuffStateWidget")
 	virtual void SetBattleCharacter(AActor* Actor);

@@ -12,5 +12,5 @@ UObject* GetMgrFunc(UClass* MgrClass)
 
 AGameMode* GetGameModeAsFunc()
 {
-	return (AGameMode*)UGameplayStatics::GetGameMode(GetSBGameInstance());
+	return (AGameMode*)UGameplayStatics::GetGameMode(GetRPGGameInstance());
 }

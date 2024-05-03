@@ -27,8 +27,6 @@ public:
 	bool SetInfo(UBaseBuff* BaseBuff);
 	virtual void SetInfo(const FHeroBuffInfo& HeroBuffInfo);
 
-	UWidgetAnimation* GetWidgetAnimation(const FString& InAnimationName);
-
 	UFUNCTION()	void UpdateBuffTimeInfo(UBaseBuff* BaseBuff);
 	UFUNCTION() void UpdateInterruptInfo(UBaseBuff* BaseBuff);
 
@@ -36,6 +34,18 @@ public:
 	void InitIconOpacity();
 
 	void ShowComponent(bool bShow);
+
+	template<typename T>
+	void AddSelectCallBack(T* BaseClass, void (T::* Infunc)(UBuffStateComponent*, bool))
+	{
+		OnSelectCallBack.Unbind();
+		OnSelectCallBack.BindUObject(BaseClass, Infunc);
+	}
+
+	UFUNCTION(BlueprintCallable) void OnTapBuffIcon(bool bshow);
+	FString GetBuffTextInfo() { return BuffInfoText; }
+
+	FVector2D GetViewPortPosition() { return ViewPortPosition; }
 
 protected:
 	bool IsTimeShowException(UBaseBuff* BaseBuff);
@@ -52,9 +62,9 @@ protected:
 	UImage* BuffLock;
 	UWidgetAnimation* BuffStateAnim;
 
-	//FVector2D ViewPortPosition;
-	//FVector2D PixelPosition;
-	//FVector2D LocalSize;
+	FVector2D ViewPortPosition;
+	FVector2D PixelPosition;
+	FVector2D LocalSize;
 
 	DECLARE_DELEGATE_TwoParams(FOnSelectCallBack, UBuffStateComponent*, bool);
 	FOnSelectCallBack OnSelectCallBack;

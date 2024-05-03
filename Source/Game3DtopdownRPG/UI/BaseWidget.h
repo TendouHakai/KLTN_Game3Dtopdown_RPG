@@ -42,6 +42,8 @@ public:
 	void OnWidgetPushed();
 
 protected:
+	UWidgetAnimation* GetWidgetAnimation(const FString& InAnimationName);
+
 	virtual void CacheOwnUI() { }
 
 	template<class T>

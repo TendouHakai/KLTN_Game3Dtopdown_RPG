@@ -2,6 +2,9 @@
 
 
 #include "BaseBuff.h"
+#include "Game3DtopdownRPG/GlobalGetter.h"
+#include "Game3DtopdownRPG/Util/Managers/HeroBuffMgr.h"
+#include "Game3DtopdownRPG/DataTable/HeroTable.h"
 
 UBaseBuff::UBaseBuff() : bIsPassiveBuff(false), Duration (0.0f), ElapseTime(0.0f), CasterCharacter(nullptr)
 						,bActiveBuff(false), bDuplicated(false), OneSecondElapseTime(0.0f)
@@ -117,7 +120,10 @@ bool UBaseBuff::IsNecessaryBuffActor()
 
 void UBaseBuff::SetBuffInfoText()
 {
-	// chua co data
+	FBuffInfoRecord* BuffInfoRecord = GetMgr(UHeroBuffMgr)->GetHeroBuffInfoRecord((int32)HeroBuffInfo.BuffType, HeroBuffInfo.BuffCondition);
+	if (nullptr == BuffInfoRecord) return;
+	BuffInfoText = BuffInfoRecord->BuffText;
+	//BuffInfoText = HeroBuffInfo
 }
 
 void UBaseBuff::UpdateBuffInfo()

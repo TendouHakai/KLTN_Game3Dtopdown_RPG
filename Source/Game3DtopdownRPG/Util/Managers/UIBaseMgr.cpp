@@ -238,8 +238,8 @@ UUIWidget* FUIWidgetData::GetOrCreateWidget()
 {
 	if (!IsWidgetValid())
 	{
-		UClass* LoadClass = GetMgr(UAssetMgr)->FastLoadClass(WidgetFullPath, UUIWidget::StaticClass(), GetSBGameInstance());
-		WidgetPtr = CreateWidget<UUIWidget>(GetSBGameInstance(), LoadClass);
+		UClass* LoadClass = GetMgr(UAssetMgr)->FastLoadClass(WidgetFullPath, UUIWidget::StaticClass(), GetRPGGameInstance());
+		WidgetPtr = CreateWidget<UUIWidget>(GetRPGGameInstance(), LoadClass);
 	}
 	return GetWidget();
 }

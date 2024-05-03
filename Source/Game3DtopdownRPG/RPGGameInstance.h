@@ -35,4 +35,4 @@ private:
 	TMap<UObject*, USingleton*> map_mgr_;
 };
 
-#define GetSBGameInstance() URPGGameInstance::Instance()
+#define GetRPGGameInstance() URPGGameInstance::Instance()

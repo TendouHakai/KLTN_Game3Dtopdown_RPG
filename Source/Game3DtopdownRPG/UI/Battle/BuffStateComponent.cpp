@@ -10,6 +10,7 @@
 #include "Game3DtopdownRPG/Battle/Buff/BuffStruct.h"
 #include "Game3DtopdownRPG/Util/Managers/AssetMgr.h"
 #include "Game3DtopdownRPG/DataTable/HeroTable.h"
+#include "Blueprint/SlateBlueprintLibrary.h"
 
 UBuffStateComponent::UBuffStateComponent() : bShowBuffWidget(false)
 {
@@ -18,6 +19,9 @@ UBuffStateComponent::UBuffStateComponent() : bShowBuffWidget(false)
 void UBuffStateComponent::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 { 
 	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	USlateBlueprintLibrary::LocalToViewport(GetWorld(), MyGeometry, FVector2D::ZeroVector, PixelPosition, ViewPortPosition);
+	//ViewPortPosition = USlateBlueprintLibrary::LocalToAbsolute(MyGeometry, FVector2D::ZeroVector);
 }
 
 void UBuffStateComponent::CacheOwnUI()
@@ -47,6 +51,7 @@ bool UBuffStateComponent::SetInfo(UBaseBuff* BaseBuff)
 	if (BuffInfoRecord == nullptr) return false;
 	ShowComponent(true);
 
+	BuffInfoText = BaseBuff->GetBuffTextInfo();
 	SetBuffIcon(BuffInfoRecord->BuffIcon);
 
 	return true;
@@ -55,21 +60,6 @@ bool UBuffStateComponent::SetInfo(UBaseBuff* BaseBuff)
 void UBuffStateComponent::SetInfo(const FHeroBuffInfo& HeroBuffInfo)
 {
 
-}
-
-UWidgetAnimation* UBuffStateComponent::GetWidgetAnimation(const FString& InAnimationName)
-{
-	if (UWidgetBlueprintGeneratedClass* BGClass = Cast<UWidgetBlueprintGeneratedClass>(GetClass()))
-	{
-		for (UWidgetAnimation* Animation : BGClass->Animations)
-		{
-			if (Animation->MovieScene->GetName() == InAnimationName)
-				return Animation;
-		}
-	}
-
-	bValidWidget = false;
-	return nullptr;
 }
 
 void UBuffStateComponent::UpdateBuffTimeInfo(UBaseBuff* BaseBuff)
@@ -132,6 +122,11 @@ void UBuffStateComponent::ShowComponent(bool bShow)
 	}
 	else
 		SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+}
+
+void UBuffStateComponent::OnTapBuffIcon(bool bshow)
+{
+	OnSelectCallBack.ExecuteIfBound(this, bshow);
 }
 
 bool UBuffStateComponent::IsTimeShowException(UBaseBuff* BaseBuff)

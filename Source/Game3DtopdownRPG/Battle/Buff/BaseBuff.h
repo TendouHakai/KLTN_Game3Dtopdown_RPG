@@ -55,6 +55,8 @@ public:
 	virtual int32 BuffStateIndex() { return -1; }
 	virtual FName GetAttachedBoneName() { return HeroBuffInfo.AttachedBoneName; }
 
+	FString GetBuffTextInfo() { return BuffInfoText; }
+
 protected:
 	void SetBuffInfoText();
 	void UpdateBuffInfo();

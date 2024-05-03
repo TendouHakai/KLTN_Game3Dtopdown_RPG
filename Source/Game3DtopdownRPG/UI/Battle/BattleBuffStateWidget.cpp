@@ -10,6 +10,7 @@
 #include "Game3DtopdownRPG/Battle/Buff/BaseBuff.h"
 #include "Game3DtopdownRPG/Battle/Buff/BaseDebuff.h"
 #include "Game3DtopdownRPG/Battle/Buff/BuffControllerComponent.h"
+#include "BattleBuffInfo.h"
 
 UBattleBuffStateWidget::UBattleBuffStateWidget() : BattleCharacter(nullptr), PassiveBuffCount(0)
 {
@@ -36,9 +37,13 @@ bool UBattleBuffStateWidget::Initialize()
 	return IsInitialized;
 }
 
-void UBattleBuffStateWidget::SetBattleInfoContainer()
+void UBattleBuffStateWidget::SetBattleInfoContainer(UBattleBuffInfo* BattleBuffInfo)
 {
-
+	for (int i = 0; i < BuffStateComponentArray.Num(); ++i)
+	{
+		if (BuffStateComponentArray[i] != nullptr)
+			BuffStateComponentArray[i]->AddSelectCallBack(BattleBuffInfo, &UBattleBuffInfo::ShowBuffInfo);
+	}
 }
 
 void UBattleBuffStateWidget::SetBattleCharacter(AActor* Actor)

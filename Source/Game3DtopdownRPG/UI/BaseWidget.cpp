@@ -2,6 +2,9 @@
 
 
 #include "BaseWidget.h"
+#include "Blueprint/WidgetBlueprintGeneratedClass.h"
+#include "Animation/WidgetAnimation.h"
+#include "MovieScene.h"
 
 UBaseWidget::UBaseWidget(const FObjectInitializer& objectInitializer)
 	: Super(objectInitializer)
@@ -50,4 +53,19 @@ void UBaseWidget::Update()
 
 void UBaseWidget::OnInitialize_Implementation()
 {
+}
+
+UWidgetAnimation* UBaseWidget::GetWidgetAnimation(const FString& InAnimationName)
+{
+	if (UWidgetBlueprintGeneratedClass* BGClass = Cast<UWidgetBlueprintGeneratedClass>(GetClass()))
+	{
+		for (UWidgetAnimation* Animation : BGClass->Animations)
+		{
+			if (Animation->MovieScene->GetName() == InAnimationName)
+				return Animation;
+		}
+	}
+
+	bValidWidget = false;
+	return nullptr;
 }
