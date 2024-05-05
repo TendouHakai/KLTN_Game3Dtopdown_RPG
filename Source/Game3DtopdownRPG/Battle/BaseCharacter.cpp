@@ -6,7 +6,7 @@
 #include "Buff/BuffControllerComponent.h"
 
 // Sets default values
-ABaseCharacter::ABaseCharacter()
+ABaseCharacter::ABaseCharacter() : HeroID(1), Level(1)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -80,6 +80,9 @@ bool ABaseCharacter::GetEnemyTeam(ECharTeam& OutEnemyTeam)
 
 bool ABaseCharacter::IsCharacterDamageable()
 {
+	if (false == IsCharacterAlive())
+		return false;
+
 	if (false == IsValid(SkeletalMesh))
 		return false;
 

@@ -42,19 +42,19 @@ struct FCharacterParam
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) float PhysicDamage;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) float MagicDamage;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) float HP;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) float Def;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) float MagicDef;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) float AttackSpeedRate;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) float MovementSpeedRate;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) float ReduceCoolDownRatio;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) float CriticalRatio;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) float HealHP;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) float PierceDef;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) float PierceMagicDef;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) float DebuffResistanceRatio;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float PhysicDamage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float MagicDamage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float HP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float Def;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float MagicDef;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float AttackSpeedRate;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float MovementSpeedRate;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float ReduceCoolDownRatio;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float CriticalRatio;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float HealHP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float PierceDef;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float PierceMagicDef;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float DebuffResistanceRatio;
 };
 
 
@@ -65,6 +65,7 @@ struct FHeroRecord : public FTableRowBase
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FCharacterParam BaseParam;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 HeroLevParamID;
 };
 
 USTRUCT(BlueprintType)
@@ -76,6 +77,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) float SumExp;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) float NextExp;
 };
+
+// note huong phat trien nhan vat: Knight: 1, Warrior: 2, Archer: 3, Mage: 4
 
 USTRUCT(BlueprintType)
 struct FHeroParamLevelRecord : public FTableRowBase

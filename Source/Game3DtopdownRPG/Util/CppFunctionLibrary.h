@@ -8,6 +8,7 @@
 #include "Managers/TableMgr.h"
 
 #include "UObject/NoExportTypes.h"
+#include "Game3DtopdownRPG/DataTable/HeroTable.h"
 #include "CppFunctionLibrary.generated.h"
 
 /**
@@ -28,4 +29,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "CppFunctionLibrary")
 	static UObject* GetDefaultObject(TSubclassOf<UObject> ObjectClass);
+
+	// Character Param
+	UFUNCTION(BlueprintCallable, Category = "CppFunctionLibrary")
+	static FCharacterParam GetHeroParamLevel(const FCharacterParam& HeropramBase, const FCharacterParam& HeroparamUpgrade, int32 Lev);
 };

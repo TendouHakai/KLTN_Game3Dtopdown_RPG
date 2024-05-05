@@ -22,6 +22,7 @@ void UBuffStateComponent::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 
 	USlateBlueprintLibrary::LocalToViewport(GetWorld(), MyGeometry, FVector2D::ZeroVector, PixelPosition, ViewPortPosition);
 	//ViewPortPosition = USlateBlueprintLibrary::LocalToAbsolute(MyGeometry, FVector2D::ZeroVector);
+	LocalSize = USlateBlueprintLibrary::GetLocalSize(MyGeometry);
 }
 
 void UBuffStateComponent::CacheOwnUI()

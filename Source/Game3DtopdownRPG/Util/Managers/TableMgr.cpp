@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "TableMgr.h"
@@ -8,12 +8,17 @@
 #include "Game3DtopdownRPG/RPGGameInstance.h"
 #include "UObject/ConstructorHelpers.h"
 
+#include "Game3DtopdownRPG/DataTable/ItemTable.h"
+
 void UTableMgr::Init()
 {
 	Super::Init();
 
 	HeroInfoTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Hero/HeroTable.HeroTable"));
+	HeroLevTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Hero/HeroLevTable.HeroLevTable"));
+	HeroLevParamTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Hero/HeroParamLevTable.HeroParamLevTable"));
 	BuffInfoTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Buff/BuffInfoTable.BuffInfoTable"));
+	ItemInfoTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Item/ItemInfoTable.ItemInfoTable"));
 }
 
 void UTableMgr::EndPlay()
@@ -28,4 +33,16 @@ void UTableMgr::Tick()
 void UTableMgr::Destroy()
 {
 	Super::Destroy();
+}
+
+FItemInfoRecord* UTableMgr::GetItemInfoRecord(FName Index)
+{
+	if (nullptr == ItemInfoTable)
+		return nullptr;
+
+	FItemInfoRecord* ItemInfoRecord = ItemInfoTable->FindRow<FItemInfoRecord>(Index, FString(""));
+
+	if (nullptr == ItemInfoRecord) return nullptr;
+
+	return ItemInfoRecord;
 }

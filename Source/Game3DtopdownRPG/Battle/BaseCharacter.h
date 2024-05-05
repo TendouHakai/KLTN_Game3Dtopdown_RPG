@@ -7,6 +7,7 @@
 #include "HitFreezer.h"
 #include "Game3DtopdownRPG/Battle/BaseAnimInstance.h"
 #include "BattleStruct.h"
+#include "Game3DtopdownRPG/Define/HeroStruct.h"
 #include "BaseCharacter.generated.h"
 
 class UBuffControllerComponent;
@@ -116,6 +117,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintPure, Category = "Character")
 	EChrAnimState GetAnimState();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintPure, Category = "Character")
+	FHeroInfo GetHeroInfo();
+
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	bool IsValidBuff(const FHeroBuffInfo& HeroBuffInfo);
@@ -130,9 +134,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) UBuffControllerComponent* HeroBuffController;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") FName HeroID;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") uint8 Level;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") uint8 CurExp;	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") int32 HeroID;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") int32 Level;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float AttackSpeedRate;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float MovementSpeedRate;

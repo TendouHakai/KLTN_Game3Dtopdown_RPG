@@ -46,6 +46,7 @@ public:
 	FString GetBuffTextInfo() { return BuffInfoText; }
 
 	FVector2D GetViewPortPosition() { return ViewPortPosition; }
+	FVector2D GetLocalSize() { return LocalSize; }
 
 protected:
 	bool IsTimeShowException(UBaseBuff* BaseBuff);

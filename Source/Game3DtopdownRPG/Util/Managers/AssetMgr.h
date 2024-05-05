@@ -26,6 +26,7 @@ enum class EGameTextureType : uint8
 {
 	None,
 	Buff,
+	Item,
 	Max,
 };
 

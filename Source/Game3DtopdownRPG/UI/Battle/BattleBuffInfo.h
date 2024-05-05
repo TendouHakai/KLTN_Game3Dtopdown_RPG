@@ -19,16 +19,11 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void Destroy(UUIBaseMgr* InUIManager);
-
 	UFUNCTION()	void ShowBuffInfo(UBuffStateComponent* BuffStateComponent, bool bShow);
-
 	UFUNCTION()	void HideBuffInfo();
-
 protected:
 	UTextBlock* bufftextinfo;
 	UWidgetAnimation* AnimHide;
-
-	FVector2D position;
 
 	FTimerHandle HideTimer;
 };

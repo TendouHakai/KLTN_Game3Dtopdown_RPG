@@ -5,9 +5,10 @@
 #include "CoreMinimal.h"
 #include "../Singleton/Singleton.h"
 #include "Engine/DataTable.h"
+
 #include "TableMgr.generated.h"
 
-
+struct FItemInfoRecord;
 
 UCLASS()
 class GAME3DTOPDOWNRPG_API UTableMgr : public USingleton
@@ -24,6 +25,18 @@ public:
 	virtual void Destroy() override;
 
 public:
+	// Item
+	FItemInfoRecord* GetItemInfoRecord(FName Index);
+
+public:
+	// Hero
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TableMgr") UDataTable* HeroInfoTable;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TableMgr") UDataTable* HeroLevTable;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TableMgr") UDataTable* HeroLevParamTable;
+
+	// Buff
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TableMgr") UDataTable* BuffInfoTable;
+
+	// Item
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TableMgr") UDataTable* ItemInfoTable;
 };

@@ -23,11 +23,6 @@ void UBattleBuffInfo::NativeConstruct()
 void UBattleBuffInfo::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-
-	FVector2D PixelPosition;
-	FVector2D ViewPortPosition;
-
-	USlateBlueprintLibrary::LocalToViewport(GetWorld(), MyGeometry, FVector2D::ZeroVector, PixelPosition, ViewPortPosition);
 }
 
 void UBattleBuffInfo::Destroy(UUIBaseMgr* InUIManager)
@@ -40,15 +35,19 @@ void UBattleBuffInfo::ShowBuffInfo(UBuffStateComponent* BuffStateComponent, bool
 	if(HideTimer.IsValid())
 		GetRPGGameInstance()->GetWorld()->GetTimerManager().ClearTimer(HideTimer);
 	
-	//if (false == bShow || nullptr == BuffStateComponent)
-	//{
-	//	PlayAnimation(AnimHide);
-	//	GetRPGGameInstance()->GetWorld()->GetTimerManager().SetTimer(HideTimer, this, &UBattleBuffInfo::HideBuffInfo, 1.0f);
-	//	return;
-	//}
-	position = BuffStateComponent->GetViewPortPosition();
+	if (false == bShow || nullptr == BuffStateComponent)
+	{
+		PlayAnimation(AnimHide);
+		GetRPGGameInstance()->GetWorld()->GetTimerManager().SetTimer(HideTimer, this, &UBattleBuffInfo::HideBuffInfo, 1.0f);
+		return;
+	}
+	FVector2D Buffposition = BuffStateComponent->GetViewPortPosition();
+	FVector2D Bufflocalsize = BuffStateComponent->GetLocalSize();
+	
+	float x = Buffposition.X + Bufflocalsize.X;
+	float y = Buffposition.Y;
 
-	SetPositionInViewport(position);
+	SetRenderTranslation(FVector2D(x,y));
 
 	bufftextinfo->SetText(FText::FromString(BuffStateComponent->GetBuffTextInfo()));
 
