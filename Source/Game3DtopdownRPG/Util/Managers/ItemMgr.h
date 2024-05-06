@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "../Singleton/Singleton.h"
+#include "Game3DtopdownRPG/Define/ItemStruct.h"
 #include "ItemMgr.generated.h"
 
 struct FItemInfoRecord;
-struct FGameItemInfo;
 
 UCLASS()
 class GAME3DTOPDOWNRPG_API UItemMgr : public USingleton
@@ -21,6 +21,8 @@ public:
 	FItemInfoRecord* GetItemInfoRecord(FName Index);
 	TArray<FGameItemInfo> GetItemArray();
 
+	FString GetItemGradeText(EItemGrade grade);
+	FString GetDescriptionItem(const FItemInfoRecord& ItemInfoRecord);
 protected:
 	TArray<FGameItemInfo> m_ItemArray;
 };

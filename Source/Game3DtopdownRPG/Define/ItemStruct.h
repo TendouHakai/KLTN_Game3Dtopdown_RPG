@@ -24,11 +24,11 @@ enum class EItemType : uint8
 UENUM(BlueprintType)
 enum class EItemGrade : uint8
 {
-	Normal,		//노멀.
-	High,		//고급.
-	Rare,		//레어.
-	Hero,		//장수.
-	Legend,		//전설.
+	Normal,		
+	High,		
+	Rare,		
+	Hero,		
+	Legend,	
 	Max
 };
 
@@ -45,6 +45,5 @@ public:
 	{
 		m_ItemCount = ItemCount;
 		m_ItemRecKey = ItemRecKey;
-		m_ItemGrade = ItemGrade;
 	}
 };

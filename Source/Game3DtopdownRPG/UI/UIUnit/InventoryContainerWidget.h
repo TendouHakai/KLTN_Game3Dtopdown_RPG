@@ -9,11 +9,11 @@
 #include "Components/TextBlock.h"
 #include "Components/Overlay.h"
 #include "Game3DtopdownRPG/Define/ItemStruct.h"
-
 #include "InventoryContainerWidget.generated.h"
 
-struct FItemInfoRecord;
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FContainerTap_DelegateEx, int32, Output, UInventoryContainerWidget*, Output02);
 
+struct FItemInfoRecord;
 
 UCLASS()
 class GAME3DTOPDOWNRPG_API UInventoryContainerWidget : public UUIUnitWidget
@@ -26,16 +26,36 @@ public:
 
 	virtual void SetInfo(FGameItemInfo* GameItemInfo, FItemInfoRecord* ItemInfoRecord);
 	virtual void SetInfo(FGameItemInfo* GameItemInfo);
+	virtual void SetInfo(UInventoryContainerWidget* InventoryContainerWidget);
 
 	void EmptyUI();
 
 	UFUNCTION(BlueprintCallable)
 	virtual void OnTap();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void OnHover();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void OnUnHover();
+
+	FGameItemInfo* GetGameItemInfo() { return gameItemInfo; }
+
+	template<class T>
+	void SetButtonEventEx(T* owner)
+	{
+		OwnerDelegateEx.BindDynamic(owner, &T::OnTapContainer);
+	}
+
+public:
+	FContainerTap_DelegateEx OwnerDelegateEx;
+
 protected:
 	void SetImageItem(FString ItemName);
 	void SetTextCount(int32 count);
-	void SetFrameBachground(EItemGrade grade);
+	void SetFrameBackground(EItemGrade grade);
+
+	void HideEffect();
 
 protected:
 	UImage* ImageEffect;
@@ -45,6 +65,7 @@ protected:
 	UOverlay* OverlayCount;
 	UTextBlock* TextCount;
 	UWidgetAnimation* SelectAnimation;
+	UWidgetAnimation* ReleaseAnimation;
 
 	FGameItemInfo* gameItemInfo;
 	FItemInfoRecord* itemInfoRecord;

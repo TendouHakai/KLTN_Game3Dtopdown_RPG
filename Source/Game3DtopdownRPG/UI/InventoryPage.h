@@ -6,6 +6,8 @@
 #include "UIWidget.h"
 #include "Game3DtopdownRPG/Define/ItemStruct.h"
 #include "Components/Image.h"
+#include "Components/RichTextBlock.h"
+#include "Components/TextBlock.h"
 #include "InventoryPage.generated.h"
 
 class UInventoryContainerWidget;
@@ -22,9 +24,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void OnTapTabcategory(EItemCategory category);
 
+	UFUNCTION()
+	virtual void OnTapContainer(int32 rec_key, UInventoryContainerWidget* Container);
+
 protected:
 	void UpdateChildItem(UWidget* Child, int32 ChildDataIdx);
 	bool IsItemInCategory(EItemCategory category);
+
+	void UpdateDecriptionItem();
 
 protected:
 	TArray<UImage*> TabImagesForcus;
@@ -34,4 +41,11 @@ protected:
 
 	UInventoryContainerWidget* CurrentSelectedItem;
 	UScrollWidget* ItemContainer_SCroll;
+
+	// Descruption Item Window
+	UInventoryContainerWidget* ItemContainer;
+	UTextBlock* textGradeItem;
+	UTextBlock* textNameItem;
+	URichTextBlock* textDecriptionItem;
+	UTextBlock* textPriceItem;
 };

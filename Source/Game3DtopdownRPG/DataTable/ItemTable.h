@@ -21,10 +21,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) EItemType ItemType;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) EItemGrade ItemGrape;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 MaxCount;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) int64 SaleGold;	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) int64 SellGold;	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int64 BuyGold;	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) bool CanMake;	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString ItemIcon;	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString Description;	
 };
 
 USTRUCT(BlueprintType)

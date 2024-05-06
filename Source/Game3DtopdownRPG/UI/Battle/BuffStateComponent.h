@@ -53,7 +53,6 @@ protected:
 	bool IsBlinkException(UBaseBuff* BaseBuff);
 
 	virtual void SetBuffIcon(FString name);
-
 protected:
 	bool bShowBuffWidget;
 

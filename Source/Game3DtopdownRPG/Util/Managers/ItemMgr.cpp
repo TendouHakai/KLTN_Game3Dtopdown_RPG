@@ -13,26 +13,25 @@ void UItemMgr::Init()
 
 	m_ItemArray.Empty();
 	bool bSuccess = true;
-	USavedInventoryConfig* config = USavedInventoryConfig::LoadInventoryCfgFromFile(bSuccess);
-	if (nullptr != config && true == bSuccess)
-	{
-		m_ItemArray = config->m_ItemArray;
-	}
-
-	//FGameItemInfo info;
-	//info.m_ItemRecKey = 101;
-	//info.m_ItemCount = 100;
-	//info.m_ItemGrade = 1;
-
-	//m_ItemArray.Add(info);
-
 	//USavedInventoryConfig* config = USavedInventoryConfig::LoadInventoryCfgFromFile(bSuccess);
-	//if (nullptr != config)
+	//if (nullptr != config && true == bSuccess)
 	//{
-	//	config->m_ItemArray = this->m_ItemArray;
+	//	m_ItemArray = config->m_ItemArray;
 	//}
 
-	//USavedInventoryConfig::SaveInventoryCfgToFile(config);
+	FGameItemInfo info;
+	info.m_ItemRecKey = 101;
+	info.m_ItemCount = 100;
+
+	m_ItemArray.Add(info);
+
+	USavedInventoryConfig* config = USavedInventoryConfig::LoadInventoryCfgFromFile(bSuccess);
+	if (nullptr != config)
+	{
+		config->m_ItemArray = this->m_ItemArray;
+	}
+
+	USavedInventoryConfig::SaveInventoryCfgToFile(config);
 }
 
 void UItemMgr::EndPlay()
@@ -65,4 +64,29 @@ FItemInfoRecord* UItemMgr::GetItemInfoRecord(FName Index)
 TArray<FGameItemInfo> UItemMgr::GetItemArray()
 {
 	return m_ItemArray;
+}
+
+FString UItemMgr::GetItemGradeText(EItemGrade grade)
+{
+	switch (grade)
+	{
+	case EItemGrade::Normal:
+		return FString("Normal");
+	case EItemGrade::High:
+		return FString("High");
+	case EItemGrade::Rare:
+		return FString("Rare");
+	case EItemGrade::Hero:
+		return FString("Hero");
+	case EItemGrade::Legend:
+		return FString("Legend");
+	case EItemGrade::Max:
+		break;
+	}
+	return FString("");
+}
+
+FString UItemMgr::GetDescriptionItem(const FItemInfoRecord& ItemInfoRecord)
+{
+	return ItemInfoRecord.Description;
 }

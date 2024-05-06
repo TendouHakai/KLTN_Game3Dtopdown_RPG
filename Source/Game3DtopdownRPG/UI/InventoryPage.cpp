@@ -29,6 +29,12 @@ void UInventoryPage::CacheOwnUI()
 		}
 	}
 
+	ItemContainer = GetOwnUI<UInventoryContainerWidget>(TEXT("InventoryContainerWidget_Des"));
+	textGradeItem = GetOwnUI<UTextBlock>(TEXT("TextBlock_DesGradeItem"));
+	textNameItem = GetOwnUI<UTextBlock>(TEXT("TextBlock_DesNameItem"));
+	textDecriptionItem = GetOwnUI<URichTextBlock>(TEXT("RichTextBlock_DesDescriptionItem"));
+	textPriceItem = GetOwnUI<UTextBlock>(TEXT("TextBlock_DesPriceItem"));
+
 	Update();
 }
 
@@ -63,6 +69,14 @@ void UInventoryPage::OnTapTabcategory(EItemCategory category)
 	Update();
 }
 
+void UInventoryPage::OnTapContainer(int32 rec_key, UInventoryContainerWidget* Container)
+{
+	if (nullptr == Container) return;
+	CurrentSelectedItem = Container;
+
+	UpdateDecriptionItem();
+}
+
 void UInventoryPage::UpdateChildItem(UWidget* Child, int32 ChildDataIdx)
 {
 	UInventoryContainerWidget* InventoryContainer = Cast<UInventoryContainerWidget>(Child);
@@ -73,6 +87,8 @@ void UInventoryPage::UpdateChildItem(UWidget* Child, int32 ChildDataIdx)
 	FGameItemInfo* info = m_CurrentItemArray[ChildDataIdx];
 
 	InventoryContainer->SetInfo(info);
+	//InventoryContainer->OwnerDelegateEx.Unbind();
+	InventoryContainer->SetButtonEventEx(this);
 }
 
 bool UInventoryPage::IsItemInCategory(EItemCategory category)
@@ -80,4 +96,20 @@ bool UInventoryPage::IsItemInCategory(EItemCategory category)
 	if (m_CurItemType == category || m_CurItemType == EItemCategory::All)
 		return true;
 	return false;
+}
+
+void UInventoryPage::UpdateDecriptionItem()
+{
+	if (nullptr == CurrentSelectedItem) return;
+	
+	ItemContainer->SetInfo(CurrentSelectedItem);
+
+	FItemInfoRecord* iteminfo = GetMgr(UItemMgr)->GetItemInfoRecord(FName(FString::FromInt(CurrentSelectedItem->GetGameItemInfo()->m_ItemRecKey)));
+	
+	if (nullptr == textGradeItem || nullptr == textNameItem || nullptr == textDecriptionItem || nullptr == textPriceItem) return;
+
+	textGradeItem->SetText(FText::FromString(GetMgr(UItemMgr)->GetItemGradeText(iteminfo->ItemGrape)));
+	textNameItem->SetText(FText::FromString(iteminfo->DesName));
+	textDecriptionItem->SetText(FText::FromString(GetMgr(UItemMgr)->GetDescriptionItem(*iteminfo)));
+	textPriceItem->SetText(FText::AsNumber(iteminfo->SellGold));
 }
