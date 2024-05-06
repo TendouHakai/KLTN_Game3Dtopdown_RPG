@@ -3,6 +3,7 @@
 #include "Game3DtopdownRPG/Game3DtopdownRPG.h"
 #include "Kismet/GameplayStatics.h"
 #include "Game3DtopdownRPG/Util/Managers/UIBaseMgr.h"
+#include "Game3DtopdownRPG/RPGGameInstance.h"
 
 
 void ABaseGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
@@ -18,6 +19,13 @@ void ABaseGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	InitInitialUI();
+}
+
+void ABaseGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	GetRPGGameInstance()->EndPlayMgr();
 }
 
 void ABaseGameMode::InitInitialUI()

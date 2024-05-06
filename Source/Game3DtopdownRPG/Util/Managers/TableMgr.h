@@ -25,10 +25,6 @@ public:
 	virtual void Destroy() override;
 
 public:
-	// Item
-	FItemInfoRecord* GetItemInfoRecord(FName Index);
-
-public:
 	// Hero
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TableMgr") UDataTable* HeroInfoTable;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TableMgr") UDataTable* HeroLevTable;

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Game3DtopdownRPG/Define/ItemStruct.h"
 #include "ItemTable.generated.h"
 /**
  * 
@@ -16,9 +17,9 @@ struct FItemInfoRecord : public FTableRowBase
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString DesName;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 Category;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 ItemType;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 ItemGrape;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) EItemCategory Category;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) EItemType ItemType;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) EItemGrade ItemGrape;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 MaxCount;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int64 SaleGold;	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int64 BuyGold;	

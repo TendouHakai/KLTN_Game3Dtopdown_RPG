@@ -16,6 +16,9 @@ enum class EUIName : uint8
 	BattleBossProgessWidget,
 	BattleFailWidget,
 	BattleVictoryWidget,
+	
+	// Inventory
+	InventoryPage,
 	Max,
 };
 

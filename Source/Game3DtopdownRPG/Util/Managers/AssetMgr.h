@@ -43,6 +43,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Asset Manager")
 	UTexture2D* LoadTexture2D(const FString& Name, EGameTextureType Type = EGameTextureType::None);
 
+	UFUNCTION(BlueprintCallable, Category = "Asset Manager")
+	UTexture2D* LoadTexture2DFromPath(const FString& PathName);
+
 private:
 	UPROPERTY(Config)
 	TArray<FDerivedWidgetPath> DerivedWidgetPaths;

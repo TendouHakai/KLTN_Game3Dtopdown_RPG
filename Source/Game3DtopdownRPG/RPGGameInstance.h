@@ -25,6 +25,7 @@ public:
 
 	UObject* GetMgrByClass(UClass* MgrClass);
 
+	void EndPlayMgr();
 private:
 	template<class T>
 	void CreateInstance();

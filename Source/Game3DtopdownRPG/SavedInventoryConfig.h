@@ -23,7 +23,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SavedUserConfig")
 	static USavedInventoryConfig* LoadInventoryCfgFromFile(bool& bSuccess);
 
-
-protected:
-	FItemInfo iteminfo;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FGameItemInfo> m_ItemArray;
 };

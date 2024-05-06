@@ -21,12 +21,22 @@ enum class EItemType : uint8
 	Max
 };
 
+UENUM(BlueprintType)
+enum class EItemGrade : uint8
+{
+	Normal,		//노멀.
+	High,		//고급.
+	Rare,		//레어.
+	Hero,		//장수.
+	Legend,		//전설.
+	Max
+};
+
 USTRUCT(BlueprintType)
 struct FGameItemInfo
 {
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)	int32 m_ItemCount;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)	int32 m_ItemRecKey;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)	uint8 m_ItemGrade;
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)	int64 m_RemainTime;
 
 	GENERATED_USTRUCT_BODY()

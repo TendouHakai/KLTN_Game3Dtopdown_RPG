@@ -5,6 +5,7 @@
 #include "Util/Managers/UIBaseMgr.h"
 #include "Util/Managers/TableMgr.h"
 #include "Util/Managers/HeroBuffMgr.h"
+#include "Util/Managers/ItemMgr.h"
 
 URPGGameInstance* URPGGameInstance::_instance = nullptr;
 
@@ -18,11 +19,20 @@ void URPGGameInstance::Init()
 	CreateInstance<UUIBaseMgr>();
 	CreateInstance<UTableMgr>();
 	CreateInstance<UHeroBuffMgr>();
+	CreateInstance<UItemMgr>();
 }
 
 void URPGGameInstance::Shutdown()
 {
 	Super::Shutdown();
+
+	for (auto& entry : map_mgr_) {
+		entry.Value->Destroy();
+		entry.Value = nullptr;
+	}
+	map_mgr_.Empty();
+
+	_instance = nullptr;
 }
 
 UObject* URPGGameInstance::GetMgrByClass(UClass* MgrClass)
@@ -36,6 +46,13 @@ UObject* URPGGameInstance::GetMgrByClass(UClass* MgrClass)
 	}
 
 	return nullptr;
+}
+
+void URPGGameInstance::EndPlayMgr()
+{
+	for (auto& entry : map_mgr_) {
+		entry.Value->EndPlay();
+	}
 }
 
 template<class T>

@@ -3,8 +3,9 @@
 
 #include "ScrollWidget.h"
 #include "Components/GridSlot.h"
+#include "InventoryContainerWidget.h"
 
-UScrollWidget::UScrollWidget(): TotalCol(0), TotalRow(0), CurCol(0), CurRow(0)
+UScrollWidget::UScrollWidget()
 {
 }
 
@@ -12,60 +13,65 @@ void UScrollWidget::CacheOwnUI()
 {
 	Super::CacheOwnUI();
 
-	GridContents = GetOwnUI<UGridPanel>(TEXT("GridPanel_Contents"));
-}
+    GridContents = GetOwnUI<UGridPanel>(TEXT("GridPanel_Contents"));
+    // create visible all child in grid content
+    if (nullptr == GridContents) return;
+    if (nullptr == ChildBP) return;
 
-void UScrollWidget::AddWidgets(TArray<UBaseWidget*> widgets)
-{
-    if (widgets.Num() <= 0) return;
-    if (nullptr == GridContents)
+    for (int indexchild = 0; indexchild < VisibleRowCnt * ChildCntPerRow; ++indexchild)
     {
-        return;
-    }
+        UUserWidget* ChildWidget = CreateWidget<UUserWidget>(GetWorld(), ChildBP);
+        UUIUnitWidget* unitWidget = Cast<UUIUnitWidget>(ChildWidget);
+        if (nullptr != unitWidget) unitWidget->InitUnit(GameMode);
 
-    for (int i = 0; i < widgets.Num(); ++i)
-    {
-        if (nullptr == widgets[i]) continue;
-        UGridSlot* GridSlot = GridContents->AddChildToGrid(widgets[i]);
-        if (nullptr != GridSlot)
-        {
-            GridSlot->SetColumn(CurCol);
-            GridSlot->SetRow(CurRow);
-        }
+        UGridSlot* GridSlot = GridContents->AddChildToGrid(ChildWidget);
 
-        ++CurCol;
-        if (CurCol >= TotalCol) 
-        {
-            CurCol = 0;
-            CurRow += 1;
-        }
+        int32 ColumnIdx = indexchild % ChildCntPerRow;
+        int32 RowIdx = indexchild / ChildCntPerRow;
+
+        //if (Orientation == EOrientation::Orient_Horizontal)
+        //    Swap(ColumnIdx, RowIdx);
+
+        GridSlot->SetColumn(ColumnIdx);
+        GridSlot->SetRow(RowIdx);
     }
 }
 
-void UScrollWidget::AddWidget(UBaseWidget* widget)
+void UScrollWidget::NativeConstruct()
 {
-    if (nullptr == GridContents || nullptr == widget)
-    {
-        return;
-    }
-
-    UGridSlot* GridSlot = GridContents->AddChildToGrid(widget);
-    if (nullptr != GridSlot)
-    {
-        GridSlot->SetColumn(CurCol);
-        GridSlot->SetRow(CurRow);
-    }
-
-    ++CurCol;
-    if (CurCol >= TotalCol)
-    {
-        CurCol = 0;
-        CurRow += 1;
-    }
+    Super::NativeConstruct();
 }
 
 void UScrollWidget::ClearAll()
 {
     if (nullptr == GridContents)
         GridContents->ClearChildren();
+}
+
+void UScrollWidget::SetChildCount(int32 InChildCount)
+{
+    this->childcount = InChildCount;
+    Update();
+}
+
+void UScrollWidget::Update()
+{
+    Super::Update();
+
+    // update children
+    for (int indexchild = 0; indexchild < GridContents->GetChildrenCount(); ++indexchild)
+    {
+        UWidget* ChildWidget = GridContents->GetChildAt(indexchild);
+        //int32 ChildDataIdx = HeadIdx + indexchild;
+
+        if (childcount <= indexchild)
+        {
+            UInventoryContainerWidget* inventoryContainer = Cast<UInventoryContainerWidget>(ChildWidget);
+            if (nullptr != inventoryContainer) inventoryContainer->EmptyUI();
+            continue;
+        }
+
+        ChildWidget->SetVisibility(ESlateVisibility::Visible);
+        ChildUpdateEvent.ExecuteIfBound(ChildWidget, indexchild);
+    }
 }

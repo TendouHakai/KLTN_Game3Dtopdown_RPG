@@ -34,15 +34,3 @@ void UTableMgr::Destroy()
 {
 	Super::Destroy();
 }
-
-FItemInfoRecord* UTableMgr::GetItemInfoRecord(FName Index)
-{
-	if (nullptr == ItemInfoTable)
-		return nullptr;
-
-	FItemInfoRecord* ItemInfoRecord = ItemInfoTable->FindRow<FItemInfoRecord>(Index, FString(""));
-
-	if (nullptr == ItemInfoRecord) return nullptr;
-
-	return ItemInfoRecord;
-}

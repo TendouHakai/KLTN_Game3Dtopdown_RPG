@@ -69,3 +69,13 @@ UTexture2D* UAssetMgr::LoadTexture2D(const FString& Name, EGameTextureType Type)
 
 	return tex;
 }
+
+UTexture2D* UAssetMgr::LoadTexture2DFromPath(const FString& PathName)
+{
+	if (PathName.IsEmpty()) return nullptr;
+
+	UTexture2D* tex = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL, *(PathName)));
+
+	if (nullptr == tex) return nullptr;
+	return tex;
+}
