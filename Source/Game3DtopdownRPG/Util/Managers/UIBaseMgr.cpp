@@ -6,6 +6,7 @@
 #include "AssetMgr.h"
 #include "Game3DtopdownRPG/RPGGameInstance.h"
 #include "Game3DtopdownRPG/UI/WaitingWidget/LoadingWidget.h"
+#include "Game3DtopdownRPG/UI/MsgBox/UIBaseMsgBox.h"
 
 void InitWidgetData(const TArray<FDerivedWidgetPath>& DerivedWidgetPaths,
 	TMap<uint16, FUIWidgetData>& WidgetDatas,
@@ -198,6 +199,59 @@ void UUIBaseMgr::CloseAllUI()
 
 	ScenesStack.Empty();
 	CurSceneId = INVALID_WIDGET_ID;
+}
+
+class UUIBaseMsgBox* UUIBaseMgr::OpenMsgBox(EUIMsgBoxType MsgBoxType, const FString& Desc,
+	UObject* Owner /*= nullptr*/, const FName& LeftTapFunctionName /*= TEXT("")*/, const FName& RightTapFunctionName /*= TEXT("")*/, 
+	const FString& LeftBtnText /*= TEXT("")*/, const FString& RightBtnText /*= TEXT("")*/, bool bAddWaitMsgBoxStack /*= true*/, bool bIsDisableBackBtnExit /*= false*/)
+{
+	if (5 < MsgBoxStack.Num())
+	{
+		return nullptr;
+	}
+
+	uint16 UIName = (uint16)EUIName::None;
+	switch (MsgBoxType)
+	{
+	case EUIMsgBoxType::None:
+		return nullptr;
+	case EUIMsgBoxType::Basic:
+		UIName = (uint16)EUIName::MsgBoxBasic;
+		break;
+	default:
+		return nullptr;
+	}
+
+	auto* WidgetData = GetWidgetData(UIName);
+	if (!WidgetData)
+	{
+		return nullptr;
+	}
+
+	UClass* LoadClass = GetMgr(UAssetMgr)->FastLoadClass(WidgetData->WidgetFullPath, UUIWidget::StaticClass(), GetRPGGameInstance());
+	UUIBaseMsgBox* MsgBox = CreateWidget<UUIBaseMsgBox>(GetRPGGameInstance(), LoadClass);
+	if (!MsgBox)
+	{
+		return nullptr;
+	}
+
+	MsgBox->SetWidgetId(/*(uint16)*/UIName);
+	MsgBox->Init(CurGameMode);
+	MsgBox->AddToViewport((int32)WidgetData->Layer);
+	//MsgBox->SetMsgBoxType(MsgBoxType);
+	MsgBox->SetDesc(Desc);
+
+	return MsgBox;
+}
+
+void UUIBaseMgr::CloseMsgBox(FString Name)
+{
+
+}
+
+void UUIBaseMgr::CloseAllMsgBox()
+{
+
 }
 
 void UUIBaseMgr::_OpenUI(UUIWidget* Widget, FUIWidgetData* WidgetData, bool Immediately, bool bPreScene)

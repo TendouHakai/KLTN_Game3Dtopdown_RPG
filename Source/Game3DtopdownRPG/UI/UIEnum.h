@@ -19,6 +19,10 @@ enum class EUIName : uint8
 	
 	// Inventory
 	InventoryPage,
+	InventoryItemSellPopup,
+
+	// MsgBox
+	MsgBoxBasic,
 	Max,
 };
 
@@ -28,5 +32,6 @@ enum class EUILayer : uint8
 	None			UMETA(DisplayName = "None"),
 	Scene			UMETA(DisplayName = "Scene"),
 	Popup			UMETA(DisplayName = "Popup"),
+	MsgBox			UMETA(DisplayName = "MsgBox"),
 	Max,
 };

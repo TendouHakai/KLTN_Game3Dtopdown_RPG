@@ -8,6 +8,9 @@
 #include "Game3DtopdownRPG/Util/Managers/ItemMgr.h"
 #include "Game3DtopdownRPG/GlobalGetter.h"
 
+#include "UIUnit/UIBaseButton.h"
+#include "Popup/Inventory_ItemSell_Popup.h"
+
 void UInventoryPage::CacheOwnUI()
 {
 	Super::CacheOwnUI();
@@ -30,10 +33,18 @@ void UInventoryPage::CacheOwnUI()
 	}
 
 	ItemContainer = GetOwnUI<UInventoryContainerWidget>(TEXT("InventoryContainerWidget_Des"));
+	if (nullptr == ItemContainer) ItemContainer->IsInteract = false;
 	textGradeItem = GetOwnUI<UTextBlock>(TEXT("TextBlock_DesGradeItem"));
 	textNameItem = GetOwnUI<UTextBlock>(TEXT("TextBlock_DesNameItem"));
 	textDecriptionItem = GetOwnUI<URichTextBlock>(TEXT("RichTextBlock_DesDescriptionItem"));
 	textPriceItem = GetOwnUI<UTextBlock>(TEXT("TextBlock_DesPriceItem"));
+
+	SellButton = GetOwnUI<UUIBaseButton>(TEXT("UISquareButton_Sell"));
+	if (nullptr != SellButton) SellButton->OnClicked_Delegate.BindUFunction(this, FName(TEXT("OnTapSellItem")));
+	UseButton = GetOwnUI<UUIBaseButton>(TEXT("UISquareButton_Use"));
+	if (nullptr != UseButton) UseButton->OnClicked_Delegate.BindUFunction(this, FName(TEXT("OnTapUseItem")));
+
+	vertical_DesItem = GetOwnUI<UVerticalBox>(TEXT("VerticalBox_DescriptionItem"));
 
 	Update();
 }
@@ -42,12 +53,13 @@ void UInventoryPage::Update()
 {
 	Super::Update();
 	m_CurrentItemArray.Empty();
+	setCurrentSelectedItem(nullptr);
 
 	for (FGameItemInfo iteminfo : GetMgr(UItemMgr)->GetItemArray())
 	{
 		if (IsItemInCategory(GetMgr(UItemMgr)->GetItemInfoRecord(FName(FString::FromInt(iteminfo.m_ItemRecKey)))->Category))
 		{
-			m_CurrentItemArray.Emplace(&iteminfo);
+			m_CurrentItemArray.Emplace(iteminfo);
 		}
 	}
 
@@ -72,9 +84,29 @@ void UInventoryPage::OnTapTabcategory(EItemCategory category)
 void UInventoryPage::OnTapContainer(int32 rec_key, UInventoryContainerWidget* Container)
 {
 	if (nullptr == Container) return;
-	CurrentSelectedItem = Container;
+	
+	setCurrentSelectedItem(Container);
+}
 
-	UpdateDecriptionItem();
+void UInventoryPage::OnTapSellItem()
+{
+	UInventory_ItemSell_Popup* SellPopup = Cast<UInventory_ItemSell_Popup>(UIMgr->OpenUI(EUIName::InventoryItemSellPopup));
+	if (nullptr != SellPopup)
+		SellPopup->SetInfo(CurrentSelectedItem->GetGameItemInfo());
+}
+
+void UInventoryPage::OnTapUseItem()
+{
+	if (nullptr == CurrentSelectedItem) return;
+	FGameItemInfo gameinfo = CurrentSelectedItem->GetGameItemInfo();
+	FItemInfoRecord* iteminfo = GetMgr(UItemMgr)->GetItemInfoRecord(FName(FString::FromInt(gameinfo.m_ItemRecKey)));
+	if (nullptr == iteminfo)
+		return;
+
+	if (iteminfo->ItemType == EItemType::Max)
+	{
+		UIMgr->OpenMsgBox(EUIMsgBoxType::Basic, FString(TEXT("test message Box")));
+	}
 }
 
 void UInventoryPage::UpdateChildItem(UWidget* Child, int32 ChildDataIdx)
@@ -84,7 +116,7 @@ void UInventoryPage::UpdateChildItem(UWidget* Child, int32 ChildDataIdx)
 	if (nullptr == InventoryContainer) return;
 	if (!m_CurrentItemArray.IsValidIndex(ChildDataIdx)) return;
 
-	FGameItemInfo* info = m_CurrentItemArray[ChildDataIdx];
+	FGameItemInfo info = m_CurrentItemArray[ChildDataIdx];
 
 	InventoryContainer->SetInfo(info);
 	//InventoryContainer->OwnerDelegateEx.Unbind();
@@ -100,11 +132,21 @@ bool UInventoryPage::IsItemInCategory(EItemCategory category)
 
 void UInventoryPage::UpdateDecriptionItem()
 {
-	if (nullptr == CurrentSelectedItem) return;
+	if (nullptr == CurrentSelectedItem)
+	{
+		if (nullptr == vertical_DesItem) return;
+		vertical_DesItem->SetVisibility(ESlateVisibility::Hidden);
+		return;
+	}
+	if (nullptr == vertical_DesItem) return;
+	vertical_DesItem->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	
 	ItemContainer->SetInfo(CurrentSelectedItem);
 
-	FItemInfoRecord* iteminfo = GetMgr(UItemMgr)->GetItemInfoRecord(FName(FString::FromInt(CurrentSelectedItem->GetGameItemInfo()->m_ItemRecKey)));
+	FGameItemInfo gameinfo = CurrentSelectedItem->GetGameItemInfo();
+
+	FItemInfoRecord* iteminfo = GetMgr(UItemMgr)->GetItemInfoRecord(FName(FString::FromInt(gameinfo.m_ItemRecKey)));
+	if (nullptr == iteminfo) return;
 	
 	if (nullptr == textGradeItem || nullptr == textNameItem || nullptr == textDecriptionItem || nullptr == textPriceItem) return;
 
@@ -112,4 +154,10 @@ void UInventoryPage::UpdateDecriptionItem()
 	textNameItem->SetText(FText::FromString(iteminfo->DesName));
 	textDecriptionItem->SetText(FText::FromString(GetMgr(UItemMgr)->GetDescriptionItem(*iteminfo)));
 	textPriceItem->SetText(FText::AsNumber(iteminfo->SellGold));
+}
+
+void UInventoryPage::setCurrentSelectedItem(UInventoryContainerWidget* selectedItem)
+{
+	CurrentSelectedItem = selectedItem;
+	UpdateDecriptionItem();
 }

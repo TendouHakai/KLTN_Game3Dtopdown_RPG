@@ -8,10 +8,12 @@
 #include "Components/Image.h"
 #include "Components/RichTextBlock.h"
 #include "Components/TextBlock.h"
+#include "Components/VerticalBox.h"
 #include "InventoryPage.generated.h"
 
 class UInventoryContainerWidget;
 class UScrollWidget;
+class UUIBaseButton;
 
 UCLASS()
 class GAME3DTOPDOWNRPG_API UInventoryPage : public UUIWidget
@@ -27,25 +29,37 @@ public:
 	UFUNCTION()
 	virtual void OnTapContainer(int32 rec_key, UInventoryContainerWidget* Container);
 
+	UFUNCTION()
+	virtual void OnTapSellItem();
+
+	UFUNCTION()
+	virtual void OnTapUseItem();
+
 protected:
 	void UpdateChildItem(UWidget* Child, int32 ChildDataIdx);
 	bool IsItemInCategory(EItemCategory category);
 
 	void UpdateDecriptionItem();
 
+	void setCurrentSelectedItem(UInventoryContainerWidget* selectedItem);
+
 protected:
 	TArray<UImage*> TabImagesForcus;
 
 	EItemCategory m_CurItemType = EItemCategory::All;
-	TArray<FGameItemInfo*> m_CurrentItemArray;
+	TArray<FGameItemInfo> m_CurrentItemArray;
 
 	UInventoryContainerWidget* CurrentSelectedItem;
 	UScrollWidget* ItemContainer_SCroll;
 
-	// Descruption Item Window
+	// Description Item Window
 	UInventoryContainerWidget* ItemContainer;
 	UTextBlock* textGradeItem;
 	UTextBlock* textNameItem;
 	URichTextBlock* textDecriptionItem;
 	UTextBlock* textPriceItem;
+	UUIBaseButton* SellButton;
+	UUIBaseButton* UseButton;
+
+	UVerticalBox* vertical_DesItem;
 };

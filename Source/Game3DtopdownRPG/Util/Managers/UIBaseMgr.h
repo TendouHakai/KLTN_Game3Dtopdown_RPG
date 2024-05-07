@@ -6,6 +6,7 @@
 #include "../Singleton/Singleton.h"
 #include "../../UI/UIWidget.h"
 #include "../../UI/UIEnum.h"
+#include "Game3DtopdownRPG/Define/MsgStruct.h"
 
 #include "UIBaseMgr.generated.h"
 
@@ -203,6 +204,15 @@ public:
 	void CloseScene(bool bBackButton = false);
 
 	void CloseAllUI();
+
+	// Message Box
+	class UUIBaseMsgBox* OpenMsgBox(EUIMsgBoxType MsgBoxType, const FString& Desc,
+		UObject* Owner = nullptr, const FName& LeftTapFunctionName = TEXT(""), const FName& RightTapFunctionName = TEXT(""),
+		const FString& LeftBtnText = TEXT(""), const FString& RightBtnText = TEXT(""), bool bAddWaitMsgBoxStack = true, bool bIsDisableBackBtnExit = false);
+
+	void CloseMsgBox(FString Name);
+	void CloseAllMsgBox();
+
 protected:
 	bool CloseUI(uint16 WidgetId, bool Immediately = false, bool isRemoveStack = true);
 	void _OpenUI(class UUIWidget* Widget, FUIWidgetData* WidgetData, bool Immediately = false, bool bPreScene = false);
@@ -211,8 +221,8 @@ protected:
 	FUIWidgetData* GetWidgetData(uint16 WidgetId);
 	UISceneData* GetSceneData(uint16 WidgetId);
 
-	/*UPROPERTY()
-	TArray<class UCUIMsgBoxBase*> MsgBoxStack;*/
+	UPROPERTY()
+	TArray<class UUIBaseMsgBox*> MsgBoxStack;
 
 	uint16 CurSceneId;
 	TArray<uint16> ScenesStack;

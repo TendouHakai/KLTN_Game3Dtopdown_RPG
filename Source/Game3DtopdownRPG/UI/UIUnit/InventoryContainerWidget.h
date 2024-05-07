@@ -24,8 +24,8 @@ public:
 	virtual void CacheOwnUI() override;
 	virtual void NativeConstruct() override;
 
-	virtual void SetInfo(FGameItemInfo* GameItemInfo, FItemInfoRecord* ItemInfoRecord);
-	virtual void SetInfo(FGameItemInfo* GameItemInfo);
+	virtual void SetInfo(FGameItemInfo& GameItemInfo, FItemInfoRecord* ItemInfoRecord);
+	virtual void SetInfo(FGameItemInfo& GameItemInfo);
 	virtual void SetInfo(UInventoryContainerWidget* InventoryContainerWidget);
 
 	void EmptyUI();
@@ -39,7 +39,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void OnUnHover();
 
-	FGameItemInfo* GetGameItemInfo() { return gameItemInfo; }
+	FGameItemInfo GetGameItemInfo() { return gameItemInfo; }
 
 	template<class T>
 	void SetButtonEventEx(T* owner)
@@ -50,6 +50,7 @@ public:
 public:
 	FContainerTap_DelegateEx OwnerDelegateEx;
 
+	bool IsInteract = true;
 protected:
 	void SetImageItem(FString ItemName);
 	void SetTextCount(int32 count);
@@ -67,6 +68,6 @@ protected:
 	UWidgetAnimation* SelectAnimation;
 	UWidgetAnimation* ReleaseAnimation;
 
-	FGameItemInfo* gameItemInfo;
+	FGameItemInfo gameItemInfo;
 	FItemInfoRecord* itemInfoRecord;
 };

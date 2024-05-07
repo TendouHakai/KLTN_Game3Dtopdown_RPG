@@ -24,7 +24,7 @@ void UInventoryContainerWidget::CacheOwnUI()
 	SelectAnimation = GetWidgetAnimation(TEXT("Ani_Select"));
 	ReleaseAnimation = GetWidgetAnimation(TEXT("Ani_Release"));
 
-	if (nullptr == gameItemInfo) EmptyUI();
+	if (gameItemInfo.m_ItemRecKey == 0) EmptyUI();
 }
 
 void UInventoryContainerWidget::NativeConstruct()
@@ -33,27 +33,26 @@ void UInventoryContainerWidget::NativeConstruct()
 	CacheOwnUI();
 }
 
-void UInventoryContainerWidget::SetInfo(FGameItemInfo* GameItemInfo, FItemInfoRecord* ItemInfoRecord)
+void UInventoryContainerWidget::SetInfo(FGameItemInfo& GameItemInfo, FItemInfoRecord* ItemInfoRecord)
 {
-	if (nullptr == GameItemInfo || nullptr == ItemInfoRecord) return;
+	if (nullptr == ItemInfoRecord) return;
 	gameItemInfo = GameItemInfo;
 	itemInfoRecord = ItemInfoRecord;
 
 	SetImageItem(itemInfoRecord->ItemIcon);
-	SetTextCount(gameItemInfo->m_ItemCount);
+	SetTextCount(gameItemInfo.m_ItemCount);
 }
 
-void UInventoryContainerWidget::SetInfo(FGameItemInfo* GameItemInfo)
+void UInventoryContainerWidget::SetInfo(FGameItemInfo& GameItemInfo)
 {
-	if (nullptr == GameItemInfo) return;
 	gameItemInfo = GameItemInfo;
 
 
-	itemInfoRecord = GetMgr(UItemMgr)->GetItemInfoRecord(FName(FString::FromInt(gameItemInfo->m_ItemRecKey)));
+	itemInfoRecord = GetMgr(UItemMgr)->GetItemInfoRecord(FName(FString::FromInt(gameItemInfo.m_ItemRecKey)));
 	if (nullptr == itemInfoRecord) return;
 
 	SetImageItem(itemInfoRecord->ItemIcon);
-	SetTextCount(gameItemInfo->m_ItemCount);
+	SetTextCount(gameItemInfo.m_ItemCount);
 	SetFrameBackground(itemInfoRecord->ItemGrape);
 }
 
@@ -62,11 +61,11 @@ void UInventoryContainerWidget::SetInfo(UInventoryContainerWidget* InventoryCont
 	if (nullptr == InventoryContainerWidget) return;
 	gameItemInfo = InventoryContainerWidget->GetGameItemInfo();
 
-	itemInfoRecord = GetMgr(UItemMgr)->GetItemInfoRecord(FName(FString::FromInt(gameItemInfo->m_ItemRecKey)));
+	itemInfoRecord = GetMgr(UItemMgr)->GetItemInfoRecord(FName(FString::FromInt(gameItemInfo.m_ItemRecKey)));
 	if (nullptr == itemInfoRecord) return;
 
 	SetImageItem(itemInfoRecord->ItemIcon);
-	SetTextCount(gameItemInfo->m_ItemCount);
+	SetTextCount(gameItemInfo.m_ItemCount);
 	SetFrameBackground(itemInfoRecord->ItemGrape);
 }
 
@@ -81,8 +80,9 @@ void UInventoryContainerWidget::EmptyUI()
 
 void UInventoryContainerWidget::OnTap()
 {
-	//if (!OwnerDelegateEx.IsBound()) return;
-	OwnerDelegateEx.ExecuteIfBound(gameItemInfo->m_ItemRecKey, this);
+	if (!OwnerDelegateEx.IsBound()) return;
+	if (false == IsInteract) return;
+	OwnerDelegateEx.ExecuteIfBound(gameItemInfo.m_ItemRecKey, this);
 }
 
 void UInventoryContainerWidget::OnHover()
