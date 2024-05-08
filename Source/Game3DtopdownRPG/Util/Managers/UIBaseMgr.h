@@ -206,7 +206,7 @@ public:
 	void CloseAllUI();
 
 	// Message Box
-	class UUIBaseMsgBox* OpenMsgBox(EUIMsgBoxType MsgBoxType, const FString& Desc,
+	class UUIBaseMsgBox* OpenMsgBox(EUIMsgBoxType MsgBoxType, const FString& Desc, EUIMsgBoxBtnType BtnType = EUIMsgBoxBtnType::Confirm,
 		UObject* Owner = nullptr, const FName& LeftTapFunctionName = TEXT(""), const FName& RightTapFunctionName = TEXT(""),
 		const FString& LeftBtnText = TEXT(""), const FString& RightBtnText = TEXT(""), bool bAddWaitMsgBoxStack = true, bool bIsDisableBackBtnExit = false);
 

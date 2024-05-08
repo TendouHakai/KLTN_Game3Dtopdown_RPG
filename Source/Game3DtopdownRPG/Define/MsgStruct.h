@@ -19,3 +19,12 @@ enum class EUIMsgBoxType : uint8
 	None = 0,
 	Basic						UMETA(DisplayName = "Basic"),
 };
+
+UENUM(BlueprintType)
+enum class EUIMsgBoxBtnType : uint8
+{
+	OkOrCancel				UMETA(DisplayName = "OkOrCancel"),
+	Confirm					UMETA(DisplayName = "Confirm"),
+	QuitOrStart				UMETA(DisplayName = "QuitOrStart"),
+	YesOrNo					UMETA(DisplayName = "YesOrNo"),
+};

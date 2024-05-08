@@ -14,12 +14,16 @@ UCLASS()
 class GAME3DTOPDOWNRPG_API UUIBaseButton : public UUIUnitWidget
 {
 	GENERATED_BODY()
-	
+public:
+	virtual void CacheOwnUI() override;
+	void SetTextButton(FString text);
+
 protected:
 	UTextBlock* Visible_Text;
 
 	UFUNCTION(BlueprintCallable, Category = "BattleAutoPlay")
 	void OnTap();
+
 public:
 	DECLARE_DELEGATE(FOnClicked);
 	FOnClicked OnClicked_Delegate;

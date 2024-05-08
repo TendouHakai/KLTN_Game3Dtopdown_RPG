@@ -22,17 +22,30 @@ public:
 	template<class T>
 	void AddHandler(EMsgEventButtonType buttonType, T* Owner, const FName& FuntionName)
 	{
-		if (buttonType == EMsgEventButtonType::Left) {
+		if (buttonType == EMsgEventButtonType::Left) 
+		{
 			HandlerLeft.Unbind();
 			HandlerLeft.BindUFunction(Owner, FuntionName);
+		}
+		else if (buttonType == EMsgEventButtonType::Right)
+		{
+			HandlerRight.Unbind();
+			HandlerRight.BindUFunction(Owner, FuntionName);
 		}
 	}
 
 	UFUNCTION(BlueprintCallable)
-	virtual void OnTap();
+	virtual void OnTapLeftButton();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void OnTapRightButton();
+
+	virtual void SetButtonType(EUIMsgBoxBtnType InButtonType) override;
 
 protected:
 	FCallMsgFuncOnTap HandlerLeft;
+	FCallMsgFuncOnTap HandlerRight;
 
-	UUIBaseButton* button;
+	UUIBaseButton* buttonLeft;
+	UUIBaseButton* buttonRight;
 };

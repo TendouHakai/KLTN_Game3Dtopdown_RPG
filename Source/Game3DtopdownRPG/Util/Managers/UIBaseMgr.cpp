@@ -7,6 +7,7 @@
 #include "Game3DtopdownRPG/RPGGameInstance.h"
 #include "Game3DtopdownRPG/UI/WaitingWidget/LoadingWidget.h"
 #include "Game3DtopdownRPG/UI/MsgBox/UIBaseMsgBox.h"
+#include "Game3DtopdownRPG/UI/MsgBox/MsgBoxBasic.h"
 
 void InitWidgetData(const TArray<FDerivedWidgetPath>& DerivedWidgetPaths,
 	TMap<uint16, FUIWidgetData>& WidgetDatas,
@@ -201,7 +202,7 @@ void UUIBaseMgr::CloseAllUI()
 	CurSceneId = INVALID_WIDGET_ID;
 }
 
-class UUIBaseMsgBox* UUIBaseMgr::OpenMsgBox(EUIMsgBoxType MsgBoxType, const FString& Desc,
+class UUIBaseMsgBox* UUIBaseMgr::OpenMsgBox(EUIMsgBoxType MsgBoxType, const FString& Desc, EUIMsgBoxBtnType BtnType /*= EUIMsgBoxBtnType::Confirm*/,
 	UObject* Owner /*= nullptr*/, const FName& LeftTapFunctionName /*= TEXT("")*/, const FName& RightTapFunctionName /*= TEXT("")*/, 
 	const FString& LeftBtnText /*= TEXT("")*/, const FString& RightBtnText /*= TEXT("")*/, bool bAddWaitMsgBoxStack /*= true*/, bool bIsDisableBackBtnExit /*= false*/)
 {
@@ -238,20 +239,68 @@ class UUIBaseMsgBox* UUIBaseMgr::OpenMsgBox(EUIMsgBoxType MsgBoxType, const FStr
 	MsgBox->SetWidgetId(/*(uint16)*/UIName);
 	MsgBox->Init(CurGameMode);
 	MsgBox->AddToViewport((int32)WidgetData->Layer);
-	//MsgBox->SetMsgBoxType(MsgBoxType);
+	MsgBox->SetMsgBoxType(MsgBoxType);
 	MsgBox->SetDesc(Desc);
+	if (EUIMsgBoxType::Basic == MsgBoxType)
+	{
+		UMsgBoxBasic* MsgBoxBasic = Cast<UMsgBoxBasic>(MsgBox);
+		if (nullptr != MsgBoxBasic)
+		{
+			MsgBoxBasic->SetButtonType(BtnType);
+			if (!LeftTapFunctionName.IsNone()) MsgBoxBasic->AddHandler(EMsgEventButtonType::Left, Owner, LeftTapFunctionName);
+			if (!RightTapFunctionName.IsNone()) MsgBoxBasic->AddHandler(EMsgEventButtonType::Right, Owner, RightTapFunctionName);
+		}
+	}
 
 	return MsgBox;
 }
 
 void UUIBaseMgr::CloseMsgBox(FString Name)
 {
+	if (MsgBoxStack.Num() == 0)
+	{
+		return;
+	}
 
+	//CleanUp
+	MsgBoxStack.RemoveAll([](UUIBaseMsgBox* MsgBox)
+		{
+			return !IsValid(MsgBox);
+		});
+
+	for (int32 i = MsgBoxStack.Num() - 1; 0 <= i; --i)
+	{
+		if (MsgBoxStack[i]->GetName() == Name)
+		{
+			MsgBoxStack[i]->RemoveFromParent();
+			MsgBoxStack[i]->RemoveFromViewport();
+			MsgBoxStack.RemoveAt(i);
+			break;
+		}
+	}
 }
 
 void UUIBaseMgr::CloseAllMsgBox()
 {
+	if (MsgBoxStack.Num() == 0)
+	{
+		return;
+	}
 
+	MsgBoxStack.RemoveAll([](UUIBaseMsgBox* MsgBox)
+		{
+			return !IsValid(MsgBox);
+		});
+
+	for (int32 i = MsgBoxStack.Num() - 1; 0 <= i; --i)
+	{
+		MsgBoxStack[i]->RemoveFromParent();
+		MsgBoxStack[i]->RemoveFromViewport();
+		MsgBoxStack.RemoveAt(i);
+		break;
+	}
+
+	MsgBoxStack.Empty();
 }
 
 void UUIBaseMgr::_OpenUI(UUIWidget* Widget, FUIWidgetData* WidgetData, bool Immediately, bool bPreScene)
