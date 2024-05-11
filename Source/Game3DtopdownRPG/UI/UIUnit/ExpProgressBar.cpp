@@ -18,27 +18,27 @@ void UExpProgressBar::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	if (!bValidWidget) return;
-	if (!bStartAddExp) return;
+	//if (!bValidWidget) return;
+	//if (!bStartAddExp) return;
 
-	Exp += addExp * InDeltaTime;
+	//Exp += (addExp*1.0f/0.1f) * InDeltaTime;
 
-	if (Exp >= endExp)
-	{
-		Level += 1;
-		UpdateInfo();
-		// chay effect up level
-	}
+	//if (Exp >= endExp)
+	//{
+	//	Level += 1;
+	//	UpdateInfo();
+	//	// chay effect up level
+	//}
 
-	progressbar->SetPercent(GetRatioProgressBar(Exp));
-	textLevel->SetText(FText::AsNumber(Level));
+	//progressbar->SetPercent(GetRatioProgressBar(Exp));
+	//textLevel->SetText(FText::AsNumber(Level));
 
-	if (Exp >= curExp) 
-	{
-		bStartAddExp = false;
-		progressbar->SetPercent(GetRatioProgressBar(curExp));
-		textLevel->SetText(FText::AsNumber(Level));
-	}
+	//if (Exp >= curExp) 
+	//{
+	//	bStartAddExp = false;
+	//	progressbar->SetPercent(GetRatioProgressBar(curExp));
+	//	textLevel->SetText(FText::AsNumber(Level));
+	//}
 }
 
 void UExpProgressBar::SetHeroExpInfo(FHeroInfo HeroInfo)
@@ -70,7 +70,7 @@ float UExpProgressBar::GetRatioProgressBar(float cExp)
 	if (cExp == endExp) 
 		Ratio = 1.f;
 	else 
-		Ratio = (cExp - startExp)*1.0f / (endExp - cExp);
+		Ratio = (cExp - startExp)*1.0f / (endExp - startExp);
 	Ratio = FMath::Clamp(Ratio, 0.f, 1.f);
 
 	return Ratio;

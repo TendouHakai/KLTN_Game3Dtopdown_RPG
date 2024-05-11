@@ -21,6 +21,9 @@ enum class EUIName : uint8
 	InventoryPage,
 	InventoryItemSellPopup,
 
+	// Equipment
+	HeroEquipmentPage,
+
 	// MsgBox
 	MsgBoxBasic,
 	Max,

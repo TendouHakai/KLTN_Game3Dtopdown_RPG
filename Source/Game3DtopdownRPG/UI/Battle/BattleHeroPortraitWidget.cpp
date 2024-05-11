@@ -21,5 +21,6 @@ void UBattleHeroPortraitWidget::SetInfo(ABaseCharacter* character)
 
 void UBattleHeroPortraitWidget::UpdateExpUI(int32 Exp)
 {
-	expbar->SetAddExp(Exp);
+	//expbar->SetAddExp(Exp);
+	expbar->SetHeroExpInfo(OwnerCharacter->GetHeroInfo());
 }

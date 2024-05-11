@@ -35,6 +35,9 @@ public:
 	UFUNCTION()
 	virtual void OnTapUseItem();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void OnTapClose();
+
 protected:
 	void UpdateChildItem(UWidget* Child, int32 ChildDataIdx);
 	bool IsItemInCategory(EItemCategory category);

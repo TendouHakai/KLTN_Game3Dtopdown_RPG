@@ -135,7 +135,7 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") int32 HeroID;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") int32 Level;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo", meta = (ExposeOnSpawn = true)) int32 Level;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float AttackSpeedRate;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float MovementSpeedRate;

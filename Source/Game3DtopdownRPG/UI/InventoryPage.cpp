@@ -109,6 +109,12 @@ void UInventoryPage::OnTapUseItem()
 	}
 }
 
+void UInventoryPage::OnTapClose()
+{
+	if (UIMgr != nullptr)
+		UIMgr->CloseScene();
+}
+
 void UInventoryPage::UpdateChildItem(UWidget* Child, int32 ChildDataIdx)
 {
 	UInventoryContainerWidget* InventoryContainer = Cast<UInventoryContainerWidget>(Child);
