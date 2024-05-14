@@ -41,7 +41,7 @@ struct FGameItemInfo
 
 	GENERATED_USTRUCT_BODY()
 public:
-	FGameItemInfo(int32 ItemCount = 0, int32 ItemRecKey = 0, uint8 ItemGrade = 0/*, int64 RemainTime = 0*/)
+	FGameItemInfo(int32 ItemCount = 0, int32 ItemRecKey = 0)
 	{
 		m_ItemCount = ItemCount;
 		m_ItemRecKey = ItemRecKey;

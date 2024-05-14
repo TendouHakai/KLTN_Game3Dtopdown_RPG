@@ -90,3 +90,16 @@ FString UItemMgr::GetDescriptionItem(const FItemInfoRecord& ItemInfoRecord)
 {
 	return ItemInfoRecord.Description;
 }
+
+FItemEquipmentInfoRecord* UItemMgr::GetItemEquipmentInfoRecord(FName Index)
+{
+	UDataTable* ItemEquipmentInfoTable = GetMgr(UTableMgr)->ItemEquipmentInfoTable;
+	if (nullptr == ItemEquipmentInfoTable)
+		return nullptr;
+
+	FItemEquipmentInfoRecord* ItemEqupimentInfoRecord = ItemEquipmentInfoTable->FindRow<FItemEquipmentInfoRecord>(Index, FString(""));
+
+	if (nullptr == ItemEqupimentInfoRecord) return nullptr;
+
+	return ItemEqupimentInfoRecord;
+}
