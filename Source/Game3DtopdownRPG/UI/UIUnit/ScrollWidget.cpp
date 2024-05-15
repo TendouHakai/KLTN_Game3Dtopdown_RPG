@@ -17,6 +17,7 @@ void UScrollWidget::CacheOwnUI()
     // create visible all child in grid content
     if (nullptr == GridContents) return;
     if (nullptr == ChildBP) return;
+    if (GridContents->GetChildrenCount() > 0) return;
 
     for (int indexchild = 0; indexchild < VisibleRowCnt * ChildCntPerRow; ++indexchild)
     {

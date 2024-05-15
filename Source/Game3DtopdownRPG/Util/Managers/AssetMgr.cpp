@@ -54,6 +54,9 @@ UTexture2D* UAssetMgr::LoadTexture2D(const FString& Name, EGameTextureType Type)
 	case EGameTextureType::Item:
 		imagePath = "Item/";
 		break;
+	case EGameTextureType::ItemEquipment:
+		imagePath = "Item/Equipment/";
+		break;
 	case EGameTextureType::Max:
 		break;
 	default:

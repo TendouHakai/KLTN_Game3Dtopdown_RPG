@@ -103,3 +103,8 @@ FItemEquipmentInfoRecord* UItemMgr::GetItemEquipmentInfoRecord(FName Index)
 
 	return ItemEqupimentInfoRecord;
 }
+
+FItemEquipmentInfoRecord UItemMgr::GetItemEquipmentInfoRecordBlueprint(FName Index)
+{
+	return *GetItemEquipmentInfoRecord(Index);
+}

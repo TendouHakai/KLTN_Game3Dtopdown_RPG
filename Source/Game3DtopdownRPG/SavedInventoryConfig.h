@@ -25,4 +25,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FGameItemInfo> m_ItemArray;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FGameItemInfo> m_ItemEquipmentArray;
 };

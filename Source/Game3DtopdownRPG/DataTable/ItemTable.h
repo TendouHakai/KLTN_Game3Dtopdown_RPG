@@ -6,6 +6,7 @@
 #include "Game3DtopdownRPG/Define/ItemStruct.h"
 #include "HeroTable.h"
 #include "Engine/SkeletalMesh.h"
+#include "Engine/StaticMesh.h"
 #include "ItemTable.generated.h"
 /**
  * 
@@ -49,6 +50,9 @@ enum class EItemEquipPosition : uint8
 	Glove,
 	Belt,
 	Backpack,
+	Weapon,
+	Shield,
+	Clother,
 	Max
 };
 
@@ -59,12 +63,15 @@ struct FItemEquipmentInfoRecord : public FTableRowBase
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString DesName;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 EquipmentLevel;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 EquipmentLevel;	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) EItemGrade EquipmentGrape;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) EItemEquipPosition EquipPosition;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FCharacterParam ItemEquipParam;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 NextItem;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int64 NeedGold;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) TArray<int32> Materials;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) TArray<int32> MatCounts;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) USkeletalMesh* Mesh;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) USkeletalMesh* MeshSkeletal;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) UStaticMesh* MeshStatic;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString IconName;
 };

@@ -57,7 +57,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float DebuffResistanceRatio;
 };
 
-
 USTRUCT(BlueprintType)
 struct FHeroRecord : public FTableRowBase
 {

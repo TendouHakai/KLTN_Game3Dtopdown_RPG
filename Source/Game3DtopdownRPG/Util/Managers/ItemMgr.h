@@ -28,6 +28,8 @@ public:
 
 	// item equipment
 	FItemEquipmentInfoRecord* GetItemEquipmentInfoRecord(FName Index);
+	UFUNCTION(BlueprintCallable)
+	FItemEquipmentInfoRecord GetItemEquipmentInfoRecordBlueprint(FName Index);
 protected:
 	TArray<FGameItemInfo> m_ItemArray;
 };

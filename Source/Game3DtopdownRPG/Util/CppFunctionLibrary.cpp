@@ -15,6 +15,11 @@ UAssetMgr* UCppFunctionLibrary::GetAssetMgr()
 	return GetMgr(UAssetMgr);
 }
 
+UItemMgr* UCppFunctionLibrary::GetItemMgr()
+{
+	return GetMgr(UItemMgr);
+}
+
 UObject* UCppFunctionLibrary::GetDefaultObject(TSubclassOf<UObject> ObjectClass)
 {
 	if (!ObjectClass)

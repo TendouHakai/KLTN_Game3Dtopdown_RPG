@@ -44,6 +44,7 @@ public:
 	template<class T>
 	void SetButtonEventEx(T* owner)
 	{
+		OwnerDelegateEx.Unbind();
 		OwnerDelegateEx.BindDynamic(owner, &T::OnTapContainer);
 	}
 

@@ -27,6 +27,7 @@ struct FHeroInfo
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FHeroExpInfo HeroExp;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 m_Level;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FCharacterParam m_Param;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<int32> m_Equip;
 
 	GENERATED_USTRUCT_BODY()
 
