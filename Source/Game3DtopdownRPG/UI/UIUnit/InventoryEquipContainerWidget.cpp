@@ -57,6 +57,7 @@ void UInventoryEquipContainerWidget::SetInfo(int32 itemreckey)
 	if (nullptr == record) return;
 
 	SetImageItem(record->IconName);
+	SetTextCount(0);
 	SetFrameBackground(record->EquipmentGrape);
 }
 
