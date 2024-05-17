@@ -22,6 +22,9 @@ public:
 	virtual void NativeConstruct() override;
 
 	virtual void SetHeroCharacter(ABaseCharacter* hero);
+
+	UFUNCTION(BlueprintCallable)
+	void EquipItemToSlot(FGameItemEquipmentInfo iteminfo);
 protected:
 	void setImageIcon();
 	
@@ -29,8 +32,6 @@ protected:
 	UImage* imageIcon;
 	UInventoryEquipContainerWidget* inventoryEquipment;
 
-	FGameItemInfo gameItemInfo;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) EItemEquipPosition EquipmentPosition;
-
 	ABaseCharacter* character;
 };

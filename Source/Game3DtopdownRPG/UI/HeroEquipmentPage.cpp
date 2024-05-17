@@ -19,9 +19,9 @@ void UHeroEquipmentPage::CacheOwnUI()
 		ItemEquipmentContainer_SCroll->ChildUpdateEvent.BindUObject(this, &UHeroEquipmentPage::UpdateChildItemEquipment);
 	}
 
-	for (int indexTab = 0; indexTab < static_cast<int32>(EItemEquipPosition::Max); ++indexTab)
+	for (int indexSlot = 0; indexSlot < static_cast<int32>(EItemEquipPosition::Max); ++indexSlot)
 	{
-		UEquipmentSlotWidget* slot = GetOwnUI<UEquipmentSlotWidget>(FString::Printf(TEXT("EquipmentSlotWidget_%d"), indexTab + 1));
+		UEquipmentSlotWidget* slot = GetOwnUI<UEquipmentSlotWidget>(FString::Printf(TEXT("EquipmentSlotWidget_%d"), indexSlot));
 		if (nullptr != slot)
 		{
 			slot->InitUnit(GameMode);
@@ -34,13 +34,18 @@ void UHeroEquipmentPage::Update()
 {
 	Super::Update();
 
-	m_CurrentItemArray.Empty();
-	FGameItemInfo gameinfo;
+	m_CurrentItemEquipmentArray.Empty();
+	FGameItemEquipmentInfo gameinfo;
 	gameinfo.m_ItemRecKey = 1;
-	gameinfo.m_ItemCount = 2;
-	m_CurrentItemArray.Emplace(gameinfo);
+	gameinfo.m_ItemUgrapeLevel = 2;
 
-	if (nullptr != ItemEquipmentContainer_SCroll) ItemEquipmentContainer_SCroll->SetChildCount(m_CurrentItemArray.Num());
+	FGameItemEquipmentInfo gameinfo1;
+	gameinfo1.m_ItemRecKey = 2;
+	gameinfo1.m_ItemUgrapeLevel = 0;
+	m_CurrentItemEquipmentArray.Emplace(gameinfo);
+	m_CurrentItemEquipmentArray.Emplace(gameinfo1);
+
+	if (nullptr != ItemEquipmentContainer_SCroll) ItemEquipmentContainer_SCroll->SetChildCount(m_CurrentItemEquipmentArray.Num());
 }
 
 void UHeroEquipmentPage::SetHeroCharacter(ABaseCharacter* herocharacter)
@@ -63,9 +68,9 @@ void UHeroEquipmentPage::UpdateChildItemEquipment(UWidget* Child, int32 ChildDat
 	UInventoryEquipContainerWidget* InventoryContainer = Cast<UInventoryEquipContainerWidget>(Child);
 
 	if (nullptr == InventoryContainer) return;
-	if (!m_CurrentItemArray.IsValidIndex(ChildDataIdx)) return;
+	if (!m_CurrentItemEquipmentArray.IsValidIndex(ChildDataIdx)) return;
 
-	FGameItemInfo info = m_CurrentItemArray[ChildDataIdx];
+	FGameItemEquipmentInfo info = m_CurrentItemEquipmentArray[ChildDataIdx];
 
 	InventoryContainer->SetInfo(info);
 

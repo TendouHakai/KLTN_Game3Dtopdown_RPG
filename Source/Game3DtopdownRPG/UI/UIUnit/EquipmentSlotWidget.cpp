@@ -5,6 +5,7 @@
 #include "InventoryEquipContainerWidget.h"
 #include "Game3DtopdownRPG/GlobalGetter.h"
 #include "Game3DtopdownRPG/Util/Managers/AssetMgr.h"
+#include "Game3DtopdownRPG/Util/Managers/ItemMgr.h"
 #include "Game3DtopdownRPG/Battle/BaseCharacter.h"
 
 void UEquipmentSlotWidget::CacheOwnUI()
@@ -16,10 +17,11 @@ void UEquipmentSlotWidget::CacheOwnUI()
 	{
 		setImageIcon();
 	}
+
 	inventoryEquipment = GetOwnUI<UInventoryEquipContainerWidget>(TEXT("InventoryEquipmentContainerWidget"));
 	if (inventoryEquipment != nullptr)
 	{
-		inventoryEquipment->IsInteract = false;
+		inventoryEquipment->InitUnit(GameMode);
 	}
 }
 
@@ -33,8 +35,21 @@ void UEquipmentSlotWidget::SetHeroCharacter(ABaseCharacter* hero)
 	if (nullptr == hero) return;
 	character = hero;
 	FHeroInfo heroinfo = character->GetHeroInfo();
-	
+
+	if (!heroinfo.m_Equip.IsValidIndex(static_cast<int32>(EquipmentPosition))) return;
+	if (heroinfo.m_Equip[static_cast<int32>(EquipmentPosition)].m_ItemRecKey == 0);
 	inventoryEquipment->SetInfo(heroinfo.m_Equip[static_cast<int32>(EquipmentPosition)]);
+	inventoryEquipment->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+}
+
+void UEquipmentSlotWidget::EquipItemToSlot(FGameItemEquipmentInfo iteminfo)
+{
+	FItemEquipmentInfoRecord* record = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(iteminfo.m_ItemRecKey)));
+
+	if (record->EquipPosition != EquipmentPosition) return;
+	inventoryEquipment->SetInfo(iteminfo);
+	inventoryEquipment->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	character->EquipItem(iteminfo);
 }
 
 void UEquipmentSlotWidget::setImageIcon()

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Game3DtopdownRPG/DataTable/HeroTable.h"
+#include "Game3DtopdownRPG/Define/ItemStruct.h"
 #include "HeroStruct.generated.h"
 
 
@@ -27,7 +28,7 @@ struct FHeroInfo
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FHeroExpInfo HeroExp;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 m_Level;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FCharacterParam m_Param;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<int32> m_Equip;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<FGameItemEquipmentInfo> m_Equip;
 
 	GENERATED_USTRUCT_BODY()
 

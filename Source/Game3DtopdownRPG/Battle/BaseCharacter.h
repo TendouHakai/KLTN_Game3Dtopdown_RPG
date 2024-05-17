@@ -8,6 +8,7 @@
 #include "Game3DtopdownRPG/Battle/BaseAnimInstance.h"
 #include "BattleStruct.h"
 #include "Game3DtopdownRPG/Define/HeroStruct.h"
+#include "Game3DtopdownRPG/Define/ItemStruct.h"
 #include "BaseCharacter.generated.h"
 
 class UBuffControllerComponent;
@@ -119,6 +120,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintPure, Category = "Character")
 	FHeroInfo GetHeroInfo();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Character")
+	void EquipItem(FGameItemEquipmentInfo iteminfo);
 
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Character")

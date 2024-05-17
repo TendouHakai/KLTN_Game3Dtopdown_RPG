@@ -7,6 +7,7 @@
 #include "HeroEquipmentPage.generated.h"
 
 struct FGameItemInfo;
+struct FGameItemEquipmentInfo;
 class UScrollWidget;
 class UInventoryEquipContainerWidget;
 class UEquipmentSlotWidget;
@@ -35,7 +36,7 @@ protected:
 	TArray<UEquipmentSlotWidget*> EquipmentSlots;
 
 	int32 m_CurrentItemIndex;
-	TArray<FGameItemInfo> m_CurrentItemArray;
+	TArray<FGameItemEquipmentInfo> m_CurrentItemEquipmentArray;
 
 	UScrollWidget* ItemContainer_SCroll;
 	UScrollWidget* ItemEquipmentContainer_SCroll;

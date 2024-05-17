@@ -14,8 +14,8 @@ void UInventoryEquipContainerWidget::CacheOwnUI()
 	ImageBackground = GetOwnUI<UImage>(TEXT("Image_Back"));
 	ImageEffect = GetOwnUI<UImage>(TEXT("Image_Effect"));
 	ImageItem = GetOwnUI<UImage>(TEXT("Image_Item"));
-	textCount = GetOwnUI<UTextBlock>(TEXT("TextBlock_count"));
-	OverlayCount = GetOwnUI<UOverlay>(TEXT("Overlay_Count"));
+	textUpgradeLevel = GetOwnUI<UTextBlock>(TEXT("TextBlock_count"));
+	OverlayUpgradeLevel = GetOwnUI<UOverlay>(TEXT("Overlay_Count"));
 
 	SelectAnimation = GetWidgetAnimation(TEXT("Ani_Select"));
 	ReleaseAnimation = GetWidgetAnimation(TEXT("Ani_Release"));
@@ -28,14 +28,14 @@ void UInventoryEquipContainerWidget::NativeConstruct()
 	Super::NativeConstruct();
 }
 
-void UInventoryEquipContainerWidget::SetInfo(FGameItemInfo& GameItemInfo)
+void UInventoryEquipContainerWidget::SetInfo(FGameItemEquipmentInfo& GameItemInfo)
 {
 	this->gameItemInfo = GameItemInfo;
 	FItemEquipmentInfoRecord* record = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(GameItemInfo.m_ItemRecKey)));
 	if (nullptr == record) return;
 
 	SetImageItem(record->IconName);
-	SetTextCount(gameItemInfo.m_ItemCount);
+	SetTextUpgrapeLevel(gameItemInfo.m_ItemUgrapeLevel);
 	SetFrameBackground(record->EquipmentGrape);
 }
 
@@ -46,7 +46,7 @@ void UInventoryEquipContainerWidget::SetInfo(UInventoryEquipContainerWidget* Inv
 	if (nullptr == record) return;
 
 	SetImageItem(record->IconName);
-	SetTextCount(gameItemInfo.m_ItemCount);
+	SetTextUpgrapeLevel(gameItemInfo.m_ItemUgrapeLevel);
 	SetFrameBackground(record->EquipmentGrape);
 }
 
@@ -57,16 +57,16 @@ void UInventoryEquipContainerWidget::SetInfo(int32 itemreckey)
 	if (nullptr == record) return;
 
 	SetImageItem(record->IconName);
-	SetTextCount(0);
+	SetTextUpgrapeLevel(0);
 	SetFrameBackground(record->EquipmentGrape);
 }
 
 void UInventoryEquipContainerWidget::EmptyUI()
 {
-	if (nullptr == ImageFrame || nullptr == ImageItem || nullptr == ImageBackground || nullptr == OverlayCount) return;
+	if (nullptr == ImageFrame || nullptr == ImageItem || nullptr == ImageBackground || nullptr == OverlayUpgradeLevel) return;
 
 	SetImageItem("");
-	SetTextCount(0);
+	SetTextUpgrapeLevel(0);
 	SetFrameBackground(EItemGrade::Max);
 }
 
@@ -110,17 +110,20 @@ void UInventoryEquipContainerWidget::SetImageItem(FString ItemName)
 	ImageItem->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
-void UInventoryEquipContainerWidget::SetTextCount(int32 count)
+void UInventoryEquipContainerWidget::SetTextUpgrapeLevel(int32 level)
 {
-	if (nullptr == OverlayCount || nullptr == textCount) return;
-	if (nullptr == textCount || count <= 0 || IsInteract == false)
+	if (nullptr == OverlayUpgradeLevel || nullptr == textUpgradeLevel) return;
+	if (nullptr == textUpgradeLevel || level <= 0 || IsInteract == false)
 	{
-		OverlayCount->SetVisibility(ESlateVisibility::Hidden);
+		OverlayUpgradeLevel->SetVisibility(ESlateVisibility::Hidden);
 		return;
 	}
 
-	textCount->SetText(FText::AsNumber(count));
-	OverlayCount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	FString str = "+";
+	str += FString::FromInt(level);
+	
+	textUpgradeLevel->SetText(FText::FromString(str));
+	OverlayUpgradeLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
 void UInventoryEquipContainerWidget::SetFrameBackground(EItemGrade grade)

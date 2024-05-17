@@ -24,7 +24,7 @@ public:
 	virtual void CacheOwnUI() override;
 	virtual void NativeConstruct() override;
 
-	virtual void SetInfo(FGameItemInfo& GameItemInfo);
+	virtual void SetInfo(FGameItemEquipmentInfo& GameItemInfo);
 
 	UFUNCTION(BlueprintCallable)
 	virtual void SetInfo(int32 itemreckey);
@@ -43,7 +43,7 @@ public:
 	virtual void OnUnHover();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	FGameItemInfo GetGameItemInfo() { return gameItemInfo; }
+	FGameItemEquipmentInfo GetGameItemInfo() { return gameItemInfo; }
 
 	template<class T>
 	void SetButtonEventEx(T* owner)
@@ -55,7 +55,7 @@ public:
 	bool IsInteract = true;
 protected:
 	void SetImageItem(FString ItemName);
-	void SetTextCount(int32 count);
+	void SetTextUpgrapeLevel(int32 level);
 	void SetFrameBackground(EItemGrade grade);
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -66,12 +66,12 @@ protected:
 	UImage* ImageBackground;
 	UImage* ImageEffect;
 	UImage* ImageItem;
-	UOverlay* OverlayCount;
-	UTextBlock* textCount;
+	UOverlay* OverlayUpgradeLevel;
+	UTextBlock* textUpgradeLevel;
 	UWidgetAnimation* SelectAnimation;
 	UWidgetAnimation* ReleaseAnimation;
 
-	FGameItemInfo gameItemInfo;
+	FGameItemEquipmentInfo gameItemInfo;
 	FItemEquipmentInfoRecord* equipmentItemInfoRecord;
 
 	FEquipmentContainerTap_DelegateEx OwnerDelegateEx;

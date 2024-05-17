@@ -47,3 +47,18 @@ public:
 		m_ItemRecKey = ItemRecKey;
 	}
 };
+
+USTRUCT(BlueprintType)
+struct FGameItemEquipmentInfo
+{
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)	int32 m_ItemRecKey;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)	int32 m_ItemUgrapeLevel;
+
+	GENERATED_USTRUCT_BODY()
+public:
+	FGameItemEquipmentInfo(int32 ItemRecKey = 0, int32 ItemUgrapeLevel = 0)
+	{
+		m_ItemRecKey = ItemRecKey;
+		m_ItemUgrapeLevel = ItemUgrapeLevel;
+	}
+};
