@@ -62,7 +62,7 @@ void ABaseBuffActor::RemoveBuffInfo(UBaseBuff* BaseBuff)
 			ParticleSystemComponent->SetTemplate(nullptr);
 			ParticleSystemComponent->SetVisibility(false);
 			ParticleSystemComponent->DetachFromComponent(FDetachmentTransformRules::KeepRelativeTransform);
-			ParticleSystemComponent->MarkPendingKill();
+			ParticleSystemComponent->MarkAsGarbage();
 			ParticleSystemComponent->DestroyComponent();
 		}
 

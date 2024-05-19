@@ -273,7 +273,7 @@ void UUIBaseMgr::CloseMsgBox(FString Name)
 		if (MsgBoxStack[i]->GetName() == Name)
 		{
 			MsgBoxStack[i]->RemoveFromParent();
-			MsgBoxStack[i]->RemoveFromViewport();
+			//MsgBoxStack[i]->RemoveFromViewport();
 			MsgBoxStack.RemoveAt(i);
 			break;
 		}
@@ -295,7 +295,7 @@ void UUIBaseMgr::CloseAllMsgBox()
 	for (int32 i = MsgBoxStack.Num() - 1; 0 <= i; --i)
 	{
 		MsgBoxStack[i]->RemoveFromParent();
-		MsgBoxStack[i]->RemoveFromViewport();
+		//MsgBoxStack[i]->RemoveFromViewport();
 		MsgBoxStack.RemoveAt(i);
 		break;
 	}

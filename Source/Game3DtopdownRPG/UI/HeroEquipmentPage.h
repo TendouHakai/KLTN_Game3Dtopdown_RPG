@@ -30,6 +30,7 @@ public:
 protected:
 	void UpdateChildItem(UWidget* Child, int32 ChildDataIdx);
 	void UpdateChildItemEquipment(UWidget* Child, int32 ChildDataIdx);
+	void UpdateEquipmentSlots();
 
 protected:
 	// equipment

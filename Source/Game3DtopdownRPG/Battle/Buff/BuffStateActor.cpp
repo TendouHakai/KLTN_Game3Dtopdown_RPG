@@ -58,7 +58,7 @@ void ABuffStateActor::EndBuffStateActor()
 			ParticleSystemComponent->SetTemplate(nullptr);
 			ParticleSystemComponent->SetVisibility(false);
 			ParticleSystemComponent->DetachFromComponent(FDetachmentTransformRules::KeepRelativeTransform);
-			ParticleSystemComponent->MarkPendingKill();
+			ParticleSystemComponent->MarkAsGarbage();
 			ParticleSystemComponent->DestroyComponent();
 		}
 	}

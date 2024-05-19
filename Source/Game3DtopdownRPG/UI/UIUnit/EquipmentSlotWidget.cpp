@@ -34,22 +34,41 @@ void UEquipmentSlotWidget::SetHeroCharacter(ABaseCharacter* hero)
 {
 	if (nullptr == hero) return;
 	character = hero;
-	FHeroInfo heroinfo = character->GetHeroInfo();
-
-	if (!heroinfo.m_Equip.IsValidIndex(static_cast<int32>(EquipmentPosition))) return;
-	if (heroinfo.m_Equip[static_cast<int32>(EquipmentPosition)].m_ItemRecKey == 0);
-	inventoryEquipment->SetInfo(heroinfo.m_Equip[static_cast<int32>(EquipmentPosition)]);
-	inventoryEquipment->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
 void UEquipmentSlotWidget::EquipItemToSlot(FGameItemEquipmentInfo iteminfo)
 {
 	FItemEquipmentInfoRecord* record = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(iteminfo.m_ItemRecKey)));
 
-	if (record->EquipPosition != EquipmentPosition) return;
+	if (record->EquipPosition != EquipmentPosition)
+	{
+		inventoryEquipment->SetVisibility(ESlateVisibility::Collapsed);
+		return;
+	}
 	inventoryEquipment->SetInfo(iteminfo);
 	inventoryEquipment->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	character->EquipItem(iteminfo);
+}
+
+void UEquipmentSlotWidget::Update()
+{
+	Super::Update();
+
+	if (nullptr == character) return;
+	FHeroInfo heroinfo = character->GetHeroInfo();
+
+	if (!heroinfo.m_Equip.IsValidIndex(static_cast<int32>(EquipmentPosition)))
+	{
+		inventoryEquipment->SetVisibility(ESlateVisibility::Collapsed);
+		return;
+	}
+	if (heroinfo.m_Equip[static_cast<int32>(EquipmentPosition)].m_ItemRecKey == 0) 
+	{
+		inventoryEquipment->SetVisibility(ESlateVisibility::Collapsed);
+		return;
+	}
+	inventoryEquipment->SetInfo(heroinfo.m_Equip[static_cast<int32>(EquipmentPosition)]);
+	inventoryEquipment->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
 void UEquipmentSlotWidget::setImageIcon()
@@ -61,7 +80,7 @@ void UEquipmentSlotWidget::setImageIcon()
 		path = "/Game/UI/Sprites/Components/Icon/HeadGears.HeadGears";
 		break;
 	case EItemEquipPosition::ShoulderPad:
-
+		path = "/Game/UI/Sprites/Components/Icon/spiked-shoulder-armor.spiked-shoulder-armor";
 		break;
 	case EItemEquipPosition::Shoe:
 		path = "/Game/UI/Sprites/Components/Icon/Shoe.Shoe";
@@ -73,6 +92,7 @@ void UEquipmentSlotWidget::setImageIcon()
 		path = "/Game/UI/Sprites/Components/Icon/Belt.Belt";
 		break;
 	case EItemEquipPosition::Backpack:
+		path = "/Game/UI/Sprites/Components/Icon/knapsack.knapsack";
 		break;
 	case EItemEquipPosition::Weapon:
 		path = "/Game/UI/Sprites/Components/Icon/Weapon.Weapon";

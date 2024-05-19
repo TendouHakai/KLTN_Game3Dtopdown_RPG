@@ -33,6 +33,7 @@ void UHeroEquipmentPage::CacheOwnUI()
 void UHeroEquipmentPage::Update()
 {
 	Super::Update();
+	UpdateEquipmentSlots();
 
 	m_CurrentItemEquipmentArray.Empty();
 	FGameItemEquipmentInfo gameinfo;
@@ -75,5 +76,13 @@ void UHeroEquipmentPage::UpdateChildItemEquipment(UWidget* Child, int32 ChildDat
 	InventoryContainer->SetInfo(info);
 
 	InventoryContainer->SetButtonEventEx(this);
+}
+
+void UHeroEquipmentPage::UpdateEquipmentSlots()
+{
+	for (UEquipmentSlotWidget* slot : EquipmentSlots)
+	{
+		slot->Update();
+	}
 }
 

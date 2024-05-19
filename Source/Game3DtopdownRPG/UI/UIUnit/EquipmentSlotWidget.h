@@ -25,6 +25,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void EquipItemToSlot(FGameItemEquipmentInfo iteminfo);
+	//void EmptyUI();
+
+	virtual void Update() override;
 protected:
 	void setImageIcon();
 	
