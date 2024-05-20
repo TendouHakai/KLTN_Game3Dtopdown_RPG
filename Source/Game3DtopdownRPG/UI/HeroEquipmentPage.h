@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UIWidget.h"
+#include "Components/TextBlock.h"
 #include "HeroEquipmentPage.generated.h"
 
 struct FGameItemInfo;
@@ -31,6 +32,7 @@ protected:
 	void UpdateChildItem(UWidget* Child, int32 ChildDataIdx);
 	void UpdateChildItemEquipment(UWidget* Child, int32 ChildDataIdx);
 	void UpdateEquipmentSlots();
+	void UpdateHeroParams();
 
 protected:
 	// equipment
@@ -43,4 +45,7 @@ protected:
 	UScrollWidget* ItemEquipmentContainer_SCroll;
 
 	ABaseCharacter* character;
+
+	// Hero param
+	TArray<UTextBlock*> HeroParam;
 };

@@ -6,6 +6,7 @@
 #include "Util/Managers/TableMgr.h"
 #include "Util/Managers/HeroBuffMgr.h"
 #include "Util/Managers/ItemMgr.h"
+#include "Util/Managers/HeroMgr.h"
 
 URPGGameInstance* URPGGameInstance::_instance = nullptr;
 
@@ -20,6 +21,7 @@ void URPGGameInstance::Init()
 	CreateInstance<UTableMgr>();
 	CreateInstance<UHeroBuffMgr>();
 	CreateInstance<UItemMgr>();
+	CreateInstance<UHeroMgr>();
 }
 
 void URPGGameInstance::Shutdown()

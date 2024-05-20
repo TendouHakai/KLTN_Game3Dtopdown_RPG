@@ -6,6 +6,10 @@
 #include "UIUnit/InventoryEquipContainerWidget.h"
 #include "UIUnit/EquipmentSlotWidget.h"
 #include "Game3DtopdownRPG/DataTable/ItemTable.h"
+#include "Game3DtopdownRPG/DataTable/HeroTable.h"
+#include "Game3DtopdownRPG/Battle/BaseCharacter.h"
+#include "Game3DtopdownRPG/Util/Managers/ItemMgr.h"
+#include "Game3DtopdownRPG/GlobalGetter.h"
 
 void UHeroEquipmentPage::CacheOwnUI()
 {
@@ -28,25 +32,29 @@ void UHeroEquipmentPage::CacheOwnUI()
 			EquipmentSlots.Emplace(slot);
 		}
 	}
+
+	for (int indexParam = 0; indexParam < static_cast<int32>(ECharacterParam::Max); ++indexParam)
+	{
+		UTextBlock* textparam = GetOwnUI<UTextBlock>(FString::Printf(TEXT("TextParam_%d"), indexParam));
+		if (nullptr != textparam)
+		{
+			HeroParam.Emplace(textparam);
+		}
+	}
 }
 
 void UHeroEquipmentPage::Update()
 {
 	Super::Update();
-	UpdateEquipmentSlots();
 
 	m_CurrentItemEquipmentArray.Empty();
-	FGameItemEquipmentInfo gameinfo;
-	gameinfo.m_ItemRecKey = 1;
-	gameinfo.m_ItemUgrapeLevel = 2;
 
-	FGameItemEquipmentInfo gameinfo1;
-	gameinfo1.m_ItemRecKey = 2;
-	gameinfo1.m_ItemUgrapeLevel = 0;
-	m_CurrentItemEquipmentArray.Emplace(gameinfo);
-	m_CurrentItemEquipmentArray.Emplace(gameinfo1);
+	m_CurrentItemEquipmentArray = GetMgr(UItemMgr)->GetItemEquipmentInBackpackArray();
 
 	if (nullptr != ItemEquipmentContainer_SCroll) ItemEquipmentContainer_SCroll->SetChildCount(m_CurrentItemEquipmentArray.Num());
+
+	UpdateEquipmentSlots();
+	UpdateHeroParams();
 }
 
 void UHeroEquipmentPage::SetHeroCharacter(ABaseCharacter* herocharacter)
@@ -83,6 +91,65 @@ void UHeroEquipmentPage::UpdateEquipmentSlots()
 	for (UEquipmentSlotWidget* slot : EquipmentSlots)
 	{
 		slot->Update();
+	}
+}
+
+void UHeroEquipmentPage::UpdateHeroParams()
+{
+	if (nullptr == character) return;
+	FHeroInfo heroinfo = character->GetHeroInfo();
+	
+	for (int index = 0; index < static_cast<int32>(ECharacterParam::Max); ++index)
+	{
+		float paramvalue;
+		switch ((ECharacterParam)index)
+		{
+		case ECharacterParam::AttackSpeed:
+			paramvalue = heroinfo.m_Param.AttackSpeedRate;
+			break;
+		case ECharacterParam::CriticalRatio:
+			paramvalue = heroinfo.m_Param.CriticalRatio;
+		case ECharacterParam::DebuffResistanceRatio:
+			paramvalue = heroinfo.m_Param.DebuffResistanceRatio;
+			break;
+		case ECharacterParam::Def:
+			paramvalue = heroinfo.m_Param.Def;
+			break;
+		case ECharacterParam::HealHP:
+			paramvalue = heroinfo.m_Param.HealHP;
+			break;
+		case ECharacterParam::HP:
+			paramvalue = heroinfo.m_Param.HP;
+			break;
+		case ECharacterParam::MagicDamage:
+			paramvalue = heroinfo.m_Param.MagicDamage;
+			break;
+		case ECharacterParam::MagicDef:
+			paramvalue = heroinfo.m_Param.MagicDef;
+			break;
+		case ECharacterParam::MovementSpeed:
+			paramvalue = heroinfo.m_Param.MovementSpeedRate;
+			break;
+		case ECharacterParam::PhysicDamage:
+			paramvalue = heroinfo.m_Param.PhysicDamage;
+			break;
+		case ECharacterParam::PierceDef:
+			paramvalue = heroinfo.m_Param.PierceDef;
+			break;
+		case ECharacterParam::PiercingMagicDef:
+			paramvalue = heroinfo.m_Param.PierceMagicDef;
+			break;
+		case ECharacterParam::ReduceCoolDownRatio:
+			paramvalue = heroinfo.m_Param.ReduceCoolDownRatio;
+			break;
+		default:
+			break;
+		}
+
+		if (HeroParam.IsValidIndex(index))
+		{
+			HeroParam[index]->SetText(FText::AsNumber(paramvalue));
+		}
 	}
 }
 

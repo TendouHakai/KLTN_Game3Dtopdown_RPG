@@ -62,7 +62,18 @@ void UUIBaseMgr::Destroy()
 
 void UUIBaseMgr::Update()
 {
+	if (CurSceneId == 0) return;
 
+	UISceneData* CurSceneData = GetSceneData(CurSceneId);
+	if (!CurSceneData) return;
+
+	for (uint16 ChildWidgetId : CurSceneData->ChildWidgetIds)
+	{
+		FUIWidgetData* StackedWidgetData = GetWidgetData(ChildWidgetId);
+		if (!StackedWidgetData || !StackedWidgetData->IsWidgetValid()) continue;
+
+		StackedWidgetData->GetWidget()->Update();
+	}
 }
 
 FUIWidgetData* UUIBaseMgr::GetWidgetData(UUIWidget* Widget)

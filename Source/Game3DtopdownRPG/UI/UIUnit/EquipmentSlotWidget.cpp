@@ -47,7 +47,7 @@ void UEquipmentSlotWidget::EquipItemToSlot(FGameItemEquipmentInfo iteminfo)
 	}
 	inventoryEquipment->SetInfo(iteminfo);
 	inventoryEquipment->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	character->EquipItem(iteminfo);
+	character->EquipItem(iteminfo, false);
 }
 
 void UEquipmentSlotWidget::Update()

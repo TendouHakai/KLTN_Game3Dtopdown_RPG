@@ -20,6 +20,11 @@ UItemMgr* UCppFunctionLibrary::GetItemMgr()
 	return GetMgr(UItemMgr);
 }
 
+UHeroMgr* UCppFunctionLibrary::GetHeroMgr()
+{
+	return GetMgr(UHeroMgr);
+}
+
 UObject* UCppFunctionLibrary::GetDefaultObject(TSubclassOf<UObject> ObjectClass)
 {
 	if (!ObjectClass)

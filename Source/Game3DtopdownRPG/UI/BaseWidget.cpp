@@ -43,7 +43,7 @@ void UBaseWidget::NativeDestruct()
 void UBaseWidget::Destroy(UUIBaseMgr* InUIManager)
 {
 	RemoveFromParent();
-	RemoveFromViewport();
+	//RemoveFromViewport();
 }
 
 void UBaseWidget::Update()

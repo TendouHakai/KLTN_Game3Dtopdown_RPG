@@ -7,6 +7,7 @@
 #include "Managers/AssetMgr.h"
 #include "Managers/TableMgr.h"
 #include "Managers/ItemMgr.h"
+#include "Managers/HeroMgr.h"
 
 #include "UObject/NoExportTypes.h"
 #include "Game3DtopdownRPG/DataTable/HeroTable.h"
@@ -30,6 +31,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "ItemMgr Singleton")
 	static UItemMgr* GetItemMgr();
+
+	UFUNCTION(BlueprintPure, Category = "HeroMgr Singleton")
+	static UHeroMgr* GetHeroMgr();
 
 	UFUNCTION(BlueprintCallable, Category = "CppFunctionLibrary")
 	static UObject* GetDefaultObject(TSubclassOf<UObject> ObjectClass);

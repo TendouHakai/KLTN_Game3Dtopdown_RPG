@@ -55,6 +55,44 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float PierceDef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float PierceMagicDef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float DebuffResistanceRatio;
+
+	FCharacterParam& operator += (const FCharacterParam& other)
+	{
+		this->PhysicDamage += other.PhysicDamage;
+		this->MagicDamage += other.MagicDamage;
+		this->HP += other.HP;
+		this->Def += other.Def;
+		this->MagicDef += other.MagicDef;
+		this->AttackSpeedRate += other.AttackSpeedRate;
+		this->MovementSpeedRate += other.MovementSpeedRate;
+		this->ReduceCoolDownRatio += other.ReduceCoolDownRatio;
+		this->CriticalRatio += other.CriticalRatio;
+		this->HealHP += other.HealHP;
+		this->PierceDef += other.PierceDef;
+		this->PierceMagicDef += other.PierceMagicDef;
+		this->DebuffResistanceRatio += other.DebuffResistanceRatio;
+
+		return *this;
+	}
+
+	FCharacterParam& operator -= (const FCharacterParam& other)
+	{
+		this->PhysicDamage -= other.PhysicDamage;
+		this->MagicDamage -= other.MagicDamage;
+		this->HP -= other.HP;
+		this->Def -= other.Def;
+		this->MagicDef -= other.MagicDef;
+		this->AttackSpeedRate -= other.AttackSpeedRate;
+		this->MovementSpeedRate -= other.MovementSpeedRate;
+		this->ReduceCoolDownRatio -= other.ReduceCoolDownRatio;
+		this->CriticalRatio -= other.CriticalRatio;
+		this->HealHP -= other.HealHP;
+		this->PierceDef -= other.PierceDef;
+		this->PierceMagicDef -= other.PierceMagicDef;
+		this->DebuffResistanceRatio -= other.DebuffResistanceRatio;
+
+		return *this;
+	}
 };
 
 USTRUCT(BlueprintType)

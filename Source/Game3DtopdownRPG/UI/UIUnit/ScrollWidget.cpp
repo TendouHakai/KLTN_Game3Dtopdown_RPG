@@ -4,6 +4,7 @@
 #include "ScrollWidget.h"
 #include "Components/GridSlot.h"
 #include "InventoryContainerWidget.h"
+#include "InventoryEquipContainerWidget.h"
 
 UScrollWidget::UScrollWidget()
 {
@@ -67,8 +68,12 @@ void UScrollWidget::Update()
 
         if (childcount <= indexchild)
         {
-            UInventoryContainerWidget* inventoryContainer = Cast<UInventoryContainerWidget>(ChildWidget);
-            if (nullptr != inventoryContainer) inventoryContainer->EmptyUI();
+            if (Cast<UInventoryContainerWidget>(ChildWidget) != nullptr)
+                Cast<UInventoryContainerWidget>(ChildWidget)->EmptyUI();
+            else if (Cast<UInventoryEquipContainerWidget>(ChildWidget) != nullptr)
+                Cast<UInventoryEquipContainerWidget>(ChildWidget)->EmptyUI();
+
+
             continue;
         }
 

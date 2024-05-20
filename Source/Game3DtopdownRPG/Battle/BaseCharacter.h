@@ -122,7 +122,10 @@ public:
 	FHeroInfo GetHeroInfo();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Character")
-	void EquipItem(FGameItemEquipmentInfo iteminfo);
+	void SetHeroInfo(FHeroInfo info);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Character")
+	void EquipItem(FGameItemEquipmentInfo iteminfo, bool IsInit = true);
 
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Character")
