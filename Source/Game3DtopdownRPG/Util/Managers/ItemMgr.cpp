@@ -78,6 +78,20 @@ TArray<FGameItemInfo> UItemMgr::GetItemInBackpackArray()
 	return ItemArrayInInventory;
 }
 
+TArray<FGameItemInfo> UItemMgr::GetItemArrayByItemType(EItemType type)
+{
+	TArray<FGameItemInfo> ItemArrayByItemType;
+	for (FGameItemInfo info : m_ItemArray)
+	{
+		FItemInfoRecord* record = GetItemInfoRecord(FName(FString::FromInt(info.m_ItemRecKey)));
+		if (nullptr == record) continue;
+		if (record->ItemType == type)
+			ItemArrayByItemType.Emplace(info);
+	}
+
+	return ItemArrayByItemType;
+}
+
 FString UItemMgr::GetItemGradeText(EItemGrade grade)
 {
 	switch (grade)
@@ -162,6 +176,7 @@ void UItemMgr::AddItem(int32 ItemReckey /*= 1*/, int32 ItemCount /*= 1*/, EInven
 		{
 			bExsist = true;
 			info.m_ItemCount += ItemInfo.m_ItemCount;
+			break;
 		}
 	}
 
@@ -181,6 +196,39 @@ void UItemMgr::AddItem(int32 ItemReckey /*= 1*/, int32 ItemCount /*= 1*/, EInven
 	USavedInventoryConfig::SaveInventoryCfgToFile(config);
 }
 
+void UItemMgr::RemoveItem(int32 ItemReckey, int32 ItemCount, EInventoryLocation InventoryLocation)
+{
+	FGameItemInfo ItemInfo;
+	ItemInfo.m_ItemRecKey = ItemReckey;
+	ItemInfo.m_ItemCount = ItemCount;
+	ItemInfo.m_InventoryLocation = InventoryLocation;
+
+	int indexRemove = -1;
+
+	for (int index = 0; index < m_ItemArray.Num(); ++index)
+	{
+		if (m_ItemArray[index].m_ItemRecKey == ItemInfo.m_ItemRecKey)
+		{
+			m_ItemArray[index].m_ItemCount -= ItemInfo.m_ItemCount;
+			if (m_ItemArray[index].m_ItemCount <= 0)
+				indexRemove = index;
+			break;
+		}
+	}
+
+	if (indexRemove >= 0) m_ItemArray.RemoveAt(indexRemove);
+
+	// save data
+	bool bSuccess = true;
+	USavedInventoryConfig* config = USavedInventoryConfig::LoadInventoryCfgFromFile(bSuccess);
+	if (nullptr != config)
+	{
+		config->m_ItemArray = this->m_ItemArray;
+	}
+
+	USavedInventoryConfig::SaveInventoryCfgToFile(config);
+}
+
 void UItemMgr::AddItemEquipment(int32 ItemEquipmentReckey /*= 1*/, int32 ItemUpgradeLevel /*= 1*/, EInventoryLocation InventoryLocation /*= EInventoryLocation::InInventory*/)
 {
 	FGameItemEquipmentInfo ItemInfo;
@@ -188,6 +236,37 @@ void UItemMgr::AddItemEquipment(int32 ItemEquipmentReckey /*= 1*/, int32 ItemUpg
 	ItemInfo.m_ItemUgrapeLevel = ItemUpgradeLevel;
 	ItemInfo.m_InventoryLocation = InventoryLocation;
 	m_ItemEquipmentArray.Emplace(ItemInfo);
+
+	// save data
+	bool bSuccess = true;
+	USavedInventoryConfig* config = USavedInventoryConfig::LoadInventoryCfgFromFile(bSuccess);
+	if (nullptr != config)
+	{
+		config->m_ItemEquipmentArray = this->m_ItemEquipmentArray;
+	}
+
+	USavedInventoryConfig::SaveInventoryCfgToFile(config);
+}
+
+void UItemMgr::RemoveItemEquipment(int32 ItemEquipmentReckey, int32 ItemUpgradeLevel, EInventoryLocation InventoryLocation)
+{
+	FGameItemEquipmentInfo ItemInfo;
+	ItemInfo.m_ItemRecKey = ItemEquipmentReckey;
+	ItemInfo.m_ItemUgrapeLevel = ItemUpgradeLevel;
+	ItemInfo.m_InventoryLocation = InventoryLocation;
+
+	int indexRemove = -1;
+
+	for (int index = 0; index < m_ItemEquipmentArray.Num(); ++index)
+	{
+		if (m_ItemEquipmentArray[index] == ItemInfo)
+		{
+			indexRemove = index;
+			break;
+		}
+	}
+
+	if (indexRemove >= 0) m_ItemEquipmentArray.RemoveAt(indexRemove);
 
 	// save data
 	bool bSuccess = true;

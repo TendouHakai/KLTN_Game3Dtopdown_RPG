@@ -18,6 +18,7 @@ enum class EItemCategory : uint8
 UENUM(BlueprintType)
 enum class EItemType : uint8
 {
+	UpgradeEquipmentItem,
 	Max
 };
 

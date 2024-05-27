@@ -24,6 +24,7 @@ public:
 	TArray<FGameItemInfo> GetItemArray();
 	TArray<FGameItemInfo> GetItemInInventoryArray();
 	TArray<FGameItemInfo> GetItemInBackpackArray();
+	TArray<FGameItemInfo> GetItemArrayByItemType(EItemType type);
 
 	FString GetItemGradeText(EItemGrade grade);
 	FString GetDescriptionItem(const FItemInfoRecord& ItemInfoRecord);
@@ -38,7 +39,9 @@ public:
 
 	// Cheat Item
 	void AddItem(int32 ItemReckey = 1, int32 ItemCount = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
+	void RemoveItem(int32 ItemReckey = 1, int32 ItemCount = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
 	void AddItemEquipment(int32 ItemEquipmentReckey = 1, int32 ItemUpgradeLevel = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
+	void RemoveItemEquipment(int32 ItemEquipmentReckey = 1, int32 ItemUpgradeLevel = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
 
 	void ChangeItemInventoryLocation(FGameItemInfo iteminfo, int ItemCount, EInventoryLocation Inventorylocation);
 	void ChangeItemEquipmentInventoryLocation(FGameItemEquipmentInfo iteminfo, EInventoryLocation Inventorylocation);
