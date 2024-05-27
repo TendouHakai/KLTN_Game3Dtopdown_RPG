@@ -30,19 +30,47 @@ void UHeroMgr::EquipHeroItem(ABaseCharacter* hero, FGameItemEquipmentInfo itemin
 
 	if (nullptr == recordNew) return;
 
-	// update equip
-	
-	HeroInfo.m_Equip[static_cast<int32>(recordNew->EquipPosition)] = iteminfo.m_ItemRecKey;
-
 	// udpate param
-	ChangeHeroParam(HeroInfo.m_Param, recordOld->ItemEquipParam, false);
+	if(nullptr != recordOld)
+		ChangeHeroParam(HeroInfo.m_Param, recordOld->ItemEquipParam, false);
 	ChangeHeroParam(HeroInfo.m_Param, recordNew->ItemEquipParam, true);
 
 	// update Item in Backpack
 	if (OldItemInfo.m_ItemRecKey == 0)
-		GetMgr(UItemMgr)->RemoveItemEquipment(iteminfo.m_ItemRecKey, iteminfo.m_ItemUgrapeLevel, true);
+		GetMgr(UItemMgr)->ChangeItemEquipmentInventoryLocation(iteminfo, EInventoryLocation::InEquipment);
 	else
-		GetMgr(UItemMgr)->ChangeItemEquipment(iteminfo, OldItemInfo);
+	{
+		GetMgr(UItemMgr)->ChangeItemEquipmentInventoryLocation(iteminfo, EInventoryLocation::InEquipment);
+		GetMgr(UItemMgr)->ChangeItemEquipmentInventoryLocation(OldItemInfo, EInventoryLocation::InBackpack);
+	}
+
+	// update equip
+	iteminfo.m_InventoryLocation = EInventoryLocation::InEquipment;
+	HeroInfo.m_Equip[static_cast<int32>(recordNew->EquipPosition)] = iteminfo;
+
+	hero->SetHeroInfo(HeroInfo);
+
+	// update UI
+	ABaseGameMode* GameMode = GetGameModeAs(ABaseGameMode);
+	if (nullptr == GameMode) return;
+	GameMode->UIMgr->Update();
+}
+
+void UHeroMgr::UnEquipHeroItem(ABaseCharacter* hero, FGameItemEquipmentInfo iteminfo)
+{
+	FHeroInfo HeroInfo = hero->GetHeroInfo();
+
+	FItemEquipmentInfoRecord* record = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(iteminfo.m_ItemRecKey)));
+	if (nullptr == record) return;
+
+	// update param
+	ChangeHeroParam(HeroInfo.m_Param, record->ItemEquipParam, false);
+
+	// update Item Mgr
+	GetMgr(UItemMgr)->ChangeItemEquipmentInventoryLocation(iteminfo, EInventoryLocation::InBackpack);
+
+	// update equip
+	HeroInfo.m_Equip[static_cast<int32>(record->EquipPosition)] = FGameItemEquipmentInfo();
 
 	hero->SetHeroInfo(HeroInfo);
 

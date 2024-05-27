@@ -32,21 +32,29 @@ enum class EItemGrade : uint8
 	Max
 };
 
+UENUM(BlueprintType)
+enum class EInventoryLocation : uint8
+{
+	InInventory,
+	InBackpack,
+	InEquipment,
+	Max
+};
+
 USTRUCT(BlueprintType)
 struct FGameItemInfo
 {
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)	int32 m_ItemCount;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)	int32 m_ItemRecKey;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)	bool m_IsInBackpack;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)	int64 m_RemainTime;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)	EInventoryLocation m_InventoryLocation;
 
 	GENERATED_USTRUCT_BODY()
 public:
-	FGameItemInfo(int32 ItemCount = 0, int32 ItemRecKey = 0, bool IsInBackpack = false)
+	FGameItemInfo(int32 ItemCount = 0, int32 ItemRecKey = 0, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory)
 	{
 		m_ItemCount = ItemCount;
 		m_ItemRecKey = ItemRecKey;
-		m_IsInBackpack = IsInBackpack;
+		m_InventoryLocation = InventoryLocation;
 	}
 };
 
@@ -55,19 +63,19 @@ struct FGameItemEquipmentInfo
 {
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)	int32 m_ItemRecKey;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)	int32 m_ItemUgrapeLevel;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)	bool m_IsInBackpack;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)	EInventoryLocation m_InventoryLocation;
 
 	GENERATED_USTRUCT_BODY()
 public:
-	FGameItemEquipmentInfo(int32 ItemRecKey = 0, int32 ItemUgrapeLevel = 0, bool IsInBackpack = false)
+	FGameItemEquipmentInfo(int32 ItemRecKey = 0, int32 ItemUgrapeLevel = 0, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory)
 	{
 		m_ItemRecKey = ItemRecKey;
 		m_ItemUgrapeLevel = ItemUgrapeLevel;
-		m_IsInBackpack = IsInBackpack;
+		m_InventoryLocation = InventoryLocation;
 	}
 
 	bool operator==(const FGameItemEquipmentInfo& Other) const
 	{
-		return (this->m_ItemRecKey == Other.m_ItemRecKey) && (this->m_ItemUgrapeLevel == Other.m_ItemUgrapeLevel) && (this->m_IsInBackpack == m_IsInBackpack);
+		return (this->m_ItemRecKey == Other.m_ItemRecKey) && (this->m_ItemUgrapeLevel == Other.m_ItemUgrapeLevel) && (this->m_InventoryLocation == Other.m_InventoryLocation);
 	}
 };

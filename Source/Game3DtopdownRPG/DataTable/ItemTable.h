@@ -75,3 +75,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) UStaticMesh* MeshStatic;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString IconName;
 };
+
+USTRUCT(BlueprintType)
+struct FItemEquipmentLevRecord : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 Level;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) float expStart;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) float expEnd;
+};

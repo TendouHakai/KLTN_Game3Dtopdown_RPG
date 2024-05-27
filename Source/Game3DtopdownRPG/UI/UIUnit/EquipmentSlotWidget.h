@@ -30,6 +30,9 @@ public:
 	virtual void Update() override;
 protected:
 	void setImageIcon();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UInventoryEquipContainerWidget* GetInventoryEquipment() { return inventoryEquipment; }
 	
 protected:
 	UImage* imageIcon;

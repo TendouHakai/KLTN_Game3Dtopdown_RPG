@@ -59,7 +59,7 @@ TArray<FGameItemInfo> UItemMgr::GetItemInInventoryArray()
 	TArray<FGameItemInfo> ItemArrayInInventory;
 	for (FGameItemInfo info : m_ItemArray)
 	{
-		if (info.m_IsInBackpack == false)
+		if (info.m_InventoryLocation == EInventoryLocation::InInventory)
 			ItemArrayInInventory.Emplace(info);
 	}
 
@@ -71,7 +71,7 @@ TArray<FGameItemInfo> UItemMgr::GetItemInBackpackArray()
 	TArray<FGameItemInfo> ItemArrayInInventory;
 	for (FGameItemInfo info : m_ItemArray)
 	{
-		if (info.m_IsInBackpack == true)
+		if (info.m_InventoryLocation == EInventoryLocation::InBackpack)
 			ItemArrayInInventory.Emplace(info);
 	}
 
@@ -108,7 +108,7 @@ TArray<FGameItemEquipmentInfo> UItemMgr::GetItemEquipmentInInventoryArray()
 	TArray<FGameItemEquipmentInfo> ItemEquipArrayInInventory;
 	for (FGameItemEquipmentInfo info : m_ItemEquipmentArray)
 	{
-		if (info.m_IsInBackpack == false)
+		if (info.m_InventoryLocation == EInventoryLocation::InInventory)
 			ItemEquipArrayInInventory.Emplace(info);
 	}
 
@@ -120,7 +120,7 @@ TArray<FGameItemEquipmentInfo> UItemMgr::GetItemEquipmentInBackpackArray()
 	TArray<FGameItemEquipmentInfo> ItemEquipArrayInInventory;
 	for (FGameItemEquipmentInfo info : m_ItemEquipmentArray)
 	{
-		if (info.m_IsInBackpack == true)
+		if (info.m_InventoryLocation == EInventoryLocation::InBackpack)
 			ItemEquipArrayInInventory.Emplace(info);
 	}
 
@@ -147,12 +147,12 @@ FItemEquipmentInfoRecord UItemMgr::GetItemEquipmentInfoRecordBlueprint(FName Ind
 	return *record;
 }
 
-void UItemMgr::AddItem(int32 ItemReckey /*= 1*/, int32 ItemCount /*= 1*/, bool IsInBackpack /*= false*/)
+void UItemMgr::AddItem(int32 ItemReckey /*= 1*/, int32 ItemCount /*= 1*/, EInventoryLocation InventoryLocation /*= EInventoryLocation::InInventory*/)
 {
 	FGameItemInfo ItemInfo;
 	ItemInfo.m_ItemRecKey = ItemReckey;
 	ItemInfo.m_ItemCount = ItemCount;
-	ItemInfo.m_IsInBackpack = IsInBackpack;
+	ItemInfo.m_InventoryLocation = InventoryLocation;
 
 	bool bExsist = false;
 	
@@ -181,12 +181,12 @@ void UItemMgr::AddItem(int32 ItemReckey /*= 1*/, int32 ItemCount /*= 1*/, bool I
 	USavedInventoryConfig::SaveInventoryCfgToFile(config);
 }
 
-void UItemMgr::AddItemEquipment(int32 ItemEquipmentReckey /*= 1*/, int32 ItemUpgradeLevel /*= 1*/, bool IsInBackpack /*= false*/)
+void UItemMgr::AddItemEquipment(int32 ItemEquipmentReckey /*= 1*/, int32 ItemUpgradeLevel /*= 1*/, EInventoryLocation InventoryLocation /*= EInventoryLocation::InInventory*/)
 {
 	FGameItemEquipmentInfo ItemInfo;
 	ItemInfo.m_ItemRecKey = ItemEquipmentReckey;
 	ItemInfo.m_ItemUgrapeLevel = ItemUpgradeLevel;
-	ItemInfo.m_IsInBackpack = IsInBackpack;
+	ItemInfo.m_InventoryLocation = InventoryLocation;
 	m_ItemEquipmentArray.Emplace(ItemInfo);
 
 	// save data
@@ -200,23 +200,27 @@ void UItemMgr::AddItemEquipment(int32 ItemEquipmentReckey /*= 1*/, int32 ItemUpg
 	USavedInventoryConfig::SaveInventoryCfgToFile(config);
 }
 
-void UItemMgr::RemoveItem(int32 ItemReckey /*= 1*/, int32 ItemCount /*= 1*/, bool IsInBackpack /*= false*/)
+void UItemMgr::ChangeItemInventoryLocation(FGameItemInfo iteminfo, int ItemCount, EInventoryLocation Inventorylocation)
 {
-	int indexDel = -1;
-	for (int index = 0; index < m_ItemArray.Num(); ++index)
+	for (int index = 0; index < m_ItemEquipmentArray.Num(); ++index)
 	{
-		if (m_ItemArray[index].m_IsInBackpack == IsInBackpack && m_ItemArray[index].m_ItemRecKey == ItemReckey)
+		if (m_ItemArray[index].m_ItemRecKey == iteminfo.m_ItemRecKey)
 		{
-			m_ItemArray[index].m_ItemCount -= ItemCount;
-			if (m_ItemArray[index].m_ItemCount <= 0)
-				indexDel = index;
+			if (m_ItemArray[index].m_ItemCount < ItemCount)
+			{
+				FGameItemInfo info;
+				info.m_ItemRecKey = m_ItemArray[index].m_ItemRecKey;
+				info.m_ItemCount = ItemCount;
+				info.m_InventoryLocation = Inventorylocation;
+
+				m_ItemArray.Emplace(info);
+			}
+			else
+			{
+				m_ItemArray[index].m_InventoryLocation = Inventorylocation;
+			}
 			break;
 		}
-	}
-
-	if(indexDel >= 0)
-	{
-		m_ItemArray.RemoveAt(indexDel);
 	}
 
 	// save data
@@ -230,38 +234,13 @@ void UItemMgr::RemoveItem(int32 ItemReckey /*= 1*/, int32 ItemCount /*= 1*/, boo
 	USavedInventoryConfig::SaveInventoryCfgToFile(config);
 }
 
-void UItemMgr::RemoveItemEquipment(int32 ItemReckey /*= 1*/, int32 ItemUpgradeLevel /*= 1*/, bool IsInBackpack /*= false*/)
+void UItemMgr::ChangeItemEquipmentInventoryLocation(FGameItemEquipmentInfo iteminfo, EInventoryLocation Inventorylocation)
 {
 	for (int index = 0; index < m_ItemEquipmentArray.Num(); ++index)
 	{
-		if (m_ItemEquipmentArray[index].m_IsInBackpack == IsInBackpack 
-			&& m_ItemEquipmentArray[index].m_ItemRecKey == ItemReckey
-			&& m_ItemEquipmentArray[index].m_ItemUgrapeLevel == ItemUpgradeLevel)
+		if (m_ItemEquipmentArray[index] == iteminfo)
 		{
-			m_ItemEquipmentArray.RemoveAt(index);
-			break;
-		}
-	}
-
-	// save data
-	bool bSuccess = true;
-	USavedInventoryConfig* config = USavedInventoryConfig::LoadInventoryCfgFromFile(bSuccess);
-	if (nullptr != config)
-	{
-		config->m_ItemEquipmentArray = this->m_ItemEquipmentArray;
-	}
-
-	USavedInventoryConfig::SaveInventoryCfgToFile(config);
-}
-
-void UItemMgr::ChangeItemEquipment(FGameItemEquipmentInfo oldItem, FGameItemEquipmentInfo newItem)
-{
-	newItem.m_IsInBackpack = true;
-	for (int index = 0; index < m_ItemEquipmentArray.Num(); ++index)
-	{
-		if (m_ItemEquipmentArray[index] == oldItem)
-		{
-			m_ItemEquipmentArray[index] = newItem;
+			m_ItemEquipmentArray[index].m_InventoryLocation = Inventorylocation;
 			break;
 		}
 	}

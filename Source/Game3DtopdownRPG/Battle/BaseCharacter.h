@@ -127,6 +127,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Character")
 	void EquipItem(FGameItemEquipmentInfo iteminfo, bool IsInit = true);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Character")
+	void UnEquipItem(FGameItemEquipmentInfo iteminfo);
+
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	bool IsValidBuff(const FHeroBuffInfo& HeroBuffInfo);
