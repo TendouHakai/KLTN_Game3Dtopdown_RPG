@@ -3,7 +3,7 @@
 
 // is a widgetID in UIbaseMgr
 UENUM(BlueprintType)
-enum class EUIName : uint8 
+enum class EUIName : uint8
 {
 	None = 0,
 	// Page 
@@ -16,7 +16,7 @@ enum class EUIName : uint8
 	BattleBossProgessWidget,
 	BattleFailWidget,
 	BattleVictoryWidget,
-	
+
 	// Inventory
 	InventoryPage,
 	InventoryItemSellPopup,
@@ -26,6 +26,14 @@ enum class EUIName : uint8
 
 	// MsgBox
 	MsgBoxBasic,
+
+	// Lobby
+	InternalPage,
+	ForgingItemEquipmentPage,
+	UpgradeItemEquipmentPage,
+	MakingPotionPage,
+	RuneBuffPage,
+
 	Max,
 };
 
