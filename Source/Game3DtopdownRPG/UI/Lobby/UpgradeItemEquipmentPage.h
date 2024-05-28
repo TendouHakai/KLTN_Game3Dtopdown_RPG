@@ -15,6 +15,7 @@
 class UScrollWidget;
 class UInventoryEquipContainerWidget;
 class UEquipmentSlotWidget;
+class UUIBaseButton;
 
 UENUM(BlueprintType)
 enum class EUgradeTabCategory : uint8
@@ -87,6 +88,9 @@ protected:
 	TArray<UOverlay*> statInfos;
 	TArray<UTextBlock*> statParamCurrent;
 	TArray<UTextBlock*> statParamAdd;
+
+	// button
+	UUIBaseButton* LevUpBtn;
 
 	// current category
 	EUgradeTabCategory m_CurrentCategory;

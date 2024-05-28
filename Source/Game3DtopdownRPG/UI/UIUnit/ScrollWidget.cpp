@@ -72,8 +72,6 @@ void UScrollWidget::Update()
                 Cast<UInventoryContainerWidget>(ChildWidget)->EmptyUI();
             else if (Cast<UInventoryEquipContainerWidget>(ChildWidget) != nullptr)
                 Cast<UInventoryEquipContainerWidget>(ChildWidget)->EmptyUI();
-
-
             continue;
         }
 

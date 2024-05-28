@@ -50,13 +50,13 @@ void UInventoryContainerWidget::SetInfo(FGameItemInfo& GameItemInfo)
 {
 	gameItemInfo = GameItemInfo;
 
-
 	itemInfoRecord = GetMgr(UItemMgr)->GetItemInfoRecord(FName(FString::FromInt(gameItemInfo.m_ItemRecKey)));
 	if (nullptr == itemInfoRecord) return;
 
 	SetImageItem(itemInfoRecord->ItemIcon);
 	SetTextCount(gameItemInfo.m_ItemCount);
 	SetFrameBackground(itemInfoRecord->ItemGrape);
+	OverlayUseCount->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UInventoryContainerWidget::SetInfo(UInventoryContainerWidget* InventoryContainerWidget)

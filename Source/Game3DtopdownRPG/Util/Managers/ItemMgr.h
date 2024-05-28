@@ -12,6 +12,7 @@ struct FItemEquipmentInfoRecord;
 struct FItemTypeInfoRecord;
 struct FItemEquipmentLevRecord;
 struct FUpgradeLevelOfMaterialRecord;
+struct FItemParamLevRecord;
 
 UCLASS()
 class GAME3DTOPDOWNRPG_API UItemMgr : public USingleton
@@ -49,6 +50,8 @@ public:
 
 	FUpgradeLevelOfMaterialRecord* GetUpgradeLevelOfMaterialRecord(FName Index);
 
+	FItemParamLevRecord* GetItemParamLevRecord(FName Index);
+
 	// Cheat Item
 	void AddItem(int32 ItemReckey = 1, int32 ItemCount = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
 	void RemoveItem(int32 ItemReckey = 1, int32 ItemCount = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
@@ -57,6 +60,9 @@ public:
 
 	void ChangeItemInventoryLocation(FGameItemInfo iteminfo, int ItemCount, EInventoryLocation Inventorylocation);
 	void ChangeItemEquipmentInventoryLocation(FGameItemEquipmentInfo iteminfo, EInventoryLocation Inventorylocation);
+
+	FGameItemEquipmentInfo UpgradeLevelItemEquipment(FGameItemEquipmentInfo iteminfo, TArray<FGameItemInfo> Materials);
+	//void ChangeItemEquipmentInfo(FGameItemEquipmentInfo olditeminfo, FGameItemEquipmentInfo newinfo);
 protected:
 	TArray<FGameItemInfo> m_ItemArray;
 	TArray<FGameItemEquipmentInfo> m_ItemEquipmentArray;

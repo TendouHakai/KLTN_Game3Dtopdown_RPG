@@ -8,6 +8,7 @@
 #include "Game3DtopdownRPG/UI/UIUnit/InventoryEquipContainerWidget.h"
 #include "Game3DtopdownRPG/UI//UIUnit/InventoryContainerWidget.h"
 #include "Game3DtopdownRPG/UI/UIUnit/EquipmentSlotWidget.h"
+#include "Game3DtopdownRPG/UI/UIUnit/UIBaseButton.h"
 #include "Game3DtopdownRPG/DataTable/ItemTable.h"
 
 void UUpgradeItemEquipmentPage::CacheOwnUI()
@@ -74,6 +75,14 @@ void UUpgradeItemEquipmentPage::CacheOwnUI()
 		}
 	}
 
+	// Button
+	LevUpBtn = GetOwnUI<UUIBaseButton>(TEXT("Button_LevelUp"));
+	if (nullptr != LevUpBtn)
+	{
+		LevUpBtn->OnClicked_Delegate.Unbind();
+		LevUpBtn->OnClicked_Delegate.BindUFunction(this, FName(TEXT("OnTapLevelUpBtn")));
+	}
+		
 	OnTapTabcategory(EUgradeTabCategory::EquipmentItem);
 	Update();
 }
@@ -91,6 +100,8 @@ void UUpgradeItemEquipmentPage::Update()
 
 	m_ItemUpgradeMaterialArray = GetMgr(UItemMgr)->GetItemArrayByItemType(EItemType::UpgradeEquipmentItem);
 	if (nullptr != scrollMaterial) scrollMaterial->SetChildCount(m_ItemUpgradeMaterialArray.Num());
+
+	if (nullptr != scrollConsumeMaterial) scrollConsumeMaterial->SetChildCount(m_ConsumeMaterialArray.Num());
 }
 
 void UUpgradeItemEquipmentPage::OnTapEquipContainer(int32 rec_key, UInventoryEquipContainerWidget* Container)
@@ -194,7 +205,17 @@ void UUpgradeItemEquipmentPage::OnTapTabcategory(EUgradeTabCategory category)
 
 void UUpgradeItemEquipmentPage::OnTapLevelUpBtn(EUgradeTabCategory category)
 {
+	if (m_CurrentGameItemInfo.m_ItemRecKey == 0) return;
+	if (m_ConsumeMaterialArray.Num() == 0) return;
 
+	FGameItemEquipmentInfo newinfo = GetMgr(UItemMgr)->UpgradeLevelItemEquipment(m_CurrentGameItemInfo, m_ConsumeMaterialArray);
+	if (0 == newinfo.m_ItemRecKey) return;
+
+	m_ConsumeMaterialArray.Empty();
+
+	SetCurrentUpgradeEquipItem(newinfo);
+
+	Update();
 }
 
 void UUpgradeItemEquipmentPage::UpdateChildMaterial(UWidget* Child, int32 ChildDataIdx)
@@ -207,7 +228,7 @@ void UUpgradeItemEquipmentPage::UpdateChildMaterial(UWidget* Child, int32 ChildD
 	FGameItemInfo info = m_ItemUpgradeMaterialArray[ChildDataIdx];
 
 	InventoryContainer->SetInfo(info);
-	//InventoryContainer->OwnerDelegateEx.Unbind();
+
 	InventoryContainer->SetButtonEventEx(this);
 	InventoryContainer->SetButtonUseSubtractEventEx(this);
 }
@@ -222,7 +243,7 @@ void UUpgradeItemEquipmentPage::UpdateChildEquipmentItem(UWidget* Child, int32 C
 	FGameItemEquipmentInfo info = m_ItemEquipmentArray[ChildDataIdx];
 
 	InventoryContainer->SetInfo(info);
-	//InventoryContainer->OwnerDelegateEx.Unbind();
+
 	InventoryContainer->SetButtonEventEx(this);
 }
 
@@ -244,6 +265,7 @@ void UUpgradeItemEquipmentPage::SetCurrentUpgradeEquipItem(FGameItemEquipmentInf
 {
 	if (info.m_ItemRecKey == 0) return;
 	m_CurrentGameItemInfo = info;
+	m_CurrentEquipmentUpgradeItem->GetInventoryEquipment()->SetInfo(info);
 	UpdateDescriptionEquipItem();
 }
 
@@ -258,38 +280,38 @@ void UUpgradeItemEquipmentPage::UpdateDescriptionEquipItem()
 
 	setIncreaseUpgradeExp();
 
-	for (int indexParam = 0; indexParam < 5; ++indexParam)
-	{
-		float paramvalue = 0;
-		switch ((ECharacterParam)indexParam)
-		{
-		case ECharacterParam::PhysicDamage:
-			paramvalue = record->ItemEquipParam.PhysicDamage;
-			break;
-		case ECharacterParam::MagicDamage:
-			paramvalue = record->ItemEquipParam.MagicDamage;
-			break;
-		case ECharacterParam::HP:
-			paramvalue = record->ItemEquipParam.HP;
-			break;
-		case ECharacterParam::Def:
-			paramvalue = record->ItemEquipParam.Def;
-			break;
-		case ECharacterParam::MagicDef:
-			paramvalue = record->ItemEquipParam.MagicDef;
-			break;
-		default:
-			break;
-		}
+	//for (int indexParam = 0; indexParam < 5; ++indexParam)
+	//{
+	//	float paramvalue = 0;
+	//	switch ((ECharacterParam)indexParam)
+	//	{
+	//	case ECharacterParam::PhysicDamage:
+	//		paramvalue = record->ItemEquipParam.PhysicDamage;
+	//		break;
+	//	case ECharacterParam::MagicDamage:
+	//		paramvalue = record->ItemEquipParam.MagicDamage;
+	//		break;
+	//	case ECharacterParam::HP:
+	//		paramvalue = record->ItemEquipParam.HP;
+	//		break;
+	//	case ECharacterParam::Def:
+	//		paramvalue = record->ItemEquipParam.Def;
+	//		break;
+	//	case ECharacterParam::MagicDef:
+	//		paramvalue = record->ItemEquipParam.MagicDef;
+	//		break;
+	//	default:
+	//		break;
+	//	}
 
-		if (0 == paramvalue)
-		{
-			statInfos[indexParam]->SetVisibility(ESlateVisibility::Collapsed);
-			continue;
-		}
-		statParamCurrent[indexParam]->SetText(FText::FromString(FString::Printf(TEXT("+%.0f"), paramvalue)));
-		statParamAdd[indexParam]->SetVisibility(ESlateVisibility::Hidden);
-	}
+	//	if (0 == paramvalue)
+	//	{
+	//		statInfos[indexParam]->SetVisibility(ESlateVisibility::Collapsed);
+	//		continue;
+	//	}
+	//	statParamCurrent[indexParam]->SetText(FText::FromString(FString::Printf(TEXT("+%.0f"), paramvalue)));
+	//	statParamAdd[indexParam]->SetVisibility(ESlateVisibility::Hidden);
+	//}
 }
 
 void UUpgradeItemEquipmentPage::setIncreaseUpgradeExp()
@@ -307,8 +329,29 @@ void UUpgradeItemEquipmentPage::setIncreaseUpgradeExp()
 	// set increase level
 	int TotalExp = m_CurrentGameItemInfo.m_ItemUgrapeExp + UpgradeExp;
 	FItemEquipmentLevRecord* record = GetMgr(UItemMgr)->GetItemEquipmentLevelRecordByTotalExp(TotalExp);
-	int IncreaseLevel = record->Level - m_CurrentGameItemInfo.m_ItemUgrapeLevel;
-	
+
+	int IncreaseLevel = 0;
+	if (nullptr != record) 
+		IncreaseLevel = record->Level - m_CurrentGameItemInfo.m_ItemUgrapeLevel;
+
+	if (IncreaseLevel == 0)
+		textLevelAdd->SetVisibility(ESlateVisibility::Hidden);
+	else
+	{
+		textLevelAdd->SetText(FText::FromString(FString::Printf(TEXT("+%d"), IncreaseLevel)));
+		textLevelAdd->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+
+	// Update Exp
+	if (nullptr != record)
+	{
+		float currentExp = m_CurrentGameItemInfo.m_ItemUgrapeExp + UpgradeExp - record->expStart;
+
+		progressBarExp->SetPercent(currentExp * 1.0f / (record->expEnd - record->expStart));
+
+		textCurrentExp->SetText(FText::FromString(FString::Printf(TEXT("%0.f/%0.f exp"), currentExp, (record->expEnd - record->expStart))));
+	}
+
 	if (UpgradeExp == 0)
 		textExpAdd->SetVisibility(ESlateVisibility::Hidden);
 	else
@@ -317,11 +360,56 @@ void UUpgradeItemEquipmentPage::setIncreaseUpgradeExp()
 		textExpAdd->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 
-	if (IncreaseLevel == 0)
-		textLevelAdd->SetVisibility(ESlateVisibility::Hidden);
-	else
+	// update ITem Param
+	// set current item param
+	FItemEquipmentInfoRecord* infoRecord = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(m_CurrentGameItemInfo.m_ItemRecKey)));
+	FItemParamLevRecord* paramRecord = GetMgr(UItemMgr)->GetItemParamLevRecord(FName(FString::FromInt(infoRecord->ItemParamLevID)));
+
+	for (int indexParam = 0; indexParam < 5; ++indexParam)
 	{
-		textLevelAdd->SetText(FText::FromString(FString::Printf(TEXT("+%d"), IncreaseLevel)));
-		textLevelAdd->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		float paramvalue = 0;
+		float paramvalueAdd = 0;
+		switch ((ECharacterParam)indexParam)
+		{
+		case ECharacterParam::PhysicDamage:
+			paramvalue = infoRecord->ItemEquipParam.PhysicDamage + paramRecord->ParamUpgrade.PhysicDamage * m_CurrentGameItemInfo.m_ItemUgrapeLevel;
+			paramvalueAdd = paramRecord->ParamUpgrade.PhysicDamage * IncreaseLevel;
+			break;
+		case ECharacterParam::MagicDamage:
+			paramvalue = infoRecord->ItemEquipParam.MagicDamage + paramRecord->ParamUpgrade.MagicDamage * m_CurrentGameItemInfo.m_ItemUgrapeLevel;
+			paramvalueAdd = paramRecord->ParamUpgrade.MagicDamage * IncreaseLevel;
+			break;
+		case ECharacterParam::HP:
+			paramvalue = infoRecord->ItemEquipParam.HP + paramRecord->ParamUpgrade.HP * m_CurrentGameItemInfo.m_ItemUgrapeLevel;
+			paramvalueAdd = paramRecord->ParamUpgrade.HP * IncreaseLevel;
+			break;
+		case ECharacterParam::Def:
+			paramvalue = infoRecord->ItemEquipParam.Def + paramRecord->ParamUpgrade.Def * m_CurrentGameItemInfo.m_ItemUgrapeLevel;
+			paramvalueAdd = paramRecord->ParamUpgrade.Def * IncreaseLevel;
+			break;
+		case ECharacterParam::MagicDef:
+			paramvalue = infoRecord->ItemEquipParam.MagicDef + paramRecord->ParamUpgrade.MagicDef * m_CurrentGameItemInfo.m_ItemUgrapeLevel;
+			paramvalueAdd = paramRecord->ParamUpgrade.MagicDef * IncreaseLevel;
+			break;
+		default:
+			break;
+		}
+
+		if (0 == paramvalue && 0 == paramvalueAdd)
+		{
+			statInfos[indexParam]->SetVisibility(ESlateVisibility::Collapsed);
+			continue;
+		}
+
+		statParamCurrent[indexParam]->SetText(FText::FromString(FString::Printf(TEXT("+%.0f"), paramvalue)));
+		
+		if (0 == paramvalueAdd)
+			statParamAdd[indexParam]->SetVisibility(ESlateVisibility::Hidden);
+		else
+		{
+			statParamAdd[indexParam]->SetText(FText::FromString(FString::Printf(TEXT("+%.0f"), paramvalueAdd)));
+			statParamAdd[indexParam]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		}
+		statInfos[indexParam]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 }

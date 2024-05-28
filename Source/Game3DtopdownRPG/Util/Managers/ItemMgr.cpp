@@ -219,8 +219,24 @@ FUpgradeLevelOfMaterialRecord* UItemMgr::GetUpgradeLevelOfMaterialRecord(FName I
 	return UpgradeLevelOfMaterialRecord;
 }
 
+FItemParamLevRecord* UItemMgr::GetItemParamLevRecord(FName Index)
+{
+	UDataTable* ItemParamLevTable = GetMgr(UTableMgr)->ItemParamLevTable;
+	if (nullptr == ItemParamLevTable)
+		return nullptr;
+
+	FItemParamLevRecord* ItemParamLevRecord = ItemParamLevTable->FindRow<FItemParamLevRecord>(Index, FString(""));
+
+	if (nullptr == ItemParamLevRecord) return nullptr;
+
+	return ItemParamLevRecord;
+}
+
 void UItemMgr::AddItem(int32 ItemReckey /*= 1*/, int32 ItemCount /*= 1*/, EInventoryLocation InventoryLocation /*= EInventoryLocation::InInventory*/)
 {
+	FItemInfoRecord* record = GetItemInfoRecord(FName(FString::FromInt(ItemReckey)));
+	if (nullptr == record) return;
+
 	FGameItemInfo ItemInfo;
 	ItemInfo.m_ItemRecKey = ItemReckey;
 	ItemInfo.m_ItemCount = ItemCount;
@@ -289,6 +305,9 @@ void UItemMgr::RemoveItem(int32 ItemReckey, int32 ItemCount, EInventoryLocation 
 
 void UItemMgr::AddItemEquipment(int32 ItemEquipmentReckey /*= 1*/, int32 ItemUpgradeLevel /*= 1*/, EInventoryLocation InventoryLocation /*= EInventoryLocation::InInventory*/)
 {
+	FItemEquipmentInfoRecord* record = GetItemEquipmentInfoRecord(FName(FString::FromInt(ItemEquipmentReckey)));
+	if (nullptr == record) return;
+
 	FGameItemEquipmentInfo ItemInfo;
 	ItemInfo.m_ItemRecKey = ItemEquipmentReckey;
 	ItemInfo.m_ItemUgrapeLevel = ItemUpgradeLevel;
@@ -391,4 +410,49 @@ void UItemMgr::ChangeItemEquipmentInventoryLocation(FGameItemEquipmentInfo itemi
 	}
 
 	USavedInventoryConfig::SaveInventoryCfgToFile(config);
+}
+
+FGameItemEquipmentInfo UItemMgr::UpgradeLevelItemEquipment(FGameItemEquipmentInfo iteminfo, TArray<FGameItemInfo> Materials)
+{
+	FGameItemEquipmentInfo newinfo;
+
+	if (iteminfo.m_ItemRecKey == 0) return newinfo;
+	if (Materials.Num() == 0) return newinfo;
+
+	int32 UpgradeExp = 0;
+
+	// Remove materials
+
+	for (int index = 0; index < Materials.Num(); ++index)
+	{
+		FUpgradeLevelOfMaterialRecord* UpgradeRecord = GetMgr(UItemMgr)->GetUpgradeLevelOfMaterialRecord(FName(FString::FromInt(Materials[index].m_ItemRecKey)));
+		RemoveItem(Materials[index].m_ItemRecKey, Materials[index].m_ItemCount, Materials[index].m_InventoryLocation);
+		UpgradeExp += (UpgradeRecord->expUpgrade * Materials[index].m_ItemCount);
+	}
+
+	// Update level item
+
+	for (int index = 0; index < m_ItemEquipmentArray.Num(); ++index)
+	{
+		if (m_ItemEquipmentArray[index] == iteminfo)
+		{
+			m_ItemEquipmentArray[index].m_ItemUgrapeExp += UpgradeExp;
+			FItemEquipmentLevRecord* levRecord = GetItemEquipmentLevelRecordByTotalExp(m_ItemEquipmentArray[index].m_ItemUgrapeExp);
+			m_ItemEquipmentArray[index].m_ItemUgrapeLevel = levRecord->Level;
+			newinfo = m_ItemEquipmentArray[index];
+			break;
+		}
+	}
+
+	// save data
+	bool bSuccess = true;
+	USavedInventoryConfig* config = USavedInventoryConfig::LoadInventoryCfgFromFile(bSuccess);
+	if (nullptr != config)
+	{
+		config->m_ItemEquipmentArray = this->m_ItemEquipmentArray;
+	}
+
+	USavedInventoryConfig::SaveInventoryCfgToFile(config);
+
+	return newinfo;
 }

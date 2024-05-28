@@ -75,6 +75,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) USkeletalMesh* MeshSkeletal;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) UStaticMesh* MeshStatic;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString IconName;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 ItemParamLevID;
 };
 
 USTRUCT(BlueprintType)
@@ -96,4 +97,13 @@ struct FUpgradeLevelOfMaterialRecord : public FTableRowBase
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 ItemReckey;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) float expUpgrade;
+};
+
+USTRUCT(BlueprintType)
+struct FItemParamLevRecord : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) FCharacterParam ParamUpgrade;
 };
