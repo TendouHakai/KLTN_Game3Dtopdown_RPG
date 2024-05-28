@@ -49,7 +49,7 @@ public:
 	void SetButtonEventEx(T* owner)
 	{
 		OwnerDelegateEx.Unbind();
-		OwnerDelegateEx.BindDynamic(owner, &T::OnTapContainer);
+		OwnerDelegateEx.BindDynamic(owner, &T::OnTapEquipContainer);
 	}
 
 	bool IsInteract = true;

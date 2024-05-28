@@ -53,6 +53,7 @@ enum class EItemEquipPosition : uint8
 	Weapon,
 	Shield,
 	Clother,
+	All,
 	Max
 };
 
@@ -85,4 +86,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 Level;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) float expStart;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) float expEnd;
+};
+
+USTRUCT(BlueprintType)
+struct FUpgradeLevelOfMaterialRecord : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 ItemReckey;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) float expUpgrade;
 };

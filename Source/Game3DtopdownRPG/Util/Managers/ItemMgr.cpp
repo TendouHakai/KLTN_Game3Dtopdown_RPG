@@ -161,6 +161,64 @@ FItemEquipmentInfoRecord UItemMgr::GetItemEquipmentInfoRecordBlueprint(FName Ind
 	return *record;
 }
 
+FItemTypeInfoRecord* UItemMgr::GetItemTypeInfoRecord(FName Index)
+{
+	UDataTable* ItemTypeInfoTable = GetMgr(UTableMgr)->ItemTypeInfoTable;
+	if (nullptr == ItemTypeInfoTable)
+		return nullptr;
+
+	FItemTypeInfoRecord* ItemTypeInfoRecord = ItemTypeInfoTable->FindRow<FItemTypeInfoRecord>(Index, FString(""));
+
+	if (nullptr == ItemTypeInfoRecord) return nullptr;
+
+	return ItemTypeInfoRecord;
+}
+
+FItemEquipmentLevRecord* UItemMgr::GetItemEquipmentLevelRecord(FName Index)
+{
+	UDataTable* ItemEquipmentLevInfoTable = GetMgr(UTableMgr)->ItemEquipmentLevInfoTable;
+	if (nullptr == ItemEquipmentLevInfoTable)
+		return nullptr;
+
+	FItemEquipmentLevRecord* ItemEquipmentLevRecord = ItemEquipmentLevInfoTable->FindRow<FItemEquipmentLevRecord>(Index, FString(""));
+
+	if (nullptr == ItemEquipmentLevRecord) return nullptr;
+
+	return ItemEquipmentLevRecord;
+}
+
+FItemEquipmentLevRecord* UItemMgr::GetItemEquipmentLevelRecordByTotalExp(int32 totalExp)
+{
+	UDataTable* ItemEquipmentLevInfoTable = GetMgr(UTableMgr)->ItemEquipmentLevInfoTable;
+	if (nullptr == ItemEquipmentLevInfoTable)
+		return nullptr;
+
+	TArray<FItemEquipmentLevRecord*> allrows;
+
+	ItemEquipmentLevInfoTable->GetAllRows(FString(), allrows);
+
+	for (auto record : allrows)
+	{
+		if (totalExp <= record->expEnd && totalExp > record->expStart)
+			return record;
+	}
+
+	return nullptr;
+}
+
+FUpgradeLevelOfMaterialRecord* UItemMgr::GetUpgradeLevelOfMaterialRecord(FName Index)
+{
+	UDataTable* UpgradeLevelOfMaterialTable = GetMgr(UTableMgr)->UpgradeLevelOfMaterialTable;
+	if (nullptr == UpgradeLevelOfMaterialTable)
+		return nullptr;
+
+	FUpgradeLevelOfMaterialRecord* UpgradeLevelOfMaterialRecord = UpgradeLevelOfMaterialTable->FindRow<FUpgradeLevelOfMaterialRecord>(Index, FString(""));
+
+	if (nullptr == UpgradeLevelOfMaterialRecord) return nullptr;
+
+	return UpgradeLevelOfMaterialRecord;
+}
+
 void UItemMgr::AddItem(int32 ItemReckey /*= 1*/, int32 ItemCount /*= 1*/, EInventoryLocation InventoryLocation /*= EInventoryLocation::InInventory*/)
 {
 	FGameItemInfo ItemInfo;

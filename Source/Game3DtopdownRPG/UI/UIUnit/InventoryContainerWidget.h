@@ -12,6 +12,7 @@
 #include "InventoryContainerWidget.generated.h"
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FContainerTap_DelegateEx, int32, Output, UInventoryContainerWidget*, Output02);
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FContainerTapUseSubtract_DelegateEx, int32, Output, UInventoryContainerWidget*, Output02);
 
 struct FItemInfoRecord;
 
@@ -34,6 +35,9 @@ public:
 	virtual void OnTap();
 
 	UFUNCTION(BlueprintCallable)
+	virtual void OnTapUseSubtract();
+
+	UFUNCTION(BlueprintCallable)
 	virtual void OnHover();
 
 	UFUNCTION(BlueprintCallable)
@@ -48,8 +52,18 @@ public:
 		OwnerDelegateEx.BindDynamic(owner, &T::OnTapContainer);
 	}
 
+	template<class T>
+	void SetButtonUseSubtractEventEx(T* owner)
+	{
+		OwnerUseSubtractDelegateEx.Unbind();
+		OwnerUseSubtractDelegateEx.BindDynamic(owner, &T::OnTapUseSubtractContainer);
+	}
+
+	void SetUseCount(int32 count);
+
 public:
 	FContainerTap_DelegateEx OwnerDelegateEx;
+	FContainerTapUseSubtract_DelegateEx OwnerUseSubtractDelegateEx;
 
 	bool IsInteract = true;
 protected:
@@ -68,6 +82,10 @@ protected:
 	UTextBlock* TextCount;
 	UWidgetAnimation* SelectAnimation;
 	UWidgetAnimation* ReleaseAnimation;
+
+	// overlay use count
+	UOverlay* OverlayUseCount;
+	UTextBlock* TextUseCount;
 
 	FGameItemInfo gameItemInfo;
 	FItemInfoRecord* itemInfoRecord;

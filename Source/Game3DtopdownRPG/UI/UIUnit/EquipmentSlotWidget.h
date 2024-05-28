@@ -9,6 +9,8 @@
 #include "Game3DtopdownRPG/DataTable/ItemTable.h"
 #include "EquipmentSlotWidget.generated.h"
 
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FEquipmentContainerDrop_DelegateEx, int32, Output, UEquipmentSlotWidget*, Output02);
+
 struct FGameItemInfo;
 class UInventoryEquipContainerWidget;
 class ABaseCharacter;
@@ -25,14 +27,20 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void EquipItemToSlot(FGameItemEquipmentInfo iteminfo);
-	//void EmptyUI();
+
+	template<class T>
+	void SetDropEventEx(T* owner)
+	{
+		OwnerDropDelegateEx.Unbind();
+		OwnerDropDelegateEx.BindDynamic(owner, &T::OnDropEquipContainer);
+	}
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UInventoryEquipContainerWidget* GetInventoryEquipment() { return inventoryEquipment; }
 
 	virtual void Update() override;
 protected:
 	void setImageIcon();
-
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	UInventoryEquipContainerWidget* GetInventoryEquipment() { return inventoryEquipment; }
 	
 protected:
 	UImage* imageIcon;
@@ -40,4 +48,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) EItemEquipPosition EquipmentPosition;
 	ABaseCharacter* character;
+
+	FEquipmentContainerDrop_DelegateEx OwnerDropDelegateEx;
 };

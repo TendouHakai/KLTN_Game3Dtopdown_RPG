@@ -64,19 +64,24 @@ struct FGameItemEquipmentInfo
 {
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)	int32 m_ItemRecKey;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)	int32 m_ItemUgrapeLevel;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)	int32 m_ItemUgrapeExp;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)	EInventoryLocation m_InventoryLocation;
 
 	GENERATED_USTRUCT_BODY()
 public:
-	FGameItemEquipmentInfo(int32 ItemRecKey = 0, int32 ItemUgrapeLevel = 0, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory)
+	FGameItemEquipmentInfo(int32 ItemRecKey = 0, int32 ItemUgrapeLevel = 0, int32 ItemUgrapeExp = 0, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory)
 	{
 		m_ItemRecKey = ItemRecKey;
 		m_ItemUgrapeLevel = ItemUgrapeLevel;
+		m_ItemUgrapeExp = ItemUgrapeExp;
 		m_InventoryLocation = InventoryLocation;
 	}
 
 	bool operator==(const FGameItemEquipmentInfo& Other) const
 	{
-		return (this->m_ItemRecKey == Other.m_ItemRecKey) && (this->m_ItemUgrapeLevel == Other.m_ItemUgrapeLevel) && (this->m_InventoryLocation == Other.m_InventoryLocation);
+		return (this->m_ItemRecKey == Other.m_ItemRecKey) 
+			&& (this->m_ItemUgrapeLevel == Other.m_ItemUgrapeLevel) 
+			&& (this->m_ItemUgrapeExp == Other.m_ItemUgrapeExp) 
+			&& (this->m_InventoryLocation == Other.m_InventoryLocation);
 	}
 };

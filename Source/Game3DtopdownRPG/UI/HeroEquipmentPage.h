@@ -23,7 +23,10 @@ public:
 	virtual void Update() override;
 
 	UFUNCTION()
-	virtual void OnTapContainer(int32 rec_key, UInventoryEquipContainerWidget* Container) {}
+	virtual void OnTapEquipContainer(int32 rec_key, UInventoryEquipContainerWidget* Container) {}
+
+	UFUNCTION()
+	virtual void OnDropContainer(int32 rec_key, UInventoryEquipContainerWidget* Container) {}
 
 	UFUNCTION(BlueprintCallable)
 	virtual void SetHeroCharacter(ABaseCharacter* herocharacter);

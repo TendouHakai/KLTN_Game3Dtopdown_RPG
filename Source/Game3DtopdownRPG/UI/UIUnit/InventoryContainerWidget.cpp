@@ -24,6 +24,9 @@ void UInventoryContainerWidget::CacheOwnUI()
 	SelectAnimation = GetWidgetAnimation(TEXT("Ani_Select"));
 	ReleaseAnimation = GetWidgetAnimation(TEXT("Ani_Release"));
 
+	OverlayUseCount = GetOwnUI<UOverlay>(TEXT("Overlay_UseCount"));
+	TextUseCount = GetOwnUI<UTextBlock>(TEXT("TextBlock_UseCount"));
+
 	if (gameItemInfo.m_ItemRecKey == 0) EmptyUI();
 }
 
@@ -83,6 +86,13 @@ void UInventoryContainerWidget::OnTap()
 	if (!OwnerDelegateEx.IsBound()) return;
 	if (false == IsInteract) return;
 	OwnerDelegateEx.ExecuteIfBound(gameItemInfo.m_ItemRecKey, this);
+}
+
+void UInventoryContainerWidget::OnTapUseSubtract()
+{
+	if (!OwnerUseSubtractDelegateEx.IsBound()) return;
+	if (false == IsInteract) return;
+	OwnerUseSubtractDelegateEx.ExecuteIfBound(gameItemInfo.m_ItemRecKey, this);
 }
 
 void UInventoryContainerWidget::OnHover()
@@ -196,6 +206,23 @@ void UInventoryContainerWidget::SetFrameBackground(EItemGrade grade)
 			ImageBackground->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 	}
+}
+
+void UInventoryContainerWidget::SetUseCount(int32 count)
+{
+	if (nullptr == OverlayUseCount) return;
+	if (nullptr == TextUseCount) return;
+
+	if (count <= 0)
+	{
+		OverlayUseCount->SetVisibility(ESlateVisibility::Collapsed);
+		return;
+	}
+
+	if (count >= gameItemInfo.m_ItemCount) count = gameItemInfo.m_ItemCount;
+
+	OverlayUseCount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	TextUseCount->SetText(FText::AsNumber(count));
 }
 
 void UInventoryContainerWidget::HideEffect()
