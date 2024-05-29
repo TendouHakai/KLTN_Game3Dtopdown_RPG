@@ -28,7 +28,7 @@ void UInventoryEquipContainerWidget::NativeConstruct()
 	Super::NativeConstruct();
 }
 
-void UInventoryEquipContainerWidget::SetInfo(FGameItemEquipmentInfo& GameItemInfo)
+void UInventoryEquipContainerWidget::SetInfo(FGameItemEquipmentInfo GameItemInfo)
 {
 	this->gameItemInfo = GameItemInfo;
 	FItemEquipmentInfoRecord* record = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(GameItemInfo.m_ItemRecKey)));
@@ -72,7 +72,12 @@ void UInventoryEquipContainerWidget::EmptyUI()
 
 void UInventoryEquipContainerWidget::OnTap()
 {
-	if (IsInteract == false) return;
+	if (OwnerDelegateEx.IsBound()) OwnerDelegateEx.ExecuteIfBound(gameItemInfo.m_ItemRecKey, this);
+}
+
+void UInventoryEquipContainerWidget::OnCtrlTap()
+{
+	if (OwnerCtrlTapDelegateEx.IsBound()) OwnerCtrlTapDelegateEx.ExecuteIfBound(gameItemInfo.m_ItemRecKey, this);
 }
 
 void UInventoryEquipContainerWidget::OnHover()

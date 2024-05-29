@@ -12,6 +12,7 @@
 #include "InventoryEquipContainerWidget.generated.h"
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FEquipmentContainerTap_DelegateEx, int32, Output, UInventoryEquipContainerWidget*, Output02);
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FEquipmentContainerCtrlTap_DelegateEx, int32, Output, UInventoryEquipContainerWidget*, Output02);
 
 struct FItemEquipmentInfoRecord;
 
@@ -24,17 +25,18 @@ public:
 	virtual void CacheOwnUI() override;
 	virtual void NativeConstruct() override;
 
-	virtual void SetInfo(FGameItemEquipmentInfo& GameItemInfo);
-
 	UFUNCTION(BlueprintCallable)
+	virtual void SetInfo(FGameItemEquipmentInfo GameItemInfo);
 	virtual void SetInfo(int32 itemreckey);
-	
 	virtual void SetInfo(UInventoryEquipContainerWidget* InventoryContainerWidget);
 
 	void EmptyUI();
 
 	UFUNCTION(BlueprintCallable)
 	virtual void OnTap();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void OnCtrlTap();
 
 	UFUNCTION(BlueprintCallable)
 	virtual void OnHover();
@@ -50,6 +52,13 @@ public:
 	{
 		OwnerDelegateEx.Unbind();
 		OwnerDelegateEx.BindDynamic(owner, &T::OnTapEquipContainer);
+	}
+
+	template<class T>
+	void SetCtrlButtonEventEx(T* owner)
+	{
+		OwnerCtrlTapDelegateEx.Unbind();
+		OwnerCtrlTapDelegateEx.BindDynamic(owner, &T::OnCtrlTapEquipContainer);
 	}
 
 	bool IsInteract = true;
@@ -75,4 +84,5 @@ protected:
 	FItemEquipmentInfoRecord* equipmentItemInfoRecord;
 
 	FEquipmentContainerTap_DelegateEx OwnerDelegateEx;
+	FEquipmentContainerCtrlTap_DelegateEx OwnerCtrlTapDelegateEx;
 };

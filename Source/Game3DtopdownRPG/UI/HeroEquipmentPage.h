@@ -28,6 +28,10 @@ public:
 	UFUNCTION()
 	virtual void OnDropContainer(int32 rec_key, UInventoryEquipContainerWidget* Container) {}
 
+	// Function for slot equipmnet
+	UFUNCTION()
+	virtual void OnDropEquipSlot(int32 rec_key, UEquipmentSlotWidget* Container);
+
 	UFUNCTION(BlueprintCallable)
 	virtual void SetHeroCharacter(ABaseCharacter* herocharacter);
 

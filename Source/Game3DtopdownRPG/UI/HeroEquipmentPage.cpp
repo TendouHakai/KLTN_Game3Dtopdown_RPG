@@ -10,6 +10,7 @@
 #include "Game3DtopdownRPG/Battle/BaseCharacter.h"
 #include "Game3DtopdownRPG/Util/Managers/ItemMgr.h"
 #include "Game3DtopdownRPG/GlobalGetter.h"
+#include "Kismet/GameplayStatics.h"
 
 void UHeroEquipmentPage::CacheOwnUI()
 {
@@ -29,6 +30,7 @@ void UHeroEquipmentPage::CacheOwnUI()
 		if (nullptr != slot)
 		{
 			slot->InitUnit(GameMode);
+			slot->SetDropEventEx(this);
 			EquipmentSlots.Emplace(slot);
 		}
 	}
@@ -55,6 +57,21 @@ void UHeroEquipmentPage::Update()
 
 	UpdateEquipmentSlots();
 	UpdateHeroParams();
+}
+
+void UHeroEquipmentPage::OnDropEquipSlot(int32 rec_key, UEquipmentSlotWidget* Container)
+{
+	if (nullptr == Container) return;
+
+	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (PlayerCharacter)
+	{
+		ABaseCharacter* basecharacter = Cast<ABaseCharacter>(PlayerCharacter);
+		if (basecharacter)
+		{
+			basecharacter->EquipItem(Container->GetInventoryEquipment()->GetGameItemInfo());
+		}
+	}
 }
 
 void UHeroEquipmentPage::SetHeroCharacter(ABaseCharacter* herocharacter)

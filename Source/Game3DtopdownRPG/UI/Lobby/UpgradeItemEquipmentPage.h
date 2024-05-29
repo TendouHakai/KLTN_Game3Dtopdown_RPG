@@ -45,7 +45,11 @@ public:
 	virtual void OnTapEquipContainer(int32 rec_key, UInventoryEquipContainerWidget* Container);
 
 	UFUNCTION()
-	virtual void OnDropEquipContainer(int32 rec_key, UEquipmentSlotWidget* Container);
+	virtual void OnCtrlTapEquipContainer(int32 rec_key, UInventoryEquipContainerWidget* Container);
+
+	// Function for Equipment Slot
+	UFUNCTION()
+	virtual void OnDropEquipSlot(int32 rec_key, UEquipmentSlotWidget* Container);
 
 	// Function for tab Category
 	UFUNCTION(BlueprintCallable)

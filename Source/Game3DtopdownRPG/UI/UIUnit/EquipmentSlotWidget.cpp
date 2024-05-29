@@ -40,6 +40,8 @@ void UEquipmentSlotWidget::EquipItemToSlot(FGameItemEquipmentInfo iteminfo)
 {
 	FItemEquipmentInfoRecord* record = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(iteminfo.m_ItemRecKey)));
 
+	if (nullptr == record) return;
+
 	if (record->EquipPosition != EquipmentPosition && EquipmentPosition != EItemEquipPosition::All)
 	{
 		inventoryEquipment->SetVisibility(ESlateVisibility::Collapsed);
@@ -47,8 +49,13 @@ void UEquipmentSlotWidget::EquipItemToSlot(FGameItemEquipmentInfo iteminfo)
 	}
 	inventoryEquipment->SetInfo(iteminfo);
 	inventoryEquipment->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+}
 
-	if (OwnerDropDelegateEx.IsBound()) OwnerDropDelegateEx.ExecuteIfBound(inventoryEquipment->GetGameItemInfo().m_ItemRecKey, this);
+void UEquipmentSlotWidget::OnDropEvent(FGameItemEquipmentInfo info)
+{
+	if (info.m_ItemRecKey == 0) return;
+	EquipItemToSlot(info);
+	OwnerDropDelegateEx.ExecuteIfBound(inventoryEquipment->GetGameItemInfo().m_ItemRecKey, this);
 }
 
 void UEquipmentSlotWidget::Update()

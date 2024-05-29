@@ -106,7 +106,16 @@ void UUpgradeItemEquipmentPage::Update()
 
 void UUpgradeItemEquipmentPage::OnTapEquipContainer(int32 rec_key, UInventoryEquipContainerWidget* Container)
 {
+	if (rec_key == 0) return;
+	if (nullptr == Container) return;
+	SetCurrentUpgradeEquipItem(Container->GetGameItemInfo());
+}
 
+void UUpgradeItemEquipmentPage::OnCtrlTapEquipContainer(int32 rec_key, UInventoryEquipContainerWidget* Container)
+{
+	if (rec_key == 0) return;
+	if (nullptr == Container) return;
+	UE_LOG(LogTemp, Warning, TEXT("Equipment decompotion"));
 }
 
 void UUpgradeItemEquipmentPage::OnTapContainer(int32 rec_key, UInventoryContainerWidget* Container)
@@ -169,7 +178,7 @@ void UUpgradeItemEquipmentPage::OnTapUseSubtractContainer(int32 rec_key, UInvent
 	if (nullptr != scrollConsumeMaterial) scrollConsumeMaterial->SetChildCount(m_ConsumeMaterialArray.Num());
 }
 
-void UUpgradeItemEquipmentPage::OnDropEquipContainer(int32 rec_key, UEquipmentSlotWidget* Container)
+void UUpgradeItemEquipmentPage::OnDropEquipSlot(int32 rec_key, UEquipmentSlotWidget* Container)
 {
 	if (nullptr == Container) return;
 	SetCurrentUpgradeEquipItem(Container->GetInventoryEquipment()->GetGameItemInfo());
@@ -245,6 +254,8 @@ void UUpgradeItemEquipmentPage::UpdateChildEquipmentItem(UWidget* Child, int32 C
 	InventoryContainer->SetInfo(info);
 
 	InventoryContainer->SetButtonEventEx(this);
+
+	InventoryContainer->SetCtrlButtonEventEx(this);
 }
 
 void UUpgradeItemEquipmentPage::UpdateChildConsumeMaterial(UWidget* Child, int32 ChildDataIdx)
@@ -265,18 +276,16 @@ void UUpgradeItemEquipmentPage::SetCurrentUpgradeEquipItem(FGameItemEquipmentInf
 {
 	if (info.m_ItemRecKey == 0) return;
 	m_CurrentGameItemInfo = info;
-	m_CurrentEquipmentUpgradeItem->GetInventoryEquipment()->SetInfo(info);
+	m_CurrentEquipmentUpgradeItem->EquipItemToSlot(info);
 	UpdateDescriptionEquipItem();
 }
 
 void UUpgradeItemEquipmentPage::UpdateDescriptionEquipItem()
 {
 	FItemEquipmentInfoRecord* record = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(m_CurrentGameItemInfo.m_ItemRecKey)));
+	if (nullptr == record) return;
 	textGrade->SetText(FText::FromString(GetMgr(UItemMgr)->GetItemGradeText(record->EquipmentGrape)));
 	textNameItem->SetText(FText::FromString(record->DesName));
-	//textLevelAdd->SetVisibility(ESlateVisibility::Hidden);
-	//textExpAdd->SetVisibility(ESlateVisibility::Hidden);
-	//textCurrentExp->SetVisibility(ESlateVisibility::Hidden);
 
 	setIncreaseUpgradeExp();
 

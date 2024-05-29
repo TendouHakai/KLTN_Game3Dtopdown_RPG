@@ -28,11 +28,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void EquipItemToSlot(FGameItemEquipmentInfo iteminfo);
 
+	UFUNCTION(BlueprintCallable)
+	void OnDropEvent(FGameItemEquipmentInfo info);
+
 	template<class T>
 	void SetDropEventEx(T* owner)
 	{
 		OwnerDropDelegateEx.Unbind();
-		OwnerDropDelegateEx.BindDynamic(owner, &T::OnDropEquipContainer);
+		OwnerDropDelegateEx.BindDynamic(owner, &T::OnDropEquipSlot);
 	}
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
