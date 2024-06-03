@@ -59,8 +59,11 @@ void UEquipmentSlotWidget::EmptyUI()
 void UEquipmentSlotWidget::OnDropEvent(FGameItemEquipmentInfo info)
 {
 	if (info.m_ItemRecKey == 0) return;
-	EquipItemToSlot(info);
-	OwnerDropDelegateEx.ExecuteIfBound(inventoryEquipment->GetGameItemInfo().m_ItemRecKey, this);
+	if (OwnerDropDelegateEx.IsBound())
+	{
+		EquipItemToSlot(info);
+		OwnerDropDelegateEx.ExecuteIfBound(inventoryEquipment->GetGameItemInfo().m_ItemRecKey, this);
+	}
 }
 
 void UEquipmentSlotWidget::Update()

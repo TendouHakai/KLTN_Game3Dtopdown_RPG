@@ -144,6 +144,24 @@ void UInventoryContainerWidget::SetTextCount(int32 count)
 	OverlayCount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
+void UInventoryContainerWidget::SetTextCountPerNumber(int32 number)
+{
+	if (nullptr == TextCount || number <= 0)
+	{
+		OverlayCount->SetVisibility(ESlateVisibility::Collapsed);
+		return;
+	}
+
+	FGameItemInfo iteminfo = GetMgr(UItemMgr)->FindItem(gameItemInfo.m_ItemRecKey);
+	if (iteminfo.m_ItemRecKey == 0)
+	{
+		OverlayCount->SetVisibility(ESlateVisibility::Collapsed);
+		return;
+	}
+
+	TextCount->SetText(FText::FromString(FString::Printf(TEXT("%d/%d"), iteminfo.m_ItemCount, number)));
+}
+
 void UInventoryContainerWidget::SetFrameBackground(EItemGrade grade)
 {
 	FString PathFrame = "";

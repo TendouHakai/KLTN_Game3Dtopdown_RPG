@@ -51,6 +51,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FItemEquipmentInfoRecord GetItemEquipmentInfoRecordBlueprint(FName Index);
 
+	// item forging
+	TArray<FGameItemEquipmentInfo> GetAllItemEquipmentRecipe();
+
 	// Cheat Item
 	void AddItem(int32 ItemReckey = 1, int32 ItemCount = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
 	void RemoveItem(int32 ItemReckey = 1, int32 ItemCount = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
@@ -62,6 +65,9 @@ public:
 
 	FGameItemEquipmentInfo UpgradeLevelItemEquipment(FGameItemEquipmentInfo iteminfo, TArray<FGameItemInfo> Materials);
 	bool isHaveEquipmentItem(FGameItemEquipmentInfo iteminfo);
+
+	FGameItemInfo FindItem(int32 ItemReckey);
+	FGameItemEquipmentInfo FindItemEquipmentWorstStat(int32 ItemReckey);
 protected:
 	TArray<FGameItemInfo> m_ItemArray;
 	TArray<FGameItemEquipmentInfo> m_ItemEquipmentArray;

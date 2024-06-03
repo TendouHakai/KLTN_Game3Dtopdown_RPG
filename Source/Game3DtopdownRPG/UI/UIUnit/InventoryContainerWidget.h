@@ -60,7 +60,7 @@ public:
 	}
 
 	void SetUseCount(int32 count);
-
+	void SetTextCountPerNumber(int32 number);
 public:
 	FContainerTap_DelegateEx OwnerDelegateEx;
 	FContainerTapUseSubtract_DelegateEx OwnerUseSubtractDelegateEx;

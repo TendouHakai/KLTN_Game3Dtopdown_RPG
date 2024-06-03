@@ -226,6 +226,25 @@ FItemEquipmentInfoRecord UItemMgr::GetItemEquipmentInfoRecordBlueprint(FName Ind
 	return *record;
 }
 
+TArray<FGameItemEquipmentInfo> UItemMgr::GetAllItemEquipmentRecipe()
+{
+	TArray<FGameItemEquipmentInfo> array;
+
+	UDataTable* ItemEquipmentInfoTable = GetMgr(UTableMgr)->ItemEquipmentInfoTable;
+	if (nullptr == ItemEquipmentInfoTable) return array;
+
+	TArray<FItemEquipmentInfoRecord*> allrows;
+
+	ItemEquipmentInfoTable->GetAllRows(FString(), allrows);
+
+	for (int index = 0; index < allrows.Num(); ++index)
+	{
+		array.Emplace(FGameItemEquipmentInfo(index+1));
+	}
+
+	return array;
+}
+
 FItemEquipmentLevRecord* UItemMgr::GetItemEquipmentLevelRecordByTotalExp(int32 totalExp)
 {
 	UDataTable* ItemEquipmentLevInfoTable = GetMgr(UTableMgr)->ItemEquipmentLevInfoTable;
@@ -476,4 +495,34 @@ bool UItemMgr::isHaveEquipmentItem(FGameItemEquipmentInfo iteminfo)
 	}
 
 	return false;
+}
+
+FGameItemInfo UItemMgr::FindItem(int32 ItemReckey)
+{
+	FGameItemInfo iteminfo;
+	iteminfo.m_ItemRecKey = ItemReckey;
+	for (int index = 0; index < m_ItemArray.Num(); ++index)
+	{
+		if (m_ItemArray[index].m_ItemRecKey == iteminfo.m_ItemRecKey)
+		{
+			iteminfo.m_ItemCount += m_ItemArray[index].m_ItemCount;
+		}
+	}
+	return iteminfo;
+}
+
+FGameItemEquipmentInfo UItemMgr::FindItemEquipmentWorstStat(int32 ItemReckey)
+{
+	FGameItemEquipmentInfo iteminfo;
+	for (int index = 0; index < m_ItemEquipmentArray.Num(); ++index)
+	{
+		if (m_ItemEquipmentArray[index].m_ItemRecKey == iteminfo.m_ItemRecKey)
+		{
+			if (iteminfo.m_ItemRecKey == 0 || iteminfo.m_ItemUgrapeLevel > m_ItemEquipmentArray[index].m_ItemUgrapeLevel)
+			{
+				iteminfo = m_ItemEquipmentArray[index];
+			}
+		}
+	}
+	return iteminfo;
 }

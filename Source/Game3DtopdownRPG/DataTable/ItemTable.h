@@ -68,7 +68,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) EItemGrade EquipmentGrape;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) EItemEquipPosition EquipPosition;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FCharacterParam ItemEquipParam;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 NextItem;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 PreviousItem;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int64 NeedGold;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) TArray<int32> Materials;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) TArray<int32> MatCounts;
