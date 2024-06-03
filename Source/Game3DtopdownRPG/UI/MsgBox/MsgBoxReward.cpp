@@ -23,8 +23,8 @@ void UMsgBoxReward::SetInfo(TArray<FGameItemInfo>& gameinfos)
 		ScrollWidget->VisibleRowCnt = 1;
 		ScrollWidget->ChildCntPerRow = gameinfos.Num();
 		ScrollWidget->InitUnit(GameMode);
-
 		ScrollWidget->ChildUpdateEvent.BindUObject(this, &UMsgBoxReward::UpdateChildItem);
+		ScrollWidget->SetChildCount(gameinfos.Num());
 	}
 }
 

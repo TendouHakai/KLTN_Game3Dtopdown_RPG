@@ -70,6 +70,7 @@ void UInventoryContainerWidget::SetInfo(UInventoryContainerWidget* InventoryCont
 	SetImageItem(itemInfoRecord->ItemIcon);
 	SetTextCount(gameItemInfo.m_ItemCount);
 	SetFrameBackground(itemInfoRecord->ItemGrape);
+	OverlayUseCount->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UInventoryContainerWidget::EmptyUI()
@@ -79,6 +80,7 @@ void UInventoryContainerWidget::EmptyUI()
 	SetImageItem("");
 	SetTextCount(0);
 	SetFrameBackground(EItemGrade::Max);
+	OverlayUseCount->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UInventoryContainerWidget::OnTap()
@@ -134,7 +136,7 @@ void UInventoryContainerWidget::SetTextCount(int32 count)
 {
 	if (nullptr == TextCount || count <= 0)
 	{
-		OverlayCount->SetVisibility(ESlateVisibility::Hidden);
+		OverlayCount->SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
 		
@@ -215,7 +217,7 @@ void UInventoryContainerWidget::SetUseCount(int32 count)
 
 	if (count <= 0)
 	{
-		OverlayUseCount->SetVisibility(ESlateVisibility::Collapsed);
+		OverlayUseCount->SetVisibility(ESlateVisibility::Hidden);
 		return;
 	}
 

@@ -238,7 +238,7 @@ FItemEquipmentLevRecord* UItemMgr::GetItemEquipmentLevelRecordByTotalExp(int32 t
 
 	for (auto record : allrows)
 	{
-		if (totalExp <= record->expEnd && totalExp > record->expStart)
+		if (totalExp <= record->expEnd && totalExp >= record->expStart)
 			return record;
 	}
 

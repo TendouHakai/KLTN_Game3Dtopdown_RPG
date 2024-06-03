@@ -59,6 +59,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void OnTapLevelUpBtn(EUgradeTabCategory category);
 
+	UFUNCTION(BlueprintCallable)
+	void OnTapCloseBtn();
+
 protected:
 	void UpdateChildMaterial(UWidget* Child, int32 ChildDataIdx);
 	void UpdateChildEquipmentItem(UWidget* Child, int32 ChildDataIdx);
