@@ -29,6 +29,9 @@ public:
 	void EquipItemToSlot(FGameItemEquipmentInfo iteminfo);
 
 	UFUNCTION(BlueprintCallable)
+	void EmptyUI();
+
+	UFUNCTION(BlueprintCallable)
 	void OnDropEvent(FGameItemEquipmentInfo info);
 
 	template<class T>

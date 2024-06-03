@@ -18,6 +18,7 @@ enum class EUIMsgBoxType : uint8
 {
 	None = 0,
 	Basic						UMETA(DisplayName = "Basic"),
+	Reward						UMETA(DisplayName = "Reward"),
 };
 
 UENUM(BlueprintType)

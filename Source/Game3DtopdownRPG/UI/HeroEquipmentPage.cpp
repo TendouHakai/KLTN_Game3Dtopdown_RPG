@@ -118,7 +118,7 @@ void UHeroEquipmentPage::UpdateHeroParams()
 	
 	for (int index = 0; index < static_cast<int32>(ECharacterParam::Max); ++index)
 	{
-		float paramvalue;
+		float paramvalue = 0.f;
 		switch ((ECharacterParam)index)
 		{
 		case ECharacterParam::AttackSpeed:

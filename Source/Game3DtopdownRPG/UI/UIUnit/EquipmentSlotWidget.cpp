@@ -44,11 +44,16 @@ void UEquipmentSlotWidget::EquipItemToSlot(FGameItemEquipmentInfo iteminfo)
 
 	if (record->EquipPosition != EquipmentPosition && EquipmentPosition != EItemEquipPosition::All)
 	{
-		inventoryEquipment->SetVisibility(ESlateVisibility::Collapsed);
+		EmptyUI();
 		return;
 	}
 	inventoryEquipment->SetInfo(iteminfo);
 	inventoryEquipment->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+}
+
+void UEquipmentSlotWidget::EmptyUI()
+{
+	inventoryEquipment->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UEquipmentSlotWidget::OnDropEvent(FGameItemEquipmentInfo info)

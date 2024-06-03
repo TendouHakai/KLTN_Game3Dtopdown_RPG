@@ -52,7 +52,6 @@ void UInventoryEquipContainerWidget::SetInfo(UInventoryEquipContainerWidget* Inv
 
 void UInventoryEquipContainerWidget::SetInfo(int32 itemreckey)
 {
-	IsInteract = false;
 	FItemEquipmentInfoRecord* record = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(itemreckey)));
 	if (nullptr == record) return;
 

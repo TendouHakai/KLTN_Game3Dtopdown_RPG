@@ -5,11 +5,13 @@
 #include "Game3DtopdownRPG/UI/UIUnit/ScrollWidget.h"
 #include "Game3DtopdownRPG/GlobalGetter.h"
 #include "Game3DtopdownRPG/Util/Managers/ItemMgr.h"
+#include "Game3DtopdownRPG/Util/Managers/TableMgr.h"
 #include "Game3DtopdownRPG/UI/UIUnit/InventoryEquipContainerWidget.h"
 #include "Game3DtopdownRPG/UI//UIUnit/InventoryContainerWidget.h"
 #include "Game3DtopdownRPG/UI/UIUnit/EquipmentSlotWidget.h"
 #include "Game3DtopdownRPG/UI/UIUnit/UIBaseButton.h"
 #include "Game3DtopdownRPG/DataTable/ItemTable.h"
+#include "Game3DtopdownRPG/UI/MsgBox/MsgBoxReward.h"
 
 void UUpgradeItemEquipmentPage::CacheOwnUI()
 {
@@ -102,6 +104,14 @@ void UUpgradeItemEquipmentPage::Update()
 	if (nullptr != scrollMaterial) scrollMaterial->SetChildCount(m_ItemUpgradeMaterialArray.Num());
 
 	if (nullptr != scrollConsumeMaterial) scrollConsumeMaterial->SetChildCount(m_ConsumeMaterialArray.Num());
+
+	if (m_CurrentGameItemInfo.m_ItemRecKey != 0)
+	{
+		if (GetMgr(UItemMgr)->isHaveEquipmentItem(m_CurrentGameItemInfo) == false)
+		{
+			SetCurrentUpgradeEquipItem(FGameItemEquipmentInfo());
+		}
+	}
 }
 
 void UUpgradeItemEquipmentPage::OnTapEquipContainer(int32 rec_key, UInventoryEquipContainerWidget* Container)
@@ -115,7 +125,27 @@ void UUpgradeItemEquipmentPage::OnCtrlTapEquipContainer(int32 rec_key, UInventor
 {
 	if (rec_key == 0) return;
 	if (nullptr == Container) return;
-	UE_LOG(LogTemp, Warning, TEXT("Equipment decompotion"));
+	
+	FItemEquipmentInfoRecord* ItemEquipmentInfoRecord = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(rec_key)));
+	if (nullptr == ItemEquipmentInfoRecord) return;
+
+	FExpForGradeRecord* ExpForGradeRecord = GetMgr(UItemMgr)->GetExpForGradeRecord(FName(FString::FromInt((int32)ItemEquipmentInfoRecord->EquipmentGrape)));
+	if (nullptr == ExpForGradeRecord) return;
+
+	int64 TotalExp = ExpForGradeRecord->expDecay + Container->GetGameItemInfo().m_ItemUgrapeExp;
+
+	TArray<FGameItemInfo> MaterialArray;
+	DecayExp(TotalExp, MaterialArray);
+
+	GetMgr(UItemMgr)->RemoveItemEquipment(Container->GetGameItemInfo());
+
+	UUIBaseMsgBox* msg = UIMgr->OpenMsgBox(EUIMsgBoxType::Reward, FString(TEXT("Decay equipmment")));
+	if (Cast<UMsgBoxReward>(msg))
+	{
+		Cast<UMsgBoxReward>(msg)->SetInfo(MaterialArray);
+	}
+
+	Update();
 }
 
 void UUpgradeItemEquipmentPage::OnTapContainer(int32 rec_key, UInventoryContainerWidget* Container)
@@ -274,8 +304,11 @@ void UUpgradeItemEquipmentPage::UpdateChildConsumeMaterial(UWidget* Child, int32
 
 void UUpgradeItemEquipmentPage::SetCurrentUpgradeEquipItem(FGameItemEquipmentInfo info)
 {
-	if (info.m_ItemRecKey == 0) return;
 	m_CurrentGameItemInfo = info;
+	if (info.m_ItemRecKey == 0)
+	{
+		m_CurrentEquipmentUpgradeItem->EmptyUI();
+	}
 	m_CurrentEquipmentUpgradeItem->EquipItemToSlot(info);
 	UpdateDescriptionEquipItem();
 }
@@ -288,39 +321,6 @@ void UUpgradeItemEquipmentPage::UpdateDescriptionEquipItem()
 	textNameItem->SetText(FText::FromString(record->DesName));
 
 	setIncreaseUpgradeExp();
-
-	//for (int indexParam = 0; indexParam < 5; ++indexParam)
-	//{
-	//	float paramvalue = 0;
-	//	switch ((ECharacterParam)indexParam)
-	//	{
-	//	case ECharacterParam::PhysicDamage:
-	//		paramvalue = record->ItemEquipParam.PhysicDamage;
-	//		break;
-	//	case ECharacterParam::MagicDamage:
-	//		paramvalue = record->ItemEquipParam.MagicDamage;
-	//		break;
-	//	case ECharacterParam::HP:
-	//		paramvalue = record->ItemEquipParam.HP;
-	//		break;
-	//	case ECharacterParam::Def:
-	//		paramvalue = record->ItemEquipParam.Def;
-	//		break;
-	//	case ECharacterParam::MagicDef:
-	//		paramvalue = record->ItemEquipParam.MagicDef;
-	//		break;
-	//	default:
-	//		break;
-	//	}
-
-	//	if (0 == paramvalue)
-	//	{
-	//		statInfos[indexParam]->SetVisibility(ESlateVisibility::Collapsed);
-	//		continue;
-	//	}
-	//	statParamCurrent[indexParam]->SetText(FText::FromString(FString::Printf(TEXT("+%.0f"), paramvalue)));
-	//	statParamAdd[indexParam]->SetVisibility(ESlateVisibility::Hidden);
-	//}
 }
 
 void UUpgradeItemEquipmentPage::setIncreaseUpgradeExp()
@@ -420,5 +420,30 @@ void UUpgradeItemEquipmentPage::setIncreaseUpgradeExp()
 			statParamAdd[indexParam]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 		statInfos[indexParam]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+}
+
+void UUpgradeItemEquipmentPage::DecayExp(int64 TotalExp, TArray<FGameItemInfo>& GameItemInfoArray)
+{
+	GameItemInfoArray.Empty();
+	
+	UDataTable* UpgradeLevelOfMaterialTable = GetMgr(UTableMgr)->UpgradeLevelOfMaterialTable;
+	if (nullptr == UpgradeLevelOfMaterialTable) return;
+
+	TArray<FUpgradeLevelOfMaterialRecord*> allrows;
+	UpgradeLevelOfMaterialTable->GetAllRows(FString(), allrows);
+
+	int32 itemcount = 0;
+
+	for (int i = allrows.Num() - 1; i >= 0; --i)
+	{
+		itemcount = TotalExp / (int64)(allrows[i]->expDecay);
+		TotalExp = TotalExp % (int64)(allrows[i]->expDecay);
+
+		if (itemcount > 0)
+		{
+			GameItemInfoArray.Emplace(FGameItemInfo(allrows[i]->ItemReckey, itemcount));
+			GetMgr(UItemMgr)->AddItem(allrows[i]->ItemReckey, itemcount);
+		}
 	}
 }

@@ -13,6 +13,7 @@ struct FItemTypeInfoRecord;
 struct FItemEquipmentLevRecord;
 struct FUpgradeLevelOfMaterialRecord;
 struct FItemParamLevRecord;
+struct FExpForGradeRecord;
 
 UCLASS()
 class GAME3DTOPDOWNRPG_API UItemMgr : public USingleton
@@ -23,8 +24,18 @@ public:
 	virtual void Init() override;
 	virtual void EndPlay() override;
 
-	// Item info
+	// record
 	FItemInfoRecord* GetItemInfoRecord(FName Index);
+	FItemEquipmentInfoRecord* GetItemEquipmentInfoRecord(FName Index);
+	FItemEquipmentLevRecord* GetItemEquipmentLevelRecord(FName Index);
+	FUpgradeLevelOfMaterialRecord* GetUpgradeLevelOfMaterialRecord(FName Index);
+	FItemParamLevRecord* GetItemParamLevRecord(FName Index);
+	FExpForGradeRecord* GetExpForGradeRecord(FName Index);
+	FItemTypeInfoRecord* GetItemTypeInfoRecord(FName Index);
+	// Upgrade Item
+	FItemEquipmentLevRecord* GetItemEquipmentLevelRecordByTotalExp(int32 totalExp);
+
+	// item normal
 	TArray<FGameItemInfo> GetItemArray();
 	TArray<FGameItemInfo> GetItemInInventoryArray();
 	TArray<FGameItemInfo> GetItemInBackpackArray();
@@ -37,32 +48,20 @@ public:
 	TArray<FGameItemEquipmentInfo> GetItemEquipmentArray() { return m_ItemEquipmentArray; }
 	TArray<FGameItemEquipmentInfo> GetItemEquipmentInInventoryArray();
 	TArray<FGameItemEquipmentInfo> GetItemEquipmentInBackpackArray();
-	FItemEquipmentInfoRecord* GetItemEquipmentInfoRecord(FName Index);
 	UFUNCTION(BlueprintCallable)
 	FItemEquipmentInfoRecord GetItemEquipmentInfoRecordBlueprint(FName Index);
-
-	// Type Item
-	FItemTypeInfoRecord* GetItemTypeInfoRecord(FName Index);
-
-	// Upgrade Item
-	FItemEquipmentLevRecord* GetItemEquipmentLevelRecord(FName Index);
-	FItemEquipmentLevRecord* GetItemEquipmentLevelRecordByTotalExp(int32 totalExp);
-
-	FUpgradeLevelOfMaterialRecord* GetUpgradeLevelOfMaterialRecord(FName Index);
-
-	FItemParamLevRecord* GetItemParamLevRecord(FName Index);
 
 	// Cheat Item
 	void AddItem(int32 ItemReckey = 1, int32 ItemCount = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
 	void RemoveItem(int32 ItemReckey = 1, int32 ItemCount = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
 	void AddItemEquipment(int32 ItemEquipmentReckey = 1, int32 ItemUpgradeLevel = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
-	void RemoveItemEquipment(int32 ItemEquipmentReckey = 1, int32 ItemUpgradeLevel = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
+	void RemoveItemEquipment(FGameItemEquipmentInfo iteminfo);
 
 	void ChangeItemInventoryLocation(FGameItemInfo iteminfo, int ItemCount, EInventoryLocation Inventorylocation);
 	void ChangeItemEquipmentInventoryLocation(FGameItemEquipmentInfo iteminfo, EInventoryLocation Inventorylocation);
 
 	FGameItemEquipmentInfo UpgradeLevelItemEquipment(FGameItemEquipmentInfo iteminfo, TArray<FGameItemInfo> Materials);
-	//void ChangeItemEquipmentInfo(FGameItemEquipmentInfo olditeminfo, FGameItemEquipmentInfo newinfo);
+	bool isHaveEquipmentItem(FGameItemEquipmentInfo iteminfo);
 protected:
 	TArray<FGameItemInfo> m_ItemArray;
 	TArray<FGameItemEquipmentInfo> m_ItemEquipmentArray;

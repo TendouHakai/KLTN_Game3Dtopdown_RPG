@@ -97,6 +97,16 @@ struct FUpgradeLevelOfMaterialRecord : public FTableRowBase
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 ItemReckey;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) float expUpgrade;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) float expDecay;
+};
+
+USTRUCT(BlueprintType)
+struct FExpForGradeRecord : public FTableRowBase
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) EItemGrade ItemGrade;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) float expDecay;
 };
 
 USTRUCT(BlueprintType)

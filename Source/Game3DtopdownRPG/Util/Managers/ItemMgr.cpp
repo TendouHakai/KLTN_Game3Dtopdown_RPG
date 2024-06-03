@@ -49,6 +49,84 @@ FItemInfoRecord* UItemMgr::GetItemInfoRecord(FName Index)
 	return ItemInfoRecord;
 }
 
+FItemEquipmentInfoRecord* UItemMgr::GetItemEquipmentInfoRecord(FName Index)
+{
+	UDataTable* ItemEquipmentInfoTable = GetMgr(UTableMgr)->ItemEquipmentInfoTable;
+	if (nullptr == ItemEquipmentInfoTable)
+		return nullptr;
+
+	FItemEquipmentInfoRecord* ItemEqupimentInfoRecord = ItemEquipmentInfoTable->FindRow<FItemEquipmentInfoRecord>(Index, FString(""));
+
+	if (nullptr == ItemEqupimentInfoRecord) return nullptr;
+
+	return ItemEqupimentInfoRecord;
+}
+
+FItemEquipmentLevRecord* UItemMgr::GetItemEquipmentLevelRecord(FName Index)
+{
+	UDataTable* ItemEquipmentLevInfoTable = GetMgr(UTableMgr)->ItemEquipmentLevInfoTable;
+	if (nullptr == ItemEquipmentLevInfoTable)
+		return nullptr;
+
+	FItemEquipmentLevRecord* ItemEquipmentLevRecord = ItemEquipmentLevInfoTable->FindRow<FItemEquipmentLevRecord>(Index, FString(""));
+
+	if (nullptr == ItemEquipmentLevRecord) return nullptr;
+
+	return ItemEquipmentLevRecord;
+}
+
+FUpgradeLevelOfMaterialRecord* UItemMgr::GetUpgradeLevelOfMaterialRecord(FName Index)
+{
+	UDataTable* UpgradeLevelOfMaterialTable = GetMgr(UTableMgr)->UpgradeLevelOfMaterialTable;
+	if (nullptr == UpgradeLevelOfMaterialTable)
+		return nullptr;
+
+	FUpgradeLevelOfMaterialRecord* UpgradeLevelOfMaterialRecord = UpgradeLevelOfMaterialTable->FindRow<FUpgradeLevelOfMaterialRecord>(Index, FString(""));
+
+	if (nullptr == UpgradeLevelOfMaterialRecord) return nullptr;
+
+	return UpgradeLevelOfMaterialRecord;
+}
+
+FItemParamLevRecord* UItemMgr::GetItemParamLevRecord(FName Index)
+{
+	UDataTable* ItemParamLevTable = GetMgr(UTableMgr)->ItemParamLevTable;
+	if (nullptr == ItemParamLevTable)
+		return nullptr;
+
+	FItemParamLevRecord* ItemParamLevRecord = ItemParamLevTable->FindRow<FItemParamLevRecord>(Index, FString(""));
+
+	if (nullptr == ItemParamLevRecord) return nullptr;
+
+	return ItemParamLevRecord;
+}
+
+FExpForGradeRecord* UItemMgr::GetExpForGradeRecord(FName Index)
+{
+	UDataTable* ExpForItemGradeTable = GetMgr(UTableMgr)->ExpForItemGradeTable;
+	if (nullptr == ExpForItemGradeTable)
+		return nullptr;
+
+	FExpForGradeRecord* ExpForGradeRecord = ExpForItemGradeTable->FindRow<FExpForGradeRecord>(Index, FString(""));
+
+	if (nullptr == ExpForGradeRecord) return nullptr;
+
+	return ExpForGradeRecord;
+}
+
+FItemTypeInfoRecord* UItemMgr::GetItemTypeInfoRecord(FName Index)
+{
+	UDataTable* ItemTypeInfoTable = GetMgr(UTableMgr)->ItemTypeInfoTable;
+	if (nullptr == ItemTypeInfoTable)
+		return nullptr;
+
+	FItemTypeInfoRecord* ItemTypeInfoRecord = ItemTypeInfoTable->FindRow<FItemTypeInfoRecord>(Index, FString(""));
+
+	if (nullptr == ItemTypeInfoRecord) return nullptr;
+
+	return ItemTypeInfoRecord;
+}
+
 TArray<FGameItemInfo> UItemMgr::GetItemArray()
 {
 	return m_ItemArray;
@@ -141,50 +219,11 @@ TArray<FGameItemEquipmentInfo> UItemMgr::GetItemEquipmentInBackpackArray()
 	return ItemEquipArrayInInventory;
 }
 
-FItemEquipmentInfoRecord* UItemMgr::GetItemEquipmentInfoRecord(FName Index)
-{
-	UDataTable* ItemEquipmentInfoTable = GetMgr(UTableMgr)->ItemEquipmentInfoTable;
-	if (nullptr == ItemEquipmentInfoTable)
-		return nullptr;
-
-	FItemEquipmentInfoRecord* ItemEqupimentInfoRecord = ItemEquipmentInfoTable->FindRow<FItemEquipmentInfoRecord>(Index, FString(""));
-
-	if (nullptr == ItemEqupimentInfoRecord) return nullptr;
-
-	return ItemEqupimentInfoRecord;
-}
-
 FItemEquipmentInfoRecord UItemMgr::GetItemEquipmentInfoRecordBlueprint(FName Index)
 {
 	FItemEquipmentInfoRecord* record = GetItemEquipmentInfoRecord(Index);
 	if (nullptr == record) return FItemEquipmentInfoRecord();
 	return *record;
-}
-
-FItemTypeInfoRecord* UItemMgr::GetItemTypeInfoRecord(FName Index)
-{
-	UDataTable* ItemTypeInfoTable = GetMgr(UTableMgr)->ItemTypeInfoTable;
-	if (nullptr == ItemTypeInfoTable)
-		return nullptr;
-
-	FItemTypeInfoRecord* ItemTypeInfoRecord = ItemTypeInfoTable->FindRow<FItemTypeInfoRecord>(Index, FString(""));
-
-	if (nullptr == ItemTypeInfoRecord) return nullptr;
-
-	return ItemTypeInfoRecord;
-}
-
-FItemEquipmentLevRecord* UItemMgr::GetItemEquipmentLevelRecord(FName Index)
-{
-	UDataTable* ItemEquipmentLevInfoTable = GetMgr(UTableMgr)->ItemEquipmentLevInfoTable;
-	if (nullptr == ItemEquipmentLevInfoTable)
-		return nullptr;
-
-	FItemEquipmentLevRecord* ItemEquipmentLevRecord = ItemEquipmentLevInfoTable->FindRow<FItemEquipmentLevRecord>(Index, FString(""));
-
-	if (nullptr == ItemEquipmentLevRecord) return nullptr;
-
-	return ItemEquipmentLevRecord;
 }
 
 FItemEquipmentLevRecord* UItemMgr::GetItemEquipmentLevelRecordByTotalExp(int32 totalExp)
@@ -204,32 +243,6 @@ FItemEquipmentLevRecord* UItemMgr::GetItemEquipmentLevelRecordByTotalExp(int32 t
 	}
 
 	return nullptr;
-}
-
-FUpgradeLevelOfMaterialRecord* UItemMgr::GetUpgradeLevelOfMaterialRecord(FName Index)
-{
-	UDataTable* UpgradeLevelOfMaterialTable = GetMgr(UTableMgr)->UpgradeLevelOfMaterialTable;
-	if (nullptr == UpgradeLevelOfMaterialTable)
-		return nullptr;
-
-	FUpgradeLevelOfMaterialRecord* UpgradeLevelOfMaterialRecord = UpgradeLevelOfMaterialTable->FindRow<FUpgradeLevelOfMaterialRecord>(Index, FString(""));
-
-	if (nullptr == UpgradeLevelOfMaterialRecord) return nullptr;
-
-	return UpgradeLevelOfMaterialRecord;
-}
-
-FItemParamLevRecord* UItemMgr::GetItemParamLevRecord(FName Index)
-{
-	UDataTable* ItemParamLevTable = GetMgr(UTableMgr)->ItemParamLevTable;
-	if (nullptr == ItemParamLevTable)
-		return nullptr;
-
-	FItemParamLevRecord* ItemParamLevRecord = ItemParamLevTable->FindRow<FItemParamLevRecord>(Index, FString(""));
-
-	if (nullptr == ItemParamLevRecord) return nullptr;
-
-	return ItemParamLevRecord;
 }
 
 void UItemMgr::AddItem(int32 ItemReckey /*= 1*/, int32 ItemCount /*= 1*/, EInventoryLocation InventoryLocation /*= EInventoryLocation::InInventory*/)
@@ -325,18 +338,13 @@ void UItemMgr::AddItemEquipment(int32 ItemEquipmentReckey /*= 1*/, int32 ItemUpg
 	USavedInventoryConfig::SaveInventoryCfgToFile(config);
 }
 
-void UItemMgr::RemoveItemEquipment(int32 ItemEquipmentReckey, int32 ItemUpgradeLevel, EInventoryLocation InventoryLocation)
+void UItemMgr::RemoveItemEquipment(FGameItemEquipmentInfo iteminfo)
 {
-	FGameItemEquipmentInfo ItemInfo;
-	ItemInfo.m_ItemRecKey = ItemEquipmentReckey;
-	ItemInfo.m_ItemUgrapeLevel = ItemUpgradeLevel;
-	ItemInfo.m_InventoryLocation = InventoryLocation;
-
 	int indexRemove = -1;
 
 	for (int index = 0; index < m_ItemEquipmentArray.Num(); ++index)
 	{
-		if (m_ItemEquipmentArray[index] == ItemInfo)
+		if (m_ItemEquipmentArray[index] == iteminfo)
 		{
 			indexRemove = index;
 			break;
@@ -455,4 +463,17 @@ FGameItemEquipmentInfo UItemMgr::UpgradeLevelItemEquipment(FGameItemEquipmentInf
 	USavedInventoryConfig::SaveInventoryCfgToFile(config);
 
 	return newinfo;
+}
+
+bool UItemMgr::isHaveEquipmentItem(FGameItemEquipmentInfo iteminfo)
+{
+	for (int index = 0; index < m_ItemEquipmentArray.Num(); ++index)
+	{
+		if (m_ItemEquipmentArray[index] == iteminfo)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }

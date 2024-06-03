@@ -68,6 +68,8 @@ protected:
 	void UpdateDescriptionEquipItem();
 
 	void setIncreaseUpgradeExp();
+
+	void DecayExp(int64 TotalExp, TArray<FGameItemInfo>& GameItemInfoArray);
 	
 protected:
 	TArray<UButton*> TabButtons;

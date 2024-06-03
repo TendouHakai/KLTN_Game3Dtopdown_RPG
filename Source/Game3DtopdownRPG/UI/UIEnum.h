@@ -26,6 +26,7 @@ enum class EUIName : uint8
 
 	// MsgBox
 	MsgBoxBasic,
+	MsgBoxReward,
 
 	// Lobby
 	InternalPage,

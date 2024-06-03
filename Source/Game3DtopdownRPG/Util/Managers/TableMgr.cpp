@@ -25,6 +25,7 @@ void UTableMgr::Init()
 	ItemEquipmentLevInfoTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Item/ItemEquipment/ItemEquipmentLevInfoTable.ItemEquipmentLevInfoTable"));
 	UpgradeLevelOfMaterialTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Item/UpgardeItemMaterial/UpgradeLevelOfMaterialTable.UpgradeLevelOfMaterialTable"));
 	ItemParamLevTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Item/ItemEquipment/ItemParamLevTable.ItemParamLevTable"));
+	ExpForItemGradeTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Item/ItemEquipment/ExpForItemGradeTable.ExpForItemGradeTable"));
 }
 
 void UTableMgr::EndPlay()

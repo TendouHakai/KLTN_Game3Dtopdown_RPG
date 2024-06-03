@@ -8,6 +8,7 @@
 #include "Game3DtopdownRPG/UI/WaitingWidget/LoadingWidget.h"
 #include "Game3DtopdownRPG/UI/MsgBox/UIBaseMsgBox.h"
 #include "Game3DtopdownRPG/UI/MsgBox/MsgBoxBasic.h"
+#include "Game3DtopdownRPG/UI/MsgBox/MsgBoxReward.h"
 
 void InitWidgetData(const TArray<FDerivedWidgetPath>& DerivedWidgetPaths,
 	TMap<uint16, FUIWidgetData>& WidgetDatas,
@@ -230,6 +231,9 @@ class UUIBaseMsgBox* UUIBaseMgr::OpenMsgBox(EUIMsgBoxType MsgBoxType, const FStr
 	case EUIMsgBoxType::Basic:
 		UIName = (uint16)EUIName::MsgBoxBasic;
 		break;
+	case EUIMsgBoxType::Reward:
+		UIName = (uint16)EUIName::MsgBoxReward;
+		break;
 	default:
 		return nullptr;
 	}
@@ -260,6 +264,16 @@ class UUIBaseMsgBox* UUIBaseMgr::OpenMsgBox(EUIMsgBoxType MsgBoxType, const FStr
 			MsgBoxBasic->SetButtonType(BtnType);
 			if (!LeftTapFunctionName.IsNone()) MsgBoxBasic->AddHandler(EMsgEventButtonType::Left, Owner, LeftTapFunctionName);
 			if (!RightTapFunctionName.IsNone()) MsgBoxBasic->AddHandler(EMsgEventButtonType::Right, Owner, RightTapFunctionName);
+		}
+	}
+	else if (EUIMsgBoxType::Reward == MsgBoxType)
+	{
+		UMsgBoxReward* MsgBoxReward = Cast<UMsgBoxReward>(MsgBox);
+		if (nullptr != MsgBoxReward)
+		{
+			MsgBoxReward->SetButtonType(BtnType);
+			if (!LeftTapFunctionName.IsNone()) MsgBoxReward->AddHandler(EMsgEventButtonType::Left, Owner, LeftTapFunctionName);
+			if (!RightTapFunctionName.IsNone()) MsgBoxReward->AddHandler(EMsgEventButtonType::Right, Owner, RightTapFunctionName);
 		}
 	}
 
