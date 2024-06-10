@@ -21,6 +21,9 @@ public:
 
 	void SetInfo(FGameStageInfo info);
 
+	UFUNCTION(BlueprintCallable)
+	void OnTapButton();
+
 protected:
 	// UI
 	UButton* button;

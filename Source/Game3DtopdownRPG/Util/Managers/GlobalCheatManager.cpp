@@ -6,6 +6,7 @@
 #include "Game3DtopdownRPG/GlobalGetter.h"
 #include "Game3DtopdownRPG/Util/Managers/UIBaseMgr.h"
 #include "Game3DtopdownRPG/Util/Managers/ItemMgr.h"
+#include "Game3DtopdownRPG/Util/Managers/StageMgr.h"
 
 
 void UGlobalCheatManager::ItemAdd(int32 ItemReckey /*= 1*/, int32 ItemCount /*= 1*/, EInventoryLocation InventoryLocation)
@@ -30,7 +31,12 @@ void UGlobalCheatManager::ItemEquipmentAdd(int32 ItemEquipmentReckey /*= 1*/, in
 
 void UGlobalCheatManager::MapClear(int32 StageReckey)
 {
+	UStageMgr* mgr = GetMgr(UStageMgr);
+	if (nullptr == mgr) return;
+	mgr->ClearStage(StageReckey, 3);
 
+	// endcheat
+	Endcheat();
 }
 
 void UGlobalCheatManager::Endcheat()

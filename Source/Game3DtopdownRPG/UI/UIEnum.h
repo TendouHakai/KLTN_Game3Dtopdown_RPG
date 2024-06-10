@@ -19,6 +19,7 @@ enum class EUIName : uint8
 
 	// Inventory
 	InventoryPage,
+	InventoryEquipmentPage,
 	InventoryItemSellPopup,
 
 	// Equipment

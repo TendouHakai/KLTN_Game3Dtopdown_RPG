@@ -239,6 +239,23 @@ TArray<FGameItemEquipmentInfo> UItemMgr::GetItemEquipmentInBackpackArray()
 	return ItemEquipArrayInInventory;
 }
 
+TArray<FGameItemEquipmentInfo> UItemMgr::GetItemEquipmentArrayByEquipPosition(EItemEquipPosition position, EInventoryLocation location)
+{
+	TArray<FGameItemEquipmentInfo> ItemEquipArrayInInventory;
+	for (FGameItemEquipmentInfo info : m_ItemEquipmentArray)
+	{
+		if (info.m_InventoryLocation == location)
+		{
+			FItemEquipmentInfoRecord* record = GetItemEquipmentInfoRecord(FName(FString::FromInt(info.m_ItemRecKey)));
+			if(nullptr == record) continue;
+			if(record->EquipPosition == position)
+				ItemEquipArrayInInventory.Emplace(info);
+		}
+	}
+
+	return ItemEquipArrayInInventory;
+}
+
 FItemEquipmentInfoRecord UItemMgr::GetItemEquipmentInfoRecordBlueprint(FName Index)
 {
 	FItemEquipmentInfoRecord* record = GetItemEquipmentInfoRecord(Index);

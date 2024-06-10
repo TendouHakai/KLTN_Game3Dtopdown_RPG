@@ -12,6 +12,7 @@ struct FStageInfoRecord : public FTableRowBase
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 StageReckey;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString strStage;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString MapName;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 ChapterReckey;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString strChapter;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 NextStageReckey;

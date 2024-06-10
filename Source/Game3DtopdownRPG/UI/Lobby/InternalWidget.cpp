@@ -68,7 +68,7 @@ void UInternalWidget::OnTapBtnMenu(int Index)
 		}
 		else if (1 == Index)
 		{
-
+			UIMgr->OpenScene(EUIName::InventoryEquipmentPage);
 		}
 		break;
 	case EBuildingType::ForgingItem:

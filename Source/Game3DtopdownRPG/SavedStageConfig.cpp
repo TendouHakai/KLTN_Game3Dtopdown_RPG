@@ -18,7 +18,7 @@ void USavedStageConfig::SaveStageCfgToFile(USavedStageConfig* Cfg)
 USavedStageConfig* USavedStageConfig::LoadStageCfgFromFile(bool& bSuccess)
 {
 	bSuccess = true;
-	USavedStageConfig* TempCfg = Cast<USavedStageConfig>(UGameplayStatics::LoadGameFromSlot(TEXT("InventoryData"), 0));
+	USavedStageConfig* TempCfg = Cast<USavedStageConfig>(UGameplayStatics::LoadGameFromSlot(TEXT("StageData"), 0));
 	if (!TempCfg)
 	{
 		bSuccess = false;

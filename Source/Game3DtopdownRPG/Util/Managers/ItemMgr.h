@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "../Singleton/Singleton.h"
 #include "Game3DtopdownRPG/Define/ItemStruct.h"
+#include "Game3DtopdownRPG/DataTable/ItemTable.h"
 #include "ItemMgr.generated.h"
 
 struct FItemInfoRecord;
@@ -51,6 +52,8 @@ public:
 	TArray<FGameItemEquipmentInfo> GetItemEquipmentArray() { return m_ItemEquipmentArray; }
 	TArray<FGameItemEquipmentInfo> GetItemEquipmentInInventoryArray();
 	TArray<FGameItemEquipmentInfo> GetItemEquipmentInBackpackArray();
+	TArray<FGameItemEquipmentInfo> GetItemEquipmentArrayByEquipPosition(EItemEquipPosition position, EInventoryLocation location);
+
 	UFUNCTION(BlueprintCallable)
 	FItemEquipmentInfoRecord GetItemEquipmentInfoRecordBlueprint(FName Index);
 

@@ -4,6 +4,7 @@
 #include "StageButton.h"
 #include "Game3DtopdownRPG/GlobalGetter.h"
 #include "Game3DtopdownRPG/DataTable/StageTable.h"
+#include "Game3DtopdownRPG/UI/WaitingWidget/LoadingWidget.h"
 #include "Game3DtopdownRPG/Util/Managers/StageMgr.h"
 
 void UStageButton::CacheOwnUI()
@@ -67,4 +68,14 @@ void UStageButton::SetInfo(FGameStageInfo info)
 	{
 		starBox->SetVisibility(ESlateVisibility::Collapsed);
 	}
+}
+
+void UStageButton::OnTapButton()
+{
+	FStageInfoRecord* record = GetMgr(UStageMgr)->GetStageInfoRecord(FName(FString::FromInt(m_info.m_StageReckey)));
+	if (nullptr == record) return;
+
+	ULoadingWidget* loadingWidget = Cast<ULoadingWidget>(GetMgr(UUIBaseMgr)->OpenUI(EUIName::LoadingWidget));
+	if (loadingWidget != nullptr)
+		loadingWidget->SetInfoScene(FName(record->MapName), FString("?Game=/Game/Blueprints/Battle/BattleGameModeBP.BattleGameModeBP_C"));
 }
