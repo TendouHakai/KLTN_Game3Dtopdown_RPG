@@ -7,6 +7,7 @@
 #include "Util/Managers/HeroBuffMgr.h"
 #include "Util/Managers/ItemMgr.h"
 #include "Util/Managers/HeroMgr.h"
+#include "Util/Managers/StageMgr.h"
 
 URPGGameInstance* URPGGameInstance::_instance = nullptr;
 
@@ -22,6 +23,7 @@ void URPGGameInstance::Init()
 	CreateInstance<UHeroBuffMgr>();
 	CreateInstance<UItemMgr>();
 	CreateInstance<UHeroMgr>();
+	CreateInstance<UStageMgr>();
 }
 
 void URPGGameInstance::Shutdown()

@@ -95,6 +95,32 @@ void UInventoryEquipContainerWidget::OnUnHover()
 	PlayAnimation(ReleaseAnimation);
 }
 
+void UInventoryEquipContainerWidget::SetTextCountPerNumber(int32 number)
+{
+	if (nullptr == textUpgradeLevel || number <= 0)
+	{
+		OverlayUpgradeLevel->SetVisibility(ESlateVisibility::Collapsed);
+		return;
+	}
+
+	int32 itemcount = GetMgr(UItemMgr)->CountItemEqupiment(gameItemInfo.m_ItemRecKey);
+
+	textUpgradeLevel->SetText(FText::FromString(FString::Printf(TEXT("%d/%d"), itemcount, number)));
+	OverlayUpgradeLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+}
+
+void UInventoryEquipContainerWidget::SetTextCount(int32 number)
+{
+	if (nullptr == textUpgradeLevel || number <= 0)
+	{
+		OverlayUpgradeLevel->SetVisibility(ESlateVisibility::Collapsed);
+		return;
+	}
+
+	textUpgradeLevel->SetText(FText::FromString(FString::Printf(TEXT("x%d"), number)));
+	OverlayUpgradeLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+}
+
 void UInventoryEquipContainerWidget::SetImageItem(FString ItemName)
 {
 	if (ItemName.IsEmpty())

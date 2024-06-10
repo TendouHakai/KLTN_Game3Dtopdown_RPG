@@ -13,6 +13,16 @@ class UScrollWidget;
 class UEquipmentSlotWidget;
 struct FGameItemEquipmentInfo;
 struct FGameItemInfo;
+class UUIBaseButton;
+
+UENUM(BlueprintType)
+enum class EErrorForgingItemCode : uint8
+{
+	NotHaveForgingItemRecipe = 0,
+	NotEnoughMaterials,
+	NotEnoughPreviousItem,
+	Max
+};
 
 UCLASS()
 class GAME3DTOPDOWNRPG_API UForgingEquipmentItemPage : public UUIWidget
@@ -30,6 +40,25 @@ public:
 	UFUNCTION()
 	virtual void OnDropEquipSlot(int32 rec_key, UEquipmentSlotWidget* Container);
 
+	// function for button UI
+	UFUNCTION(BlueprintCallable)
+	void OnTapAddItemButton();
+
+	UFUNCTION(BlueprintCallable)
+	void OnTapSubtractItemButton();
+
+	UFUNCTION(BlueprintCallable)
+	void OnTapMaxItemItemButton();
+
+	UFUNCTION(BlueprintCallable)
+	void OnTapMinItemButton();
+
+	UFUNCTION(BlueprintCallable)
+	void OnValueChangeCountItemSlider(int32 count);
+
+	UFUNCTION(BlueprintCallable)
+	void OnTapForgingItemBtn();
+
 protected:
 	void UpdateChildEquipmentItem(UWidget* Child, int32 ChildDataIdx);
 	void UpdateChildConsumeMaterials(UWidget* Child, int32 ChildDataIdx);
@@ -38,6 +67,10 @@ protected:
 	
 	// UI
 	void EmptyCurrentForgingItemUI();
+
+	// count
+	void SetCountItem(int32 count);
+	void UpdateMaterials(int32 count);
 
 protected:
 	TArray<FGameItemEquipmentInfo> m_EquipmentItemRecipeArray;
@@ -48,10 +81,14 @@ protected:
 
 	UEquipmentSlotWidget* m_currentForgingItem;
 	UEquipmentSlotWidget* m_PreviousItem;
+	int32 m_Count;
 
 	UTextBlock* textName;
 	UTextBlock* textCreateCountItem;
 	USlider* sliderCountItem;
 	UProgressBar* progressbarCountItem;
 	UTextBlock* textPrice;
+
+	// button
+	UUIBaseButton* ForgingBtn;
 };

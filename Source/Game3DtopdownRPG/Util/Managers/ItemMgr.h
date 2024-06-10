@@ -32,6 +32,9 @@ public:
 	FItemParamLevRecord* GetItemParamLevRecord(FName Index);
 	FExpForGradeRecord* GetExpForGradeRecord(FName Index);
 	FItemTypeInfoRecord* GetItemTypeInfoRecord(FName Index);
+	
+	TArray<FGameItemInfo> GetAllItemRecipeByItemType(EItemType type);
+
 	// Upgrade Item
 	FItemEquipmentLevRecord* GetItemEquipmentLevelRecordByTotalExp(int32 totalExp);
 
@@ -53,6 +56,10 @@ public:
 
 	// item forging
 	TArray<FGameItemEquipmentInfo> GetAllItemEquipmentRecipe();
+	EResult ForgingItemEquipment(int32 ItemReckey, int32 count, int32 &errorcode);
+
+	// Item making
+	EResult MakeItem(int32 ItemReckey, int32 count, int32& errorcode);
 
 	// Cheat Item
 	void AddItem(int32 ItemReckey = 1, int32 ItemCount = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
@@ -67,6 +74,7 @@ public:
 	bool isHaveEquipmentItem(FGameItemEquipmentInfo iteminfo);
 
 	FGameItemInfo FindItem(int32 ItemReckey);
+	int32 CountItemEqupiment(int32 ItemReckey);
 	FGameItemEquipmentInfo FindItemEquipmentWorstStat(int32 ItemReckey);
 protected:
 	TArray<FGameItemInfo> m_ItemArray;

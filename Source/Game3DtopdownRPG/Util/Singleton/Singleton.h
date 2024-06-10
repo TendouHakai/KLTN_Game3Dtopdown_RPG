@@ -6,9 +6,14 @@
 #include "UObject/NoExportTypes.h"
 #include "Singleton.generated.h"
 
-/**
- * 
- */
+UENUM(BlueprintType)
+enum class EResult : uint8
+{
+	Success,
+	Fail,
+	Max
+};
+
 UCLASS()
 class GAME3DTOPDOWNRPG_API USingleton : public UObject
 {

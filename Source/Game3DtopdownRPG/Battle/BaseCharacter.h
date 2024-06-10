@@ -130,6 +130,10 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Character")
 	void UnEquipItem(FGameItemEquipmentInfo iteminfo);
 
+	// get current class
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Character")
+	EHeroClass GetCurrentHeroClass();
+
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	bool IsValidBuff(const FHeroBuffInfo& HeroBuffInfo);

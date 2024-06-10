@@ -80,6 +80,26 @@ void UHeroMgr::UnEquipHeroItem(ABaseCharacter* hero, FGameItemEquipmentInfo item
 	GameMode->UIMgr->Update();
 }
 
+void UHeroMgr::UnEquipHeroItemByClass(ABaseCharacter* hero)
+{
+	if (nullptr == hero) return;
+
+	FHeroInfo HeroInfo = hero->GetHeroInfo();
+
+	for (int equipIndex = 0; equipIndex < HeroInfo.m_Equip.Num(); ++equipIndex)
+	{
+		if (HeroInfo.m_Equip[equipIndex].m_ItemRecKey == 0) continue;
+		FItemEquipmentInfoRecord* record = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(HeroInfo.m_Equip[equipIndex].m_ItemRecKey)));
+		if (nullptr == record) continue;
+		if (static_cast<int32>(EItemEquipPosition::Weapon) == equipIndex) continue;
+
+		if (record->HeroClass != hero->GetCurrentHeroClass())
+		{
+			hero->UnEquipItem(HeroInfo.m_Equip[equipIndex]);
+		}
+	}
+}
+
 void UHeroMgr::ChangeHeroParam(FCharacterParam& heroParam, const FCharacterParam& AddParam, bool IsAddParam /*= true*/)
 {
 	if (IsAddParam)

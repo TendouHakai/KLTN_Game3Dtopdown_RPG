@@ -44,8 +44,8 @@ void UInternalWidget::SetCurrentBuilding(EBuildingType type)
 	case EBuildingType::RuneBuff:
 		textNameBuilding->SetText(FText::FromString("Rune Buff Building"));
 		break;
-	case EBuildingType::SkillLibrary:
-		textNameBuilding->SetText(FText::FromString("Skill Library Building"));
+	case EBuildingType::BattleField:
+		textNameBuilding->SetText(FText::FromString("Battle Stage"));
 		break;
 	case EBuildingType::Max:
 		textNameBuilding->SetText(FText::FromString(""));
@@ -93,8 +93,11 @@ void UInternalWidget::OnTapBtnMenu(int Index)
 			UIMgr->OpenScene(EUIName::RuneBuffPage);
 		}
 		break;
-	case EBuildingType::SkillLibrary:
-
+	case EBuildingType::BattleField:
+		if (0 == Index)
+		{
+			UIMgr->OpenScene(EUIName::BattleStagePage);
+		}
 		break;
 	case EBuildingType::Max:
 		break;

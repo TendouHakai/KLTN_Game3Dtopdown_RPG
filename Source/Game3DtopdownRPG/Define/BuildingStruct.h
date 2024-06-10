@@ -12,6 +12,6 @@ enum class EBuildingType : uint8
 	ForgingItem,
 	MakingPotion,
 	RuneBuff,
-	SkillLibrary,
+	BattleField,
 	Max
 };

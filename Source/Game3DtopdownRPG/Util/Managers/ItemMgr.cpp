@@ -127,6 +127,26 @@ FItemTypeInfoRecord* UItemMgr::GetItemTypeInfoRecord(FName Index)
 	return ItemTypeInfoRecord;
 }
 
+TArray<FGameItemInfo> UItemMgr::GetAllItemRecipeByItemType(EItemType type)
+{
+	TArray<FGameItemInfo> array;
+
+	UDataTable* ItemInfoTable = GetMgr(UTableMgr)->ItemInfoTable;
+	if (nullptr == ItemInfoTable) return array;
+
+	TArray<FItemInfoRecord*> allrows;
+
+	ItemInfoTable->GetAllRows(FString(), allrows);
+
+	for (int index = 0; index < allrows.Num(); ++index)
+	{
+		if(allrows[index]->CanMake == true && allrows[index]->ItemType == type)
+			array.Emplace(FGameItemInfo(0, allrows[index]->ItemReckey));
+	}
+
+	return array;
+}
+
 TArray<FGameItemInfo> UItemMgr::GetItemArray()
 {
 	return m_ItemArray;
@@ -245,6 +265,87 @@ TArray<FGameItemEquipmentInfo> UItemMgr::GetAllItemEquipmentRecipe()
 	return array;
 }
 
+EResult UItemMgr::ForgingItemEquipment(int32 ItemReckey, int32 count, int32& errorcode)
+{
+	FItemEquipmentInfoRecord* record = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(ItemReckey)));
+	// check
+	if (nullptr == record)
+	{
+		errorcode = 0;
+		return EResult::Fail;
+	}
+
+	for (int matIndex = 0; matIndex < record->Materials.Num(); ++matIndex)
+	{
+		FGameItemInfo info = GetMgr(UItemMgr)->FindItem(record->Materials[matIndex]);
+		if (info.m_ItemCount < record->MatCounts[matIndex]*count)
+		{
+			errorcode = 1;
+			return EResult::Fail;
+		}
+	}
+
+	int32 countitem = GetMgr(UItemMgr)->CountItemEqupiment(record->PreviousItem);
+	if (countitem < count)
+	{
+		errorcode = 2;
+		return EResult::Fail;
+	}
+
+	// xu ly
+	for (int matIndex = 0; matIndex < record->Materials.Num(); ++matIndex)
+	{
+		RemoveItem(record->Materials[matIndex], record->MatCounts[matIndex], EInventoryLocation::All);
+	}
+
+	for (int i = 0; i < count; ++i)
+	{
+		FGameItemEquipmentInfo info = FindItemEquipmentWorstStat(record->PreviousItem);
+		RemoveItemEquipment(info);
+	}
+
+	AddItemEquipment(ItemReckey, 1, EInventoryLocation::InBackpack);
+
+	return EResult::Success;
+}
+
+EResult UItemMgr::MakeItem(int32 ItemReckey, int32 count, int32& errorcode)
+{
+	if (count == 0)
+	{
+		errorcode = 0;
+		return EResult::Fail;
+	}
+	
+	// check 
+	FItemInfoRecord* record = GetMgr(UItemMgr)->GetItemInfoRecord(FName(FString::FromInt(ItemReckey)));
+	if (nullptr == record)
+	{
+		errorcode = 1;
+		return EResult::Fail;
+	}
+
+	for (int matIndex = 0; matIndex < record->Materials.Num(); ++matIndex)
+	{
+		FGameItemInfo info = GetMgr(UItemMgr)->FindItem(record->Materials[matIndex]);
+		if (info.m_ItemCount < record->MatCounts[matIndex] * count)
+		{
+			errorcode = 2;
+			return EResult::Fail;
+		}
+	}
+
+	// excute
+	for (int matIndex = 0; matIndex < record->Materials.Num(); ++matIndex)
+	{
+		RemoveItem(record->Materials[matIndex], record->MatCounts[matIndex] * count, EInventoryLocation::All);
+	}
+
+	AddItem(ItemReckey, count, EInventoryLocation::InBackpack);
+
+	return EResult::Success;
+}
+
 FItemEquipmentLevRecord* UItemMgr::GetItemEquipmentLevelRecordByTotalExp(int32 totalExp)
 {
 	UDataTable* ItemEquipmentLevInfoTable = GetMgr(UTableMgr)->ItemEquipmentLevInfoTable;
@@ -304,18 +405,13 @@ void UItemMgr::AddItem(int32 ItemReckey /*= 1*/, int32 ItemCount /*= 1*/, EInven
 
 void UItemMgr::RemoveItem(int32 ItemReckey, int32 ItemCount, EInventoryLocation InventoryLocation)
 {
-	FGameItemInfo ItemInfo;
-	ItemInfo.m_ItemRecKey = ItemReckey;
-	ItemInfo.m_ItemCount = ItemCount;
-	ItemInfo.m_InventoryLocation = InventoryLocation;
-
 	int indexRemove = -1;
 
 	for (int index = 0; index < m_ItemArray.Num(); ++index)
 	{
-		if (m_ItemArray[index].m_ItemRecKey == ItemInfo.m_ItemRecKey)
+		if (m_ItemArray[index].m_ItemRecKey == ItemReckey && (m_ItemArray[index].m_InventoryLocation == InventoryLocation || InventoryLocation == EInventoryLocation::All))
 		{
-			m_ItemArray[index].m_ItemCount -= ItemInfo.m_ItemCount;
+			m_ItemArray[index].m_ItemCount -= ItemCount;
 			if (m_ItemArray[index].m_ItemCount <= 0)
 				indexRemove = index;
 			break;
@@ -511,12 +607,27 @@ FGameItemInfo UItemMgr::FindItem(int32 ItemReckey)
 	return iteminfo;
 }
 
+int32 UItemMgr::CountItemEqupiment(int32 ItemReckey)
+{
+	int32 count = 0;
+
+	for (int index = 0; index < m_ItemEquipmentArray.Num(); ++index)
+	{
+		if (m_ItemEquipmentArray[index].m_ItemRecKey == ItemReckey)
+		{
+			++count;
+		}
+	}
+
+	return count;
+}
+
 FGameItemEquipmentInfo UItemMgr::FindItemEquipmentWorstStat(int32 ItemReckey)
 {
 	FGameItemEquipmentInfo iteminfo;
 	for (int index = 0; index < m_ItemEquipmentArray.Num(); ++index)
 	{
-		if (m_ItemEquipmentArray[index].m_ItemRecKey == iteminfo.m_ItemRecKey)
+		if (m_ItemEquipmentArray[index].m_ItemRecKey == ItemReckey)
 		{
 			if (iteminfo.m_ItemRecKey == 0 || iteminfo.m_ItemUgrapeLevel > m_ItemEquipmentArray[index].m_ItemUgrapeLevel)
 			{

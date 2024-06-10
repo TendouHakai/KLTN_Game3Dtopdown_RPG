@@ -28,6 +28,11 @@ void UGlobalCheatManager::ItemEquipmentAdd(int32 ItemEquipmentReckey /*= 1*/, in
 	Endcheat();
 }
 
+void UGlobalCheatManager::MapClear(int32 StageReckey)
+{
+
+}
+
 void UGlobalCheatManager::Endcheat()
 {
 	ABaseGameMode* GameMode = GetGameModeAs(ABaseGameMode);

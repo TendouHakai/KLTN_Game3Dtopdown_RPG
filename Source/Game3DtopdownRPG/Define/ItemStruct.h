@@ -19,6 +19,8 @@ UENUM(BlueprintType)
 enum class EItemType : uint8
 {
 	UpgradeEquipmentItem,
+	Potion,
+	PotionMaterial,
 	Max
 };
 
@@ -39,6 +41,7 @@ enum class EInventoryLocation : uint8
 	InInventory,
 	InBackpack,
 	InEquipment,
+	All,
 	Max
 };
 

@@ -5,12 +5,11 @@
 #include "CoreMinimal.h"
 #include "Game3DtopdownRPG/Define/ItemStruct.h"
 #include "HeroTable.h"
+#include "Game3DtopdownRPG/Define/HeroStruct.h"
 #include "Engine/SkeletalMesh.h"
 #include "Engine/StaticMesh.h"
 #include "ItemTable.generated.h"
-/**
- * 
- */
+
 
 
 USTRUCT(BlueprintType)
@@ -19,6 +18,7 @@ struct FItemInfoRecord : public FTableRowBase
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 ItemReckey;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString DesName;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) EItemCategory Category;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) EItemType ItemType;
@@ -26,9 +26,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 MaxCount;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int64 SellGold;	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int64 BuyGold;	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) int64 MakingGold;	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) bool CanMake;	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) TArray<int32> Materials;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) TArray<int32> MatCounts;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString ItemIcon;	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString Description;	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString Description;		
 };
 
 USTRUCT(BlueprintType)
@@ -76,6 +79,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) UStaticMesh* MeshStatic;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString IconName;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 ItemParamLevID;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) EHeroClass HeroClass;
 };
 
 USTRUCT(BlueprintType)

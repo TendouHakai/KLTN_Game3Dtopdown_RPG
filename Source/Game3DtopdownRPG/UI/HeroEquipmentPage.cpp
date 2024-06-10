@@ -69,9 +69,11 @@ void UHeroEquipmentPage::OnDropEquipSlot(int32 rec_key, UEquipmentSlotWidget* Co
 		ABaseCharacter* basecharacter = Cast<ABaseCharacter>(PlayerCharacter);
 		if (basecharacter)
 		{
-			basecharacter->EquipItem(Container->GetInventoryEquipment()->GetGameItemInfo());
+			basecharacter->EquipItem(Container->GetInventoryEquipment()->GetGameItemInfo(), false);
 		}
 	}
+
+	Update();
 }
 
 void UHeroEquipmentPage::SetHeroCharacter(ABaseCharacter* herocharacter)

@@ -26,6 +26,9 @@ public:
 	void UnEquipHeroItem(ABaseCharacter* hero, FGameItemEquipmentInfo iteminfo);
 
 	UFUNCTION(BlueprintCallable)
+	void UnEquipHeroItemByClass(ABaseCharacter* hero);
+
+	UFUNCTION(BlueprintCallable)
 	void ChangeHeroParam(FCharacterParam& heroParam, const FCharacterParam& AddParam, bool IsAddParam = true);
 
 protected:

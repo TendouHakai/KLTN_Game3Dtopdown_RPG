@@ -7,7 +7,6 @@
 #include "Components/GridPanel.h"
 #include "ScrollWidget.generated.h"
 
-
 UCLASS()
 class GAME3DTOPDOWNRPG_API UScrollWidget : public UUIUnitWidget
 {

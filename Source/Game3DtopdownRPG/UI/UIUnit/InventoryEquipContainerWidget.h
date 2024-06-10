@@ -62,6 +62,9 @@ public:
 	}
 
 	bool IsInteract = true;
+
+	void SetTextCountPerNumber(int32 number);
+	void SetTextCount(int32 number);
 protected:
 	void SetImageItem(FString ItemName);
 	void SetTextUpgrapeLevel(int32 level);

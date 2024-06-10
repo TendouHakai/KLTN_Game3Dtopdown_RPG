@@ -45,14 +45,16 @@ public:
 	UInventoryEquipContainerWidget* GetInventoryEquipment() { return inventoryEquipment; }
 
 	virtual void Update() override;
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) EItemEquipPosition EquipmentPosition;
 protected:
 	void setImageIcon();
 	
 protected:
 	UImage* imageIcon;
+	UImage* imageLock;
 	UInventoryEquipContainerWidget* inventoryEquipment;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) EItemEquipPosition EquipmentPosition;
 	ABaseCharacter* character;
 
 	FEquipmentContainerDrop_DelegateEx OwnerDropDelegateEx;

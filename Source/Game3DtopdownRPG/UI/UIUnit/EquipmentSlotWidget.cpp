@@ -13,6 +13,7 @@ void UEquipmentSlotWidget::CacheOwnUI()
 	Super::CacheOwnUI();
 
 	imageIcon = GetOwnUI<UImage>(TEXT("Image_Icon"));
+	imageLock = GetOwnUI<UImage>(TEXT("Image_EquipmentLock"));
 	if (imageIcon != nullptr)
 	{
 		setImageIcon();
@@ -47,12 +48,14 @@ void UEquipmentSlotWidget::EquipItemToSlot(FGameItemEquipmentInfo iteminfo)
 		EmptyUI();
 		return;
 	}
+
 	inventoryEquipment->SetInfo(iteminfo);
 	inventoryEquipment->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
 void UEquipmentSlotWidget::EmptyUI()
 {
+	inventoryEquipment->SetInfo(FGameItemEquipmentInfo());
 	inventoryEquipment->SetVisibility(ESlateVisibility::Collapsed);
 }
 
@@ -71,20 +74,22 @@ void UEquipmentSlotWidget::Update()
 	Super::Update();
 
 	if (nullptr == character) return;
+	setImageIcon();
 	FHeroInfo heroinfo = character->GetHeroInfo();
 
 	if (!heroinfo.m_Equip.IsValidIndex(static_cast<int32>(EquipmentPosition)))
 	{
-		inventoryEquipment->SetVisibility(ESlateVisibility::Collapsed);
+		EmptyUI();
 		return;
 	}
 	if (heroinfo.m_Equip[static_cast<int32>(EquipmentPosition)].m_ItemRecKey == 0) 
 	{
-		inventoryEquipment->SetVisibility(ESlateVisibility::Collapsed);
+		EmptyUI();
 		return;
 	}
-	inventoryEquipment->SetInfo(heroinfo.m_Equip[static_cast<int32>(EquipmentPosition)]);
-	inventoryEquipment->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	EquipItemToSlot(heroinfo.m_Equip[static_cast<int32>(EquipmentPosition)]);
+	//inventoryEquipment->SetInfo(heroinfo.m_Equip[static_cast<int32>(EquipmentPosition)]);
+	//inventoryEquipment->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
 void UEquipmentSlotWidget::setImageIcon()
@@ -114,7 +119,35 @@ void UEquipmentSlotWidget::setImageIcon()
 		path = "/Game/UI/Sprites/Components/Icon/Weapon.Weapon";
 		break;
 	case EItemEquipPosition::Shield:
-		path = "/Game/UI/Sprites/Components/Icon/Shield.Shield";
+		if (nullptr == character)
+		{
+			imageLock->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			return;
+		}
+		switch (character->GetCurrentHeroClass())
+		{
+		case EHeroClass::NoWeapon:
+			imageLock->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			return;
+		case EHeroClass::SwordAndShield:
+			path = "/Game/UI/Sprites/Components/Icon/Shield.Shield";
+			break;
+		case EHeroClass::Bow:
+			path = "/Game/UI/Sprites/Components/Icon/spiral-arrow.spiral-arrow";
+			break;
+		case EHeroClass::DoubleSword:
+			path = "/Game/UI/Sprites/Components/Icon/Weapon.Weapon";
+			break;
+		case EHeroClass::MagicWand:
+			imageLock->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			return;
+		case EHeroClass::SingleSword:
+			imageLock->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			return;
+		default:
+			imageLock->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			return;
+		}
 		break;
 	case EItemEquipPosition::Clother:
 		path = "/Game/UI/Sprites/Components/Icon/Clother.Clother";
@@ -127,4 +160,5 @@ void UEquipmentSlotWidget::setImageIcon()
 	UTexture2D* Tex = GetMgr(UAssetMgr)->LoadTexture2DFromPath(path);
 	if (nullptr == Tex) return;
 	imageIcon->SetBrushFromTexture(Tex);
+	imageLock->SetVisibility(ESlateVisibility::Collapsed);
 }

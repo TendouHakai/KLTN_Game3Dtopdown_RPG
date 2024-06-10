@@ -19,5 +19,8 @@ public:
 	UFUNCTION(Exec)
 	void ItemEquipmentAdd(int32 ItemEquipmentReckey = 1, int32 ItemUpgradeLevel = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
 
+	UFUNCTION(Exec)
+	void MapClear(int32 StageReckey = 1);
+
 	void Endcheat();
 };

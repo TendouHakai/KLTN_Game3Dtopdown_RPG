@@ -46,7 +46,7 @@ void UInventoryContainerWidget::SetInfo(FGameItemInfo& GameItemInfo, FItemInfoRe
 	SetTextCount(gameItemInfo.m_ItemCount);
 }
 
-void UInventoryContainerWidget::SetInfo(FGameItemInfo& GameItemInfo)
+void UInventoryContainerWidget::SetInfo(FGameItemInfo GameItemInfo)
 {
 	gameItemInfo = GameItemInfo;
 
@@ -112,6 +112,17 @@ void UInventoryContainerWidget::OnUnHover()
 		return;
 	ImageEffect->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	PlayAnimation(ReleaseAnimation);
+}
+
+void UInventoryContainerWidget::OnDropEvent(FGameItemInfo info)
+{
+	if (info.m_ItemRecKey == 0) return;
+
+	if (OwnerDropDelefateEx.IsBound())
+	{
+		SetInfo(info);
+		OwnerDropDelefateEx.ExecuteIfBound(info.m_ItemRecKey, this);
+	}
 }
 
 void UInventoryContainerWidget::SetImageItem(FString ItemName)

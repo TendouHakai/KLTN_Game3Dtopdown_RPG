@@ -34,6 +34,7 @@ enum class EUIName : uint8
 	UpgradeItemEquipmentPage,
 	MakingPotionPage,
 	RuneBuffPage,
+	BattleStagePage,
 
 	Max,
 };

@@ -28,9 +28,10 @@ void ATeleportLevel::OnEnterLevel_Implementation()
 {
 	if (IsPlayerInRange)
 	{
-		ULoadingWidget* loadingWidget = Cast<ULoadingWidget>(GetMgr(UUIBaseMgr)->OpenUI(EUIName::LoadingWidget));
-		if(loadingWidget != nullptr)
-			loadingWidget->SetInfoScene(FName("Map01New"), FString("?Game=/Game/Blueprints/Battle/BattleGameModeBP.BattleGameModeBP_C"));
+		//ULoadingWidget* loadingWidget = Cast<ULoadingWidget>(GetMgr(UUIBaseMgr)->OpenUI(EUIName::LoadingWidget));
+		//if(loadingWidget != nullptr)
+		//	loadingWidget->SetInfoScene(FName("Map01New"), FString("?Game=/Game/Blueprints/Battle/BattleGameModeBP.BattleGameModeBP_C"));
+		GetMgr(UUIBaseMgr)->OpenUI(EUIName::BattleStagePage);
 	}
 }
 

@@ -13,6 +13,7 @@
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FContainerTap_DelegateEx, int32, Output, UInventoryContainerWidget*, Output02);
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FContainerTapUseSubtract_DelegateEx, int32, Output, UInventoryContainerWidget*, Output02);
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FContainerDrop_DelegateEx, int32, Output, UInventoryContainerWidget*, Output02);
 
 struct FItemInfoRecord;
 
@@ -22,11 +23,13 @@ class GAME3DTOPDOWNRPG_API UInventoryContainerWidget : public UUIUnitWidget
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable)
 	virtual void CacheOwnUI() override;
 	virtual void NativeConstruct() override;
 
 	virtual void SetInfo(FGameItemInfo& GameItemInfo, FItemInfoRecord* ItemInfoRecord);
-	virtual void SetInfo(FGameItemInfo& GameItemInfo);
+	UFUNCTION(BlueprintCallable)
+	virtual void SetInfo(FGameItemInfo GameItemInfo);
 	virtual void SetInfo(UInventoryContainerWidget* InventoryContainerWidget);
 
 	void EmptyUI();
@@ -43,6 +46,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void OnUnHover();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void OnDropEvent(FGameItemInfo info);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FGameItemInfo GetGameItemInfo() { return gameItemInfo; }
 
 	template<class T>
@@ -59,11 +66,19 @@ public:
 		OwnerUseSubtractDelegateEx.BindDynamic(owner, &T::OnTapUseSubtractContainer);
 	}
 
+	template<class T>
+	void SetDropEventEx(T* owner)
+	{
+		OwnerDropDelefateEx.Unbind();
+		OwnerDropDelefateEx.BindDynamic(owner, &T::OnDropInventoryContainer);
+	}
+
 	void SetUseCount(int32 count);
 	void SetTextCountPerNumber(int32 number);
 public:
 	FContainerTap_DelegateEx OwnerDelegateEx;
 	FContainerTapUseSubtract_DelegateEx OwnerUseSubtractDelegateEx;
+	FContainerDrop_DelegateEx OwnerDropDelefateEx;
 
 	bool IsInteract = true;
 protected:
