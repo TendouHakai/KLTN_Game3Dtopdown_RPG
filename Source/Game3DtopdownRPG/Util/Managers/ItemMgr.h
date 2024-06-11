@@ -43,7 +43,8 @@ public:
 	TArray<FGameItemInfo> GetItemArray();
 	TArray<FGameItemInfo> GetItemInInventoryArray();
 	TArray<FGameItemInfo> GetItemInBackpackArray();
-	TArray<FGameItemInfo> GetItemArrayByItemType(EItemType type);
+	TArray<FGameItemInfo> GetItemArrayByItemType(EItemType type, EInventoryLocation location = EInventoryLocation::InInventory);
+	TArray<FGameItemInfo> GetItemArrayByCategory(EItemCategory category, EInventoryLocation location = EInventoryLocation::InInventory);
 
 	FString GetItemGradeText(EItemGrade grade);
 	FString GetDescriptionItem(const FItemInfoRecord& ItemInfoRecord);

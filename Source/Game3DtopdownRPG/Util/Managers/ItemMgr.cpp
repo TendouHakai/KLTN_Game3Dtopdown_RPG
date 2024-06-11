@@ -176,14 +176,28 @@ TArray<FGameItemInfo> UItemMgr::GetItemInBackpackArray()
 	return ItemArrayInInventory;
 }
 
-TArray<FGameItemInfo> UItemMgr::GetItemArrayByItemType(EItemType type)
+TArray<FGameItemInfo> UItemMgr::GetItemArrayByItemType(EItemType type, EInventoryLocation location)
 {
 	TArray<FGameItemInfo> ItemArrayByItemType;
 	for (FGameItemInfo info : m_ItemArray)
 	{
 		FItemInfoRecord* record = GetItemInfoRecord(FName(FString::FromInt(info.m_ItemRecKey)));
 		if (nullptr == record) continue;
-		if (record->ItemType == type)
+		if (record->ItemType == type && info.m_InventoryLocation == location)
+			ItemArrayByItemType.Emplace(info);
+	}
+
+	return ItemArrayByItemType;
+}
+
+TArray<FGameItemInfo> UItemMgr::GetItemArrayByCategory(EItemCategory category, EInventoryLocation location)
+{
+	TArray<FGameItemInfo> ItemArrayByItemType;
+	for (FGameItemInfo info : m_ItemArray)
+	{
+		FItemInfoRecord* record = GetItemInfoRecord(FName(FString::FromInt(info.m_ItemRecKey)));
+		if (nullptr == record) continue;
+		if (record->Category == category && info.m_InventoryLocation == location)
 			ItemArrayByItemType.Emplace(info);
 	}
 
