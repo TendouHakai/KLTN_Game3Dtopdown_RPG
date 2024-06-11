@@ -3,6 +3,7 @@
 
 #include "ItemSlotWidget.h"
 #include "Game3DtopdownRPG/UI/UIUnit/InventoryContainerWidget.h"
+#include "Game3DtopdownRPG/Battle/BaseCharacter.h"
 
 void UItemSlotWidget::CacheOwnUI()
 {
@@ -53,4 +54,30 @@ void UItemSlotWidget::OnTapEvent()
 	{
 		OwnerTapDelegateEx.ExecuteIfBound(0, this);
 	}
+}
+
+void UItemSlotWidget::SetHeroCharacter(ABaseCharacter* hero)
+{
+	if (nullptr == hero) return;
+	character = hero;
+}
+
+void UItemSlotWidget::Update()
+{
+	Super::Update();
+
+	if (nullptr == character) return;
+	FHeroInfo heroinfo = character->GetHeroInfo();
+
+	if (!heroinfo.m_EquipNormal.IsValidIndex(EquipPosition))
+	{
+		EmptyUI();
+		return;
+	}
+	if (heroinfo.m_EquipNormal[EquipPosition].m_ItemRecKey == 0)
+	{
+		EmptyUI();
+		return;
+	}
+	EquipItemToSlot(heroinfo.m_EquipNormal[EquipPosition]);
 }

@@ -91,13 +91,59 @@ void UHeroMgr::UnEquipHeroItemByClass(ABaseCharacter* hero)
 		if (HeroInfo.m_Equip[equipIndex].m_ItemRecKey == 0) continue;
 		FItemEquipmentInfoRecord* record = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(HeroInfo.m_Equip[equipIndex].m_ItemRecKey)));
 		if (nullptr == record) continue;
-		if (static_cast<int32>(EItemEquipPosition::Weapon) == equipIndex) continue;
+		if (record->EquipPosition == EItemEquipPosition::Weapon) continue;
+		if (record->EquipPosition == EItemEquipPosition::All) continue;
 
 		if (record->HeroClass != hero->GetCurrentHeroClass())
 		{
 			hero->UnEquipItem(HeroInfo.m_Equip[equipIndex]);
 		}
 	}
+}
+
+void UHeroMgr::EquipHeroNormalItem(ABaseCharacter* hero, FGameItemInfo iteminfo, int32 position)
+{
+	FHeroInfo HeroInfo = hero->GetHeroInfo();
+
+	FGameItemInfo OldItemInfo = HeroInfo.m_EquipNormal[position];
+
+	// update Item in Backpack
+	if (OldItemInfo.m_ItemRecKey == 0)
+		GetMgr(UItemMgr)->ChangeItemInventoryLocation(iteminfo, iteminfo.m_ItemCount, EInventoryLocation::InEquipment);
+	else
+	{
+		GetMgr(UItemMgr)->ChangeItemInventoryLocation(iteminfo, iteminfo.m_ItemCount, EInventoryLocation::InEquipment);
+		GetMgr(UItemMgr)->ChangeItemInventoryLocation(OldItemInfo, OldItemInfo.m_ItemCount, EInventoryLocation::InBackpack);
+	}
+
+	// update equip
+	iteminfo.m_InventoryLocation = EInventoryLocation::InEquipment;
+	HeroInfo.m_EquipNormal[position] = iteminfo;
+
+	hero->SetHeroInfo(HeroInfo);
+
+	// update UI
+	ABaseGameMode* GameMode = GetGameModeAs(ABaseGameMode);
+	if (nullptr == GameMode) return;
+	GameMode->UIMgr->Update();
+}
+
+void UHeroMgr::UnEquipHeroNormalItem(ABaseCharacter* hero, FGameItemInfo iteminfo, int32 position)
+{
+	FHeroInfo HeroInfo = hero->GetHeroInfo();
+
+	// update Item Mgr
+	GetMgr(UItemMgr)->ChangeItemInventoryLocation(iteminfo, iteminfo.m_ItemCount, EInventoryLocation::InBackpack);
+
+	// update equip
+	HeroInfo.m_EquipNormal[position] = FGameItemInfo();
+
+	hero->SetHeroInfo(HeroInfo);
+
+	// update UI
+	ABaseGameMode* GameMode = GetGameModeAs(ABaseGameMode);
+	if (nullptr == GameMode) return;
+	GameMode->UIMgr->Update();
 }
 
 void UHeroMgr::ChangeHeroParam(FCharacterParam& heroParam, const FCharacterParam& AddParam, bool IsAddParam /*= true*/)

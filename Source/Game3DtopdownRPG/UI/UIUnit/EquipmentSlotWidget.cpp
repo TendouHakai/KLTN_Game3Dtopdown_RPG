@@ -69,6 +69,14 @@ void UEquipmentSlotWidget::OnDropEvent(FGameItemEquipmentInfo info)
 	}
 }
 
+void UEquipmentSlotWidget::OnTapEvent()
+{
+	if (OwnerTapDelegateEx.IsBound())
+	{
+		OwnerTapDelegateEx.ExecuteIfBound(inventoryEquipment->GetGameItemInfo().m_ItemRecKey, this);
+	}
+}
+
 void UEquipmentSlotWidget::Update()
 {
 	Super::Update();

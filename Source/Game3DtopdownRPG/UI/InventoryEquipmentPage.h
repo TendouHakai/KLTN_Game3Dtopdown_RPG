@@ -51,6 +51,9 @@ public:
 	UFUNCTION()
 	void OnTapButtonSell();
 
+	UFUNCTION(BlueprintCallable)
+	void OnTapClose();
+
 protected:
 	void UpdateChildEquipmentContainer(UWidget* Child, int32 ChildDataIdx);
 

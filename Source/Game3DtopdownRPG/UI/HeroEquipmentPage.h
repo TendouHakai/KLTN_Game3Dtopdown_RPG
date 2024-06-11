@@ -47,15 +47,19 @@ public:
 	virtual void CacheOwnUI() override;
 	virtual void Update() override;
 
+	// function for equipment item
 	UFUNCTION()
 	virtual void OnTapEquipContainer(int32 rec_key, UInventoryEquipContainerWidget* Container) {}
 
 	UFUNCTION()
-	virtual void OnDropContainer(int32 rec_key, UInventoryEquipContainerWidget* Container) {}
+	void OnCtrlTapEquipContainer(int32 rec_key, UInventoryEquipContainerWidget* container);
 
 	// Function for slot equipmnet
 	UFUNCTION()
 	virtual void OnDropEquipSlot(int32 rec_key, UEquipmentSlotWidget* Container);
+
+	UFUNCTION()
+	virtual void OnTapEquipSlot(int32 rec_key, UEquipmentSlotWidget* Container);
 
 	// Function for slot item
 	UFUNCTION()
@@ -77,6 +81,7 @@ protected:
 	void UpdateChildItem(UWidget* Child, int32 ChildDataIdx);
 	void UpdateChildItemEquipment(UWidget* Child, int32 ChildDataIdx);
 	void UpdateEquipmentSlots();
+	void UpdateNormalEquipmentSlots();
 	void UpdateHeroParams();
 
 protected:

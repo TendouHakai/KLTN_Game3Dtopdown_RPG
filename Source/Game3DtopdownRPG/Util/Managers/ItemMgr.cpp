@@ -512,9 +512,9 @@ void UItemMgr::RemoveItemEquipment(FGameItemEquipmentInfo iteminfo)
 
 void UItemMgr::ChangeItemInventoryLocation(FGameItemInfo iteminfo, int ItemCount, EInventoryLocation Inventorylocation)
 {
-	for (int index = 0; index < m_ItemEquipmentArray.Num(); ++index)
+	for (int index = 0; index < m_ItemArray.Num(); ++index)
 	{
-		if (m_ItemArray[index].m_ItemRecKey == iteminfo.m_ItemRecKey)
+		if (m_ItemArray[index].m_ItemRecKey == iteminfo.m_ItemRecKey && m_ItemArray[index].m_ItemCount == iteminfo.m_ItemCount && m_ItemArray[index].m_InventoryLocation == iteminfo.m_InventoryLocation)
 		{
 			if (m_ItemArray[index].m_ItemCount < ItemCount)
 			{

@@ -23,9 +23,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SavedUserConfig")
 	static USavedInventoryConfig* LoadInventoryCfgFromFile(bool& bSuccess);
 
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FGameItemInfo> m_ItemArray;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FGameItemEquipmentInfo> m_ItemEquipmentArray;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int64 Gold;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int64 Energy;
 };

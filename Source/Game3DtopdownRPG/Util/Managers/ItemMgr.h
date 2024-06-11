@@ -80,7 +80,14 @@ public:
 	FGameItemInfo FindItem(int32 ItemReckey);
 	int32 CountItemEqupiment(int32 ItemReckey);
 	FGameItemEquipmentInfo FindItemEquipmentWorstStat(int32 ItemReckey);
+
+	// Gold
+
+
+	// Energy
 protected:
 	TArray<FGameItemInfo> m_ItemArray;
 	TArray<FGameItemEquipmentInfo> m_ItemEquipmentArray;
+	int Gold;
+	int Energy;
 };

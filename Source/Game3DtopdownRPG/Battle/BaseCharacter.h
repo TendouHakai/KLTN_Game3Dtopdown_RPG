@@ -130,6 +130,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Character")
 	void UnEquipItem(FGameItemEquipmentInfo iteminfo);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Character")
+	void EquipNormalItem(FGameItemInfo iteminfo, int32 postion, bool IsInit = true);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Character")
+	void UnEquipNormalItem(FGameItemInfo iteminfo, int32 postion);
+
 	// get current class
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Character")
 	EHeroClass GetCurrentHeroClass();

@@ -41,6 +41,7 @@ struct FHeroInfo
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 m_Level;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FCharacterParam m_Param;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<FGameItemEquipmentInfo> m_Equip;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<FGameItemInfo> m_EquipNormal;
 
 	GENERATED_USTRUCT_BODY()
 

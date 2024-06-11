@@ -11,6 +11,7 @@ DECLARE_DYNAMIC_DELEGATE_TwoParams(FItemSlotDrop_DelegateEx, int32, Output, UIte
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FItemSlotTap_DelegateEx, int32, Output, UItemSlotWidget*, Output02);
 
 class UInventoryContainerWidget;
+class ABaseCharacter;
 
 UCLASS()
 class GAME3DTOPDOWNRPG_API UItemSlotWidget : public UUIUnitWidget
@@ -49,9 +50,17 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	UInventoryContainerWidget* GetInventoryContainer() { return inventoryEquipment; }
 
+	virtual void SetHeroCharacter(ABaseCharacter* hero);
+
+	virtual void Update() override;
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 EquipPosition;
+
 protected:
 	UInventoryContainerWidget* inventoryEquipment;
 
 	FItemSlotDrop_DelegateEx OwnerDropDelegateEx;
 	FItemSlotTap_DelegateEx OwnerTapDelegateEx;
+
+	ABaseCharacter* character;
 };

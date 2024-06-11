@@ -261,3 +261,9 @@ void UInventoryEquipmentPage::OnTapButtonSell()
 
 	Update();
 }
+
+void UInventoryEquipmentPage::OnTapClose()
+{
+	if (UIMgr != nullptr)
+		UIMgr->CloseScene();
+}

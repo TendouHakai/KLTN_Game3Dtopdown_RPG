@@ -7,6 +7,7 @@
 #include "UIUnit/InventoryContainerWidget.h"
 #include "UIUnit/EquipmentSlotWidget.h"
 #include "UIUnit/ItemSlotWidget.h"
+#include "UIUnit/ItemSlotWidget.h"
 #include "Game3DtopdownRPG/DataTable/ItemTable.h"
 #include "Game3DtopdownRPG/DataTable/HeroTable.h"
 #include "Game3DtopdownRPG/Battle/BaseCharacter.h"
@@ -41,6 +42,7 @@ void UHeroEquipmentPage::CacheOwnUI()
 		{
 			slot->InitUnit(GameMode);
 			slot->SetDropEventEx(this);
+			slot->SetTapEventEx(this);
 			EquipmentSlots.Emplace(slot);
 		}
 	}
@@ -126,13 +128,13 @@ void UHeroEquipmentPage::Update()
 		m_CurrentItemArray = GetMgr(UItemMgr)->GetItemInBackpackArray();
 		break;
 	case EItemTabCategory::Common:
-		m_CurrentItemArray = GetMgr(UItemMgr)->GetItemArrayByCategory(EItemCategory::Common);
+		m_CurrentItemArray = GetMgr(UItemMgr)->GetItemArrayByCategory(EItemCategory::Common, EInventoryLocation::InBackpack);
 		break;
 	case EItemTabCategory::Material:
-		m_CurrentItemArray = GetMgr(UItemMgr)->GetItemArrayByCategory(EItemCategory::Material);
+		m_CurrentItemArray = GetMgr(UItemMgr)->GetItemArrayByCategory(EItemCategory::Material, EInventoryLocation::InBackpack);
 		break;
 	case EItemTabCategory::Potion:
-		m_CurrentItemArray = GetMgr(UItemMgr)->GetItemArrayByCategory(EItemCategory::Potion);
+		m_CurrentItemArray = GetMgr(UItemMgr)->GetItemArrayByCategory(EItemCategory::Potion, EInventoryLocation::InBackpack);
 		break;
 	case EItemTabCategory::Max:
 		break;
@@ -144,6 +146,7 @@ void UHeroEquipmentPage::Update()
 	if (nullptr != ItemEquipmentContainer_SCroll) ItemEquipmentContainer_SCroll->SetChildCount(m_CurrentItemEquipmentArray.Num());
 
 	UpdateEquipmentSlots();
+	UpdateNormalEquipmentSlots();
 	UpdateHeroParams();
 }
 
@@ -164,8 +167,37 @@ void UHeroEquipmentPage::OnDropEquipSlot(int32 rec_key, UEquipmentSlotWidget* Co
 	Update();
 }
 
+void UHeroEquipmentPage::OnTapEquipSlot(int32 rec_key, UEquipmentSlotWidget* Container)
+{
+	VerticalBoxItemEquipment->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	VerticalBoxItem->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UHeroEquipmentPage::OnCtrlTapEquipContainer(int32 rec_key, UInventoryEquipContainerWidget* container)
+{
+	FItemEquipmentInfoRecord* infoRecord = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(container->GetGameItemInfo().m_ItemRecKey)));
+	if (infoRecord == nullptr) return;
+	UIMgr->OpenMsgBox(EUIMsgBoxType::Basic, FString::Printf(TEXT("Change %s to inventory success"), *infoRecord->DesName));
+	GetMgr(UItemMgr)->ChangeItemEquipmentInventoryLocation(container->GetGameItemInfo(), EInventoryLocation::InInventory);
+
+	Update();
+}
+
 void UHeroEquipmentPage::OnDropItemSlot(int32 rec_key, UItemSlotWidget* Container)
 {
+	if (nullptr == Container) return;
+
+	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (PlayerCharacter)
+	{
+		ABaseCharacter* basecharacter = Cast<ABaseCharacter>(PlayerCharacter);
+		if (basecharacter)
+		{
+			basecharacter->EquipNormalItem(Container->GetInventoryContainer()->GetGameItemInfo(), Container->EquipPosition, false);
+		}
+	}
+
+	Update();
 }
 
 void UHeroEquipmentPage::OnTapItemSlot(int32 rec_key, UItemSlotWidget* Container)
@@ -179,6 +211,11 @@ void UHeroEquipmentPage::SetHeroCharacter(ABaseCharacter* herocharacter)
 	if (nullptr == herocharacter) return;
 	character = herocharacter;
 	for (UEquipmentSlotWidget* slot : EquipmentSlots)
+	{
+		slot->SetHeroCharacter(character);
+	}
+
+	for (UItemSlotWidget* slot: ItemSlots)
 	{
 		slot->SetHeroCharacter(character);
 	}
@@ -241,12 +278,22 @@ void UHeroEquipmentPage::UpdateChildItemEquipment(UWidget* Child, int32 ChildDat
 
 	InventoryContainer->SetInfo(info);
 
-	InventoryContainer->SetButtonEventEx(this);
+	//InventoryContainer->SetButtonEventEx(this);
+
+	InventoryContainer->SetCtrlButtonEventEx(this);
 }
 
 void UHeroEquipmentPage::UpdateEquipmentSlots()
 {
 	for (UEquipmentSlotWidget* slot : EquipmentSlots)
+	{
+		slot->Update();
+	}
+}
+
+void UHeroEquipmentPage::UpdateNormalEquipmentSlots()
+{
+	for (UItemSlotWidget* slot : ItemSlots)
 	{
 		slot->Update();
 	}
