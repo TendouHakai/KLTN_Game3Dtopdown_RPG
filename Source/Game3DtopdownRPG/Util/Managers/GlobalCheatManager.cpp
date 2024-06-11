@@ -29,6 +29,26 @@ void UGlobalCheatManager::ItemEquipmentAdd(int32 ItemEquipmentReckey /*= 1*/, in
 	Endcheat();
 }
 
+void UGlobalCheatManager::Gold(int64 gold)
+{
+	UItemMgr* mgr = GetMgr(UItemMgr);
+	if (nullptr == mgr) return;
+	mgr->AddGold(gold);
+
+	// endcheat
+	Endcheat();
+}
+
+void UGlobalCheatManager::Energy(int64 energy)
+{
+	UItemMgr* mgr = GetMgr(UItemMgr);
+	if (nullptr == mgr) return;
+	mgr->AddEnergy(energy);
+
+	// endcheat
+	Endcheat();
+}
+
 void UGlobalCheatManager::MapClear(int32 StageReckey)
 {
 	UStageMgr* mgr = GetMgr(UStageMgr);

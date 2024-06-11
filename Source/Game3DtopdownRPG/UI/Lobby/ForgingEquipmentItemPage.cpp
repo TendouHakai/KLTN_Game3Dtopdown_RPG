@@ -10,6 +10,7 @@
 #include "Game3DtopdownRPG/Util/Managers/ItemMgr.h"
 #include "Game3DtopdownRPG/UI/MsgBox/MsgBoxReward.h"
 #include "Game3DtopdownRPG/UI/UIUnit/UIBaseButton.h"
+#include "Game3DtopdownRPG/UI/UIUnit/TopMenuWidget.h"
 
 void UForgingEquipmentItemPage::CacheOwnUI()
 {
@@ -54,6 +55,9 @@ void UForgingEquipmentItemPage::CacheOwnUI()
 		ForgingBtn->OnClicked_Delegate.BindUFunction(this, FName(TEXT("OnTapForgingItemBtn")));
 	}
 
+	TopMenu = GetOwnUI<UTopMenuWidget>(TEXT("TopMenuWidgetBP"));
+	if (nullptr != TopMenu) TopMenu->InitUnit(GameMode);
+
 	Update();
 }
 
@@ -72,6 +76,8 @@ void UForgingEquipmentItemPage::Update()
 		m_PreviousItem->EquipItemToSlot(FGameItemEquipmentInfo(m_PreviousItem->GetInventoryEquipment()->GetGameItemInfo().m_ItemRecKey));
 		m_PreviousItem->GetInventoryEquipment()->SetTextCountPerNumber(m_Count);
 	}
+
+	if (nullptr != TopMenu) TopMenu->Update();
 }
 
 void UForgingEquipmentItemPage::OnTapEquipContainer(int32 rec_key, UInventoryEquipContainerWidget* Container)
@@ -172,6 +178,12 @@ void UForgingEquipmentItemPage::OnTapForgingItemBtn()
 			SetCountItem(1);
 		}
 	}
+}
+
+void UForgingEquipmentItemPage::OnTapClose()
+{
+	if (UIMgr != nullptr)
+		UIMgr->CloseScene();
 }
 
 void UForgingEquipmentItemPage::UpdateChildEquipmentItem(UWidget* Child, int32 ChildDataIdx)

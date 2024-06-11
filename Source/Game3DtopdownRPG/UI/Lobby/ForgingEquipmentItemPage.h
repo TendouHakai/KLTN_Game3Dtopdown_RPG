@@ -14,6 +14,7 @@ class UEquipmentSlotWidget;
 struct FGameItemEquipmentInfo;
 struct FGameItemInfo;
 class UUIBaseButton;
+class UTopMenuWidget;
 
 UENUM(BlueprintType)
 enum class EErrorForgingItemCode : uint8
@@ -59,6 +60,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnTapForgingItemBtn();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void OnTapClose();
+
 protected:
 	void UpdateChildEquipmentItem(UWidget* Child, int32 ChildDataIdx);
 	void UpdateChildConsumeMaterials(UWidget* Child, int32 ChildDataIdx);
@@ -88,6 +92,9 @@ protected:
 	USlider* sliderCountItem;
 	UProgressBar* progressbarCountItem;
 	UTextBlock* textPrice;
+
+	// top menu widget
+	UTopMenuWidget* TopMenu;
 
 	// button
 	UUIBaseButton* ForgingBtn;

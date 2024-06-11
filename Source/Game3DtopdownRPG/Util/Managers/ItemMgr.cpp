@@ -18,6 +18,8 @@ void UItemMgr::Init()
 	{
 		m_ItemArray = config->m_ItemArray;
 		m_ItemEquipmentArray = config->m_ItemEquipmentArray;
+		Gold = config->Gold;
+		Energy = config->Energy;
 	}
 }
 
@@ -31,6 +33,8 @@ void UItemMgr::EndPlay()
 	{
 		config->m_ItemArray = this->m_ItemArray;
 		config->m_ItemEquipmentArray = this->m_ItemEquipmentArray;
+		config->Gold = Gold;
+		config->Energy = Energy;
 	}
 
 	USavedInventoryConfig::SaveInventoryCfgToFile(config);
@@ -183,7 +187,7 @@ TArray<FGameItemInfo> UItemMgr::GetItemArrayByItemType(EItemType type, EInventor
 	{
 		FItemInfoRecord* record = GetItemInfoRecord(FName(FString::FromInt(info.m_ItemRecKey)));
 		if (nullptr == record) continue;
-		if (record->ItemType == type && info.m_InventoryLocation == location)
+		if (record->ItemType == type && (info.m_InventoryLocation == location || location == EInventoryLocation::All))
 			ItemArrayByItemType.Emplace(info);
 	}
 
@@ -410,7 +414,7 @@ void UItemMgr::AddItem(int32 ItemReckey /*= 1*/, int32 ItemCount /*= 1*/, EInven
 	
 	for (auto& info : m_ItemArray)
 	{
-		if (info.m_ItemRecKey == ItemInfo.m_ItemRecKey)
+		if (info.m_ItemRecKey == ItemInfo.m_ItemRecKey  && info.m_InventoryLocation == ItemInfo.m_InventoryLocation)
 		{
 			bExsist = true;
 			info.m_ItemCount += ItemInfo.m_ItemCount;
@@ -436,7 +440,7 @@ void UItemMgr::AddItem(int32 ItemReckey /*= 1*/, int32 ItemCount /*= 1*/, EInven
 
 void UItemMgr::RemoveItem(int32 ItemReckey, int32 ItemCount, EInventoryLocation InventoryLocation)
 {
-	int indexRemove = -1;
+	TArray<int32> indexRemoves;
 
 	for (int index = 0; index < m_ItemArray.Num(); ++index)
 	{
@@ -444,12 +448,21 @@ void UItemMgr::RemoveItem(int32 ItemReckey, int32 ItemCount, EInventoryLocation 
 		{
 			m_ItemArray[index].m_ItemCount -= ItemCount;
 			if (m_ItemArray[index].m_ItemCount <= 0)
-				indexRemove = index;
-			break;
+			{
+				indexRemoves.Emplace(index);
+				if (m_ItemArray[index].m_ItemCount < 0)
+				{
+					ItemCount = FMath::Abs(m_ItemArray[index].m_ItemCount);
+					break;
+				}
+			}
 		}
 	}
 
-	if (indexRemove >= 0) m_ItemArray.RemoveAt(indexRemove);
+	for (int index = 0; index < indexRemoves.Num(); ++index)
+	{
+		m_ItemArray.RemoveAt(indexRemoves[index]);
+	}
 
 	// save data
 	bool bSuccess = true;
@@ -465,11 +478,14 @@ void UItemMgr::RemoveItem(int32 ItemReckey, int32 ItemCount, EInventoryLocation 
 void UItemMgr::AddItemEquipment(int32 ItemEquipmentReckey /*= 1*/, int32 ItemUpgradeLevel /*= 1*/, EInventoryLocation InventoryLocation /*= EInventoryLocation::InInventory*/)
 {
 	FItemEquipmentInfoRecord* record = GetItemEquipmentInfoRecord(FName(FString::FromInt(ItemEquipmentReckey)));
+	FItemEquipmentLevRecord* levRecord = GetItemEquipmentLevelRecord(FName(FString::FromInt(ItemUpgradeLevel)));
 	if (nullptr == record) return;
+	if (nullptr == levRecord) return;
 
 	FGameItemEquipmentInfo ItemInfo;
 	ItemInfo.m_ItemRecKey = ItemEquipmentReckey;
 	ItemInfo.m_ItemUgrapeLevel = ItemUpgradeLevel;
+	ItemInfo.m_ItemUgrapeExp = levRecord->expStart;
 	ItemInfo.m_InventoryLocation = InventoryLocation;
 	m_ItemEquipmentArray.Emplace(ItemInfo);
 

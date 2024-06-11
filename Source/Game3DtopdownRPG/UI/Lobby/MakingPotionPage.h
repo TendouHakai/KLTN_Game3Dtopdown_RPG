@@ -15,6 +15,7 @@
 class UScrollWidget;
 class UInventoryContainerWidget;
 class UUIBaseButton;
+class UTopMenuWidget;
 
 UENUM(BlueprintType)
 enum class EMakePotionTabCategory : uint8
@@ -76,6 +77,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void OnTapMakePotionOrMaterial();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void OnTapClose();
+
 protected:
 	void SetCurrentItemToMake(FGameItemInfo info);
 	void UpdateDecriptionCurrentItemToMake();
@@ -105,6 +109,9 @@ protected:
 
 	USlider* countItemSlider;
 	UProgressBar* countItemProgressBar;
+
+	// top menu widget
+	UTopMenuWidget* TopMenu;
 
 	UUIBaseButton* MakingPotionBtn;
 };

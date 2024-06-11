@@ -22,6 +22,7 @@ public:
 protected:
 	// UI
 	UTextBlock* textEnergy;
+	UTextBlock* textGold;
 
 	// info
 };

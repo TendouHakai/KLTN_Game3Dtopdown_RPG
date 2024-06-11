@@ -9,6 +9,7 @@
 #include "Game3DtopdownRPG/GlobalGetter.h"
 
 #include "UIUnit/UIBaseButton.h"
+#include "UIUnit/TopMenuWidget.h"
 #include "Popup/Inventory_ItemSell_Popup.h"
 
 void UInventoryPage::CacheOwnUI()
@@ -46,6 +47,9 @@ void UInventoryPage::CacheOwnUI()
 
 	vertical_DesItem = GetOwnUI<UVerticalBox>(TEXT("VerticalBox_DescriptionItem"));
 
+	TopMenu = GetOwnUI<UTopMenuWidget>(TEXT("TopMenuWidgetBP"));
+	if (nullptr != TopMenu) TopMenu->InitUnit(GameMode);
+
 	Update();
 }
 
@@ -55,7 +59,7 @@ void UInventoryPage::Update()
 	m_CurrentItemArray.Empty();
 	setCurrentSelectedItem(nullptr);
 
-	for (FGameItemInfo iteminfo : GetMgr(UItemMgr)->GetItemArray())
+	for (FGameItemInfo iteminfo : GetMgr(UItemMgr)->GetItemInInventoryArray())
 	{
 		if (IsItemInCategory(GetMgr(UItemMgr)->GetItemInfoRecord(FName(FString::FromInt(iteminfo.m_ItemRecKey)))->Category))
 		{
@@ -64,6 +68,8 @@ void UInventoryPage::Update()
 	}
 
 	if (nullptr != ItemContainer_SCroll) ItemContainer_SCroll->SetChildCount(m_CurrentItemArray.Num());
+
+	if (nullptr != TopMenu) TopMenu->Update();
 }
 
 void UInventoryPage::OnTapTabcategory(EItemCategory category)
@@ -92,7 +98,15 @@ void UInventoryPage::OnTapSellItem()
 {
 	UInventory_ItemSell_Popup* SellPopup = Cast<UInventory_ItemSell_Popup>(UIMgr->OpenUI(EUIName::InventoryItemSellPopup));
 	if (nullptr != SellPopup)
+	{
 		SellPopup->SetInfo(CurrentSelectedItem->GetGameItemInfo());
+		SellPopup->HandleSell.BindUFunction(this, FName(TEXT("OnHandleSell")));
+	}
+}
+
+void UInventoryPage::OnHandleSell()
+{
+	Update();
 }
 
 void UInventoryPage::OnTapUseItem()

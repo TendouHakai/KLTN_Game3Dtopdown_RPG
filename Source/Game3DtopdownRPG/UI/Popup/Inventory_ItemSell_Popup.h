@@ -10,6 +10,8 @@
 #include "Components/ProgressBar.h"
 #include "Inventory_ItemSell_Popup.generated.h"
 
+DECLARE_DELEGATE(FCallSellPopupFuncOnTap);
+
 class UInventoryContainerWidget;
 class UUIBaseButton;
 
@@ -46,6 +48,9 @@ public:
 
 protected:
 	void SetSellItemCount(int32 count);
+
+public:
+	FCallSellPopupFuncOnTap HandleSell;
 
 protected:
 	FGameItemInfo GameItemInfo;

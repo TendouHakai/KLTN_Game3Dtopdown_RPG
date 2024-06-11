@@ -10,6 +10,7 @@
 #include "Game3DtopdownRPG/UI//UIUnit/InventoryContainerWidget.h"
 #include "Game3DtopdownRPG/UI/UIUnit/EquipmentSlotWidget.h"
 #include "Game3DtopdownRPG/UI/UIUnit/UIBaseButton.h"
+#include "Game3DtopdownRPG/UI/UIUnit/TopMenuWidget.h"
 #include "Game3DtopdownRPG/DataTable/ItemTable.h"
 #include "Game3DtopdownRPG/UI/MsgBox/MsgBoxReward.h"
 
@@ -84,6 +85,9 @@ void UUpgradeItemEquipmentPage::CacheOwnUI()
 		LevUpBtn->OnClicked_Delegate.Unbind();
 		LevUpBtn->OnClicked_Delegate.BindUFunction(this, FName(TEXT("OnTapLevelUpBtn")));
 	}
+
+	TopMenu = GetOwnUI<UTopMenuWidget>(TEXT("TopMenuWidgetBP"));
+	if (nullptr != TopMenu) TopMenu->InitUnit(GameMode);
 		
 	OnTapTabcategory(EUgradeTabCategory::EquipmentItem);
 	Update();
@@ -100,7 +104,7 @@ void UUpgradeItemEquipmentPage::Update()
 	m_ItemEquipmentArray = GetMgr(UItemMgr)->GetItemEquipmentArray();
 	if (nullptr != scrollEquipmentItem) scrollEquipmentItem->SetChildCount(m_ItemEquipmentArray.Num());
 
-	m_ItemUpgradeMaterialArray = GetMgr(UItemMgr)->GetItemArrayByItemType(EItemType::UpgradeEquipmentItem);
+	m_ItemUpgradeMaterialArray = GetMgr(UItemMgr)->GetItemArrayByItemType(EItemType::UpgradeEquipmentItem, EInventoryLocation::All);
 	if (nullptr != scrollMaterial) scrollMaterial->SetChildCount(m_ItemUpgradeMaterialArray.Num());
 
 	if (nullptr != scrollConsumeMaterial) scrollConsumeMaterial->SetChildCount(m_ConsumeMaterialArray.Num());
@@ -113,6 +117,8 @@ void UUpgradeItemEquipmentPage::Update()
 			SetCurrentUpgradeEquipItem(info);
 		}
 	}
+
+	if (nullptr != TopMenu) TopMenu->Update();
 }
 
 void UUpgradeItemEquipmentPage::OnTapEquipContainer(int32 rec_key, UInventoryEquipContainerWidget* Container)

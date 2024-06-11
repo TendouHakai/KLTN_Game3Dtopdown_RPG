@@ -10,6 +10,7 @@
 
 class UScrollWidget;
 class UStageNaviButton;
+class UTopMenuWidget;
 
 UCLASS()
 class GAME3DTOPDOWNRPG_API UStagePage : public UUIWidget
@@ -25,6 +26,10 @@ public:
 
 	void UpdateChildStage(UWidget* Child, int32 ChildDataIdx);
 	void UpdateChildChapter(UWidget* Child, int32 ChildDataIdx);
+
+	UFUNCTION(BlueprintCallable)
+	virtual void OnTapClose();
+
 protected:
 	void InitChapters();
 	void SetCurrentChapter(int32 chapterReckey);
@@ -34,6 +39,9 @@ protected:
 	UScrollWidget* SCrollWidgetStage;
 	UScrollWidget* SCrollWidgetChapter;
 	UTextBlock* textNameChapter;
+
+	// top menu widget
+	UTopMenuWidget* TopMenu;
 
 	// info
 	int32 m_currentChapterReckey;

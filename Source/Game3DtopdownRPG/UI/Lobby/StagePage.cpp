@@ -7,6 +7,7 @@
 #include "Game3DtopdownRPG/Util/Managers/StageMgr.h"
 #include "Game3DtopdownRPG/UI/UIUnit/StageNaviButton.h"
 #include "Game3DtopdownRPG/UI/UIUnit/StageButton.h"
+#include "Game3DtopdownRPG/UI/UIUnit/TopMenuWidget.h"
 #include "Game3DtopdownRPG/DataTable/StageTable.h"
 
 void UStagePage::CacheOwnUI()
@@ -22,6 +23,9 @@ void UStagePage::CacheOwnUI()
 	SCrollWidgetChapter = GetOwnUI<UScrollWidget>(TEXT("ScrollWidgetBP_Chapter"));
 	textNameChapter = GetOwnUI<UTextBlock>(TEXT("TextBlock_NameChapter"));
 
+	TopMenu = GetOwnUI<UTopMenuWidget>(TEXT("TopMenuWidgetBP"));
+	if (nullptr != TopMenu) TopMenu->InitUnit(GameMode);
+
 	InitChapters();
 	SetCurrentChapter(m_ChapterArray[0]);
 }
@@ -33,6 +37,8 @@ void UStagePage::Update()
 	m_currentStageArray.Empty();
 	m_currentStageArray = GetMgr(UStageMgr)->GetStageArrayByChapter(m_currentChapterReckey);
 	if (SCrollWidgetStage != nullptr) SCrollWidgetStage->SetChildCount(m_currentStageArray.Num());
+
+	if (nullptr != TopMenu) TopMenu->Update();
 }
 
 void UStagePage::OnTapStageButton(int32 reckey, UStageNaviButton* button)
@@ -74,6 +80,12 @@ void UStagePage::UpdateChildChapter(UWidget* Child, int32 ChildDataIdx)
 		StageNaviButton->SetSelect(true);
 	else
 		StageNaviButton->SetSelect(false);
+}
+
+void UStagePage::OnTapClose()
+{
+	if (UIMgr != nullptr)
+		UIMgr->CloseScene();
 }
 
 void UStagePage::InitChapters()

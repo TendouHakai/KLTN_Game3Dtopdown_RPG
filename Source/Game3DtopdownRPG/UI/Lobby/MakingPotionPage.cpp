@@ -7,6 +7,7 @@
 #include "Game3DtopdownRPG/GlobalGetter.h"
 #include "Game3DtopdownRPG/UI/UIUnit/InventoryContainerWidget.h"
 #include "Game3DtopdownRPG/UI/UIUnit/UIBaseButton.h"
+#include "Game3DtopdownRPG/UI/UIUnit/TopMenuWidget.h"
 #include "Game3DtopdownRPG/UI/MsgBox/MsgBoxReward.h"
 #include "Game3DtopdownRPG/DataTable/ItemTable.h"
 
@@ -63,6 +64,9 @@ void UMakingPotionPage::CacheOwnUI()
 		MakingPotionBtn->OnClicked_Delegate.BindUFunction(this, FName(TEXT("OnTapMakePotionOrMaterial")));
 	}
 
+	TopMenu = GetOwnUI<UTopMenuWidget>(TEXT("TopMenuWidgetBP"));
+	if (nullptr != TopMenu) TopMenu->InitUnit(GameMode);
+
 	OnTapTabcategory(EMakePotionTabCategory::PotionRecipe);
 }
 
@@ -79,6 +83,8 @@ void UMakingPotionPage::Update()
 	if (nullptr != scrollPotionRecipe) scrollPotionRecipe->SetChildCount(m_PotionRecipe.Num());
 	if (nullptr != scrollMaterialRecipe) scrollMaterialRecipe->SetChildCount(m_MaterialRecipe.Num());
 	if (nullptr != scrollConsumeMaterial) scrollConsumeMaterial->SetChildCount(m_ConsumeMaterial.Num());
+
+	if (nullptr != TopMenu) TopMenu->Update();
 }
 
 void UMakingPotionPage::UpdateChildPotionRecipe(UWidget* Child, int32 ChildDataIdx)
@@ -255,6 +261,12 @@ void UMakingPotionPage::OnTapMakePotionOrMaterial()
 	}
 
 	Update();
+}
+
+void UMakingPotionPage::OnTapClose()
+{
+	if (UIMgr != nullptr)
+		UIMgr->CloseScene();
 }
 
 void UMakingPotionPage::SetCurrentItemToMake(FGameItemInfo info)

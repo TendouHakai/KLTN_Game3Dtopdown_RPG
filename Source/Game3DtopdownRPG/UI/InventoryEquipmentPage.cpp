@@ -9,6 +9,7 @@
 #include "Game3DtopdownRPG/UI/UIUnit/InventoryEquipContainerWidget.h"
 #include "Game3DtopdownRPG/UI/UIUnit/EquipmentSlotWidget.h"
 #include "Game3DtopdownRPG/UI/UIUnit/UIBaseButton.h"
+#include "Game3DtopdownRPG/UI/UIUnit/TopMenuWidget.h"
 #include "Game3DtopdownRPG/UI/MsgBox/MsgBoxReward.h"
 
 void UInventoryEquipmentPage::CacheOwnUI()
@@ -59,6 +60,9 @@ void UInventoryEquipmentPage::CacheOwnUI()
 		}
 	}
 
+	TopMenu = GetOwnUI<UTopMenuWidget>(TEXT("TopMenuWidgetBP"));
+	if (nullptr != TopMenu) TopMenu->InitUnit(GameMode);
+
 	SetTab(EEquipItemTabCategory::All);
 }
 
@@ -96,6 +100,8 @@ void UInventoryEquipmentPage::Update()
 	{
 		SetCurrentEquipItem(FGameItemEquipmentInfo());
 	}
+
+	if (nullptr != TopMenu) TopMenu->Update();
 }
 
 void UInventoryEquipmentPage::UpdateChildEquipmentContainer(UWidget* Child, int32 ChildDataIdx)
@@ -258,6 +264,7 @@ void UInventoryEquipmentPage::OnTapButtonSell()
 
 	// xu ly data
 	GetMgr(UItemMgr)->RemoveItemEquipment(m_currentItemEquipInfo);
+	GetMgr(UItemMgr)->AddGold(infoRecord->SellGold);
 
 	Update();
 }

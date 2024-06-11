@@ -82,12 +82,18 @@ public:
 	FGameItemEquipmentInfo FindItemEquipmentWorstStat(int32 ItemReckey);
 
 	// Gold
-
+	int64 GetGold() { return Gold; }
+	void AddGold(int64 gold) { Gold = Gold + gold; }
 
 	// Energy
+	int64 GetEnergy() { return Energy; }
+	int64 GetMaxEnergy() { return MaxEnergy; }
+	void AddEnergy(int64 energy) { Energy = Energy + energy; }
 protected:
 	TArray<FGameItemInfo> m_ItemArray;
 	TArray<FGameItemEquipmentInfo> m_ItemEquipmentArray;
 	int Gold;
+
 	int Energy;
+	int MaxEnergy = 30;
 };

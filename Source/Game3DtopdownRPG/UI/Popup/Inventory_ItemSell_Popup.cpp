@@ -5,8 +5,10 @@
 #include "../UIUnit/InventoryContainerWidget.h"
 #include "Game3DtopdownRPG/Util/Managers/ItemMgr.h"
 #include "Game3DtopdownRPG/DataTable/ItemTable.h"
+#include "Game3DtopdownRPG/Define/ItemStruct.h"
 #include "Game3DtopdownRPG/GlobalGetter.h"
 #include "../UIUnit/UIBaseButton.h"
+#include "Game3DtopdownRPG/UI/MsgBox/MsgBoxReward.h"
 
 void UInventory_ItemSell_Popup::CacheOwnUI()
 {
@@ -88,7 +90,23 @@ void UInventory_ItemSell_Popup::OnTapCancelButton()
 
 void UInventory_ItemSell_Popup::OnTapSellButton()
 {
+	if (GameItemInfo.m_ItemRecKey == 0) return;
 
+	GetMgr(UItemMgr)->RemoveItem(GameItemInfo.m_ItemRecKey, sellcount, GameItemInfo.m_InventoryLocation);
+	GetMgr(UItemMgr)->AddGold(sellPrice);
+	
+	UUIBaseMsgBox* msg = UIMgr->OpenMsgBox(EUIMsgBoxType::Reward, FString(TEXT("Decay equipmment")));
+	if (Cast<UMsgBoxReward>(msg))
+	{
+		TArray<FGameItemInfo> arrays;
+		arrays.Emplace(FGameItemInfo(sellcount, 1001));
+		Cast<UMsgBoxReward>(msg)->SetInfo(arrays);
+	}
+
+	HandleSell.ExecuteIfBound();
+
+	if (UIMgr != nullptr)
+		UIMgr->CloseUI(this);
 }
 
 void UInventory_ItemSell_Popup::SetSellItemCount(int32 count)
@@ -106,6 +124,6 @@ void UInventory_ItemSell_Popup::SetSellItemCount(int32 count)
 	textSellCountItem->SetText(FText::AsNumber(sellcount));
 	textSellPriceItem->SetText(FText::AsNumber(sellPrice));
 
-	//sliderCountItem->SetValue(sellcount);
+	sliderCountItem->SetValue(sellcount);
 	progressbarCountItem->SetPercent(sellcount * 1.f / GameItemInfo.m_ItemCount);
 }

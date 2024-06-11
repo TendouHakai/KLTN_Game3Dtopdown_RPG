@@ -7,7 +7,7 @@
 #include "UIUnit/InventoryContainerWidget.h"
 #include "UIUnit/EquipmentSlotWidget.h"
 #include "UIUnit/ItemSlotWidget.h"
-#include "UIUnit/ItemSlotWidget.h"
+#include "UIUnit/TopMenuWidget.h"
 #include "Game3DtopdownRPG/DataTable/ItemTable.h"
 #include "Game3DtopdownRPG/DataTable/HeroTable.h"
 #include "Game3DtopdownRPG/Battle/BaseCharacter.h"
@@ -87,6 +87,12 @@ void UHeroEquipmentPage::CacheOwnUI()
 		}
 	}
 
+	TopMenu = GetOwnUI<UTopMenuWidget>(TEXT("TopMenuWidgetBP"));
+	if (TopMenu != nullptr)
+	{
+		TopMenu->InitUnit(GameMode);
+	}
+
 	OnTapTabEquipmentItemCategory(EEquipmentItemTabCategory::All);
 	OnTapTabItemCategory(EItemTabCategory::All);
 }
@@ -148,6 +154,7 @@ void UHeroEquipmentPage::Update()
 	UpdateEquipmentSlots();
 	UpdateNormalEquipmentSlots();
 	UpdateHeroParams();
+	if(nullptr != TopMenu) TopMenu->Update();
 }
 
 void UHeroEquipmentPage::OnDropEquipSlot(int32 rec_key, UEquipmentSlotWidget* Container)

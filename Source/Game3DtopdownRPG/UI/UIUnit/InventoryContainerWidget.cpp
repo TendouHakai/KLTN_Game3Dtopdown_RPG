@@ -78,7 +78,7 @@ void UInventoryContainerWidget::EmptyUI()
 	if (nullptr == ImageFrame || nullptr == ImageItem || nullptr == ImageBackground || nullptr == OverlayCount) return;
 	
 	SetImageItem("");
-	SetTextCount(0);
+	SetTextCount(-1);
 	SetFrameBackground(EItemGrade::Max);
 	OverlayUseCount->SetVisibility(ESlateVisibility::Collapsed);
 }
@@ -145,7 +145,7 @@ void UInventoryContainerWidget::SetImageItem(FString ItemName)
 
 void UInventoryContainerWidget::SetTextCount(int32 count)
 {
-	if (nullptr == TextCount || count <= 0)
+	if (nullptr == TextCount || count < 0)
 	{
 		OverlayCount->SetVisibility(ESlateVisibility::Collapsed);
 		return;

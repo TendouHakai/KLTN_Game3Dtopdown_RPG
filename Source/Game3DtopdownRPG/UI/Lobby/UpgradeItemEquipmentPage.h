@@ -16,6 +16,7 @@ class UScrollWidget;
 class UInventoryEquipContainerWidget;
 class UEquipmentSlotWidget;
 class UUIBaseButton;
+class UTopMenuWidget;
 
 UENUM(BlueprintType)
 enum class EUgradeTabCategory : uint8
@@ -100,6 +101,9 @@ protected:
 
 	// button
 	UUIBaseButton* LevUpBtn;
+
+	// top menu widget
+	UTopMenuWidget* TopMenu;
 
 	// current category
 	EUgradeTabCategory m_CurrentCategory;

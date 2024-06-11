@@ -20,6 +20,12 @@ public:
 	void ItemEquipmentAdd(int32 ItemEquipmentReckey = 1, int32 ItemUpgradeLevel = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
 
 	UFUNCTION(Exec)
+	void Gold(int64 gold = 0);
+
+	UFUNCTION(Exec)
+	void Energy(int64 energy = 0);
+
+	UFUNCTION(Exec)
 	void MapClear(int32 StageReckey = 1);
 
 	void Endcheat();

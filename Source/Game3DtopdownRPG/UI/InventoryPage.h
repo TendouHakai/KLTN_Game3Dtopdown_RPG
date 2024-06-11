@@ -14,6 +14,7 @@
 class UInventoryContainerWidget;
 class UScrollWidget;
 class UUIBaseButton;
+class UTopMenuWidget;
 
 UCLASS()
 class GAME3DTOPDOWNRPG_API UInventoryPage : public UUIWidget
@@ -31,6 +32,9 @@ public:
 
 	UFUNCTION()
 	virtual void OnTapSellItem();
+
+	UFUNCTION()
+	virtual void OnHandleSell();
 
 	UFUNCTION()
 	virtual void OnTapUseItem();
@@ -63,6 +67,9 @@ protected:
 	UTextBlock* textPriceItem;
 	UUIBaseButton* SellButton;
 	UUIBaseButton* UseButton;
+
+	// top menu widget
+	UTopMenuWidget* TopMenu;
 
 	UVerticalBox* vertical_DesItem;
 };

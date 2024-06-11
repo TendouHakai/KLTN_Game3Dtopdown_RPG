@@ -17,6 +17,7 @@ class UInventoryEquipContainerWidget;
 class UEquipmentSlotWidget;
 class UItemSlotWidget;
 class ABaseCharacter;
+class UTopMenuWidget;
 
 UENUM(BlueprintType)
 enum class EEquipmentItemTabCategory : uint8
@@ -107,6 +108,9 @@ protected:
 	TArray<FGameItemInfo> m_CurrentItemArray;
 	UScrollWidget* ItemContainer_Scroll;
 	UVerticalBox* VerticalBoxItem;
+
+	// top menu widget
+	UTopMenuWidget* TopMenu;
 
 	ABaseCharacter* character;
 

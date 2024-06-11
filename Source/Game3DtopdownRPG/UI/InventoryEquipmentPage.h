@@ -17,6 +17,7 @@ class UUIBaseButton;
 class UInventoryEquipContainerWidget;
 class UEquipmentSlotWidget;
 struct FGameItemEquipmentInfo;
+class UTopMenuWidget;
 
 UENUM(BlueprintType)
 enum class EEquipItemTabCategory : uint8
@@ -80,6 +81,9 @@ protected:
 	TArray<UTextBlock*> statParamAdd;
 	UTextBlock* textPrice;
 	UUIBaseButton* buttonSell;
+
+	// top menu widget
+	UTopMenuWidget* TopMenu;
 
 	// info
 	FGameItemEquipmentInfo m_currentItemEquipInfo;
