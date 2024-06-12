@@ -20,6 +20,9 @@ void UInventoryEquipContainerWidget::CacheOwnUI()
 	SelectAnimation = GetWidgetAnimation(TEXT("Ani_Select"));
 	ReleaseAnimation = GetWidgetAnimation(TEXT("Ani_Release"));
 
+	OverlatInventoryLocation = GetOwnUI<UOverlay>(TEXT("Overlay_InventoryLocation"));
+	imageinventoryLocation = GetOwnUI<UImage>(TEXT("Image_InventoryLocation"));
+
 	if (gameItemInfo.m_ItemRecKey == 0) EmptyUI();
 }
 
@@ -37,6 +40,7 @@ void UInventoryEquipContainerWidget::SetInfo(FGameItemEquipmentInfo GameItemInfo
 	SetImageItem(record->IconName);
 	SetTextUpgrapeLevel(gameItemInfo.m_ItemUgrapeLevel);
 	SetFrameBackground(record->EquipmentGrape);
+	SetInventoryLocation(gameItemInfo.m_InventoryLocation);
 }
 
 void UInventoryEquipContainerWidget::SetInfo(UInventoryEquipContainerWidget* InventoryContainerWidget)
@@ -48,6 +52,7 @@ void UInventoryEquipContainerWidget::SetInfo(UInventoryEquipContainerWidget* Inv
 	SetImageItem(record->IconName);
 	SetTextUpgrapeLevel(gameItemInfo.m_ItemUgrapeLevel);
 	SetFrameBackground(record->EquipmentGrape);
+	SetInventoryLocation(gameItemInfo.m_InventoryLocation);
 }
 
 void UInventoryEquipContainerWidget::SetInfo(int32 itemreckey)
@@ -119,6 +124,18 @@ void UInventoryEquipContainerWidget::SetTextCount(int32 number)
 
 	textUpgradeLevel->SetText(FText::FromString(FString::Printf(TEXT("x%d"), number)));
 	OverlayUpgradeLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+}
+
+void UInventoryEquipContainerWidget::ShowInventoryLocation(bool IsShow)
+{
+	if (IsShow)
+	{
+		OverlatInventoryLocation->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		OverlatInventoryLocation->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void UInventoryEquipContainerWidget::SetImageItem(FString ItemName)
@@ -205,5 +222,42 @@ void UInventoryEquipContainerWidget::SetFrameBackground(EItemGrade grade)
 	{
 		setColorBackground(grade);
 		ImageBackground->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+}
+
+void UInventoryEquipContainerWidget::SetInventoryLocation(EInventoryLocation location)
+{
+	FString PathIcon = "";
+
+	switch (gameItemInfo.m_InventoryLocation)
+	{
+	default:
+		break;
+	case EInventoryLocation::InInventory:
+		PathIcon = "/Game/UI/Sprites/Components/Icon/wooden-crate.wooden-crate";
+		break;
+	case EInventoryLocation::InBackpack:
+		PathIcon = "/Game/UI/Sprites/Components/Icon/knapsack.knapsack";
+		break;
+	case EInventoryLocation::InEquipment:
+		PathIcon = "/Game/UI/Sprites/Components/Icon/brutal-helm.brutal-helm";
+		break;
+	case EInventoryLocation::All:
+		break;
+	case EInventoryLocation::Max:
+		break;
+	}
+
+	UTexture2D* TexIcon = GetMgr(UAssetMgr)->LoadTexture2DFromPath(PathIcon);
+
+	if (nullptr == TexIcon)
+	{
+		imageinventoryLocation->SetVisibility(ESlateVisibility::Hidden);
+		return;
+	}
+	else
+	{
+		imageinventoryLocation->SetBrushFromTexture(TexIcon);
+		imageinventoryLocation->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 }

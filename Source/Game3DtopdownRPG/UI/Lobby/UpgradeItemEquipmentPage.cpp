@@ -107,7 +107,11 @@ void UUpgradeItemEquipmentPage::Update()
 	m_ItemUpgradeMaterialArray = GetMgr(UItemMgr)->GetItemArrayByItemType(EItemType::UpgradeEquipmentItem, EInventoryLocation::All);
 	if (nullptr != scrollMaterial) scrollMaterial->SetChildCount(m_ItemUpgradeMaterialArray.Num());
 
-	if (nullptr != scrollConsumeMaterial) scrollConsumeMaterial->SetChildCount(m_ConsumeMaterialArray.Num());
+	if (nullptr != scrollConsumeMaterial) 
+	{ 
+		scrollConsumeMaterial->SetChildCount(m_ConsumeMaterialArray.Num()); 
+		setIncreaseUpgradeExp();
+	}
 
 	if (m_CurrentGameItemInfo.m_ItemRecKey != 0)
 	{
@@ -158,15 +162,17 @@ void UUpgradeItemEquipmentPage::OnCtrlTapEquipContainer(int32 rec_key, UInventor
 void UUpgradeItemEquipmentPage::OnTapContainer(int32 rec_key, UInventoryContainerWidget* Container)
 {
 	if (nullptr == Container) return;
+	if (IncreaseLevel + m_CurrentGameItemInfo.m_ItemUgrapeLevel >= GetMgr(UItemMgr)->GetMaxEquipmentLevelByTotalExp()) return;
 
 	bool isExist = false;
+	FGameItemInfo Iteminfo = Container->GetGameItemInfo();
 
 	for (int index = 0; index < m_ConsumeMaterialArray.Num(); ++index)
 	{
-		if (m_ConsumeMaterialArray[index].m_ItemRecKey == rec_key)
+		if (m_ConsumeMaterialArray[index].m_ItemRecKey == rec_key && m_ConsumeMaterialArray[index].m_InventoryLocation == Iteminfo.m_InventoryLocation)
 		{
 			if (Container->GetGameItemInfo().m_ItemCount <= m_ConsumeMaterialArray[index].m_ItemCount)
-				m_ConsumeMaterialArray[index].m_ItemCount = Container->GetGameItemInfo().m_ItemCount;
+				m_ConsumeMaterialArray[index].m_ItemCount = Iteminfo.m_ItemCount;
 			else m_ConsumeMaterialArray[index].m_ItemCount += 1;
 			isExist = true;
 
@@ -179,6 +185,7 @@ void UUpgradeItemEquipmentPage::OnTapContainer(int32 rec_key, UInventoryContaine
 		FGameItemInfo info;
 		info.m_ItemRecKey = rec_key;
 		info.m_ItemCount = 1;
+		info.m_InventoryLocation = Iteminfo.m_InventoryLocation;
 
 		m_ConsumeMaterialArray.Emplace(info);
 		Container->SetUseCount(1);
@@ -219,6 +226,7 @@ void UUpgradeItemEquipmentPage::OnDropEquipSlot(int32 rec_key, UEquipmentSlotWid
 {
 	if (nullptr == Container) return;
 	SetCurrentUpgradeEquipItem(Container->GetInventoryEquipment()->GetGameItemInfo());
+	Container->GetInventoryEquipment()->ShowInventoryLocation(true);
 }
 
 void UUpgradeItemEquipmentPage::OnTapTabcategory(EUgradeTabCategory category)
@@ -280,6 +288,7 @@ void UUpgradeItemEquipmentPage::UpdateChildMaterial(UWidget* Child, int32 ChildD
 	FGameItemInfo info = m_ItemUpgradeMaterialArray[ChildDataIdx];
 
 	InventoryContainer->SetInfo(info);
+	InventoryContainer->ShowInventoryLocation(true);
 
 	InventoryContainer->SetButtonEventEx(this);
 	InventoryContainer->SetButtonUseSubtractEventEx(this);
@@ -295,6 +304,7 @@ void UUpgradeItemEquipmentPage::UpdateChildEquipmentItem(UWidget* Child, int32 C
 	FGameItemEquipmentInfo info = m_ItemEquipmentArray[ChildDataIdx];
 
 	InventoryContainer->SetInfo(info);
+	InventoryContainer->ShowInventoryLocation(true);
 
 	InventoryContainer->SetButtonEventEx(this);
 
@@ -311,6 +321,7 @@ void UUpgradeItemEquipmentPage::UpdateChildConsumeMaterial(UWidget* Child, int32
 	FGameItemInfo info = m_ConsumeMaterialArray[ChildDataIdx];
 
 	InventoryContainer->SetInfo(info);
+	InventoryContainer->ShowInventoryLocation(true);
 	//InventoryContainer->OwnerDelegateEx.Unbind();
 	//InventoryContainer->SetButtonEventEx(this);
 }
@@ -359,7 +370,7 @@ void UUpgradeItemEquipmentPage::setIncreaseUpgradeExp()
 	int TotalExp = m_CurrentGameItemInfo.m_ItemUgrapeExp + UpgradeExp;
 	FItemEquipmentLevRecord* record = GetMgr(UItemMgr)->GetItemEquipmentLevelRecordByTotalExp(TotalExp);
 
-	int IncreaseLevel = 0;
+	IncreaseLevel = 0;
 	if (nullptr != record) 
 		IncreaseLevel = record->Level - m_CurrentGameItemInfo.m_ItemUgrapeLevel;
 
@@ -376,9 +387,16 @@ void UUpgradeItemEquipmentPage::setIncreaseUpgradeExp()
 	{
 		float currentExp = m_CurrentGameItemInfo.m_ItemUgrapeExp + UpgradeExp - record->expStart;
 
-		progressBarExp->SetPercent(currentExp * 1.0f / (record->expEnd - record->expStart));
-
-		textCurrentExp->SetText(FText::FromString(FString::Printf(TEXT("%0.f/%0.f exp"), currentExp, (record->expEnd - record->expStart))));
+		if (record->Level >= GetMgr(UItemMgr)->GetMaxEquipmentLevelByTotalExp())
+		{
+			progressBarExp->SetPercent(1.f);
+			textCurrentExp->SetText(FText::FromString("Max level"));
+		}
+		else
+		{
+			progressBarExp->SetPercent(currentExp * 1.0f / (record->expEnd - record->expStart));
+			textCurrentExp->SetText(FText::FromString(FString::Printf(TEXT("%0.f/%0.f exp"), currentExp, (record->expEnd - record->expStart))));
+		}
 	}
 
 	if (UpgradeExp == 0)

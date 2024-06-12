@@ -35,4 +35,7 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int64 Energy;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float EnergyResetTime;
 };

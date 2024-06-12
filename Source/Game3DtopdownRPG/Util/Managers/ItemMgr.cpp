@@ -19,7 +19,17 @@ void UItemMgr::Init()
 		m_ItemArray = config->m_ItemArray;
 		m_ItemEquipmentArray = config->m_ItemEquipmentArray;
 		Gold = config->Gold;
-		Energy = config->Energy;
+		int totaltime = FDateTime::Now().GetTimeOfDay().GetTotalSeconds() - config->EnergyResetTime;
+		int energytoadd = totaltime / EnergyRemainTime;
+		Energy = config->Energy + energytoadd;
+		if (Energy > MaxEnergy) Energy = MaxEnergy;
+		EnergyResetTime = FDateTime::Now().GetTimeOfDay().GetTotalSeconds();
+	}
+	else
+	{
+		Gold = 0;
+		Energy = MaxEnergy;
+		EnergyResetTime = FDateTime::Now().GetTimeOfDay().GetTotalSeconds();
 	}
 }
 
@@ -35,6 +45,7 @@ void UItemMgr::EndPlay()
 		config->m_ItemEquipmentArray = this->m_ItemEquipmentArray;
 		config->Gold = Gold;
 		config->Energy = Energy;
+		config->EnergyResetTime = EnergyResetTime;
 	}
 
 	USavedInventoryConfig::SaveInventoryCfgToFile(config);
@@ -145,7 +156,7 @@ TArray<FGameItemInfo> UItemMgr::GetAllItemRecipeByItemType(EItemType type)
 	for (int index = 0; index < allrows.Num(); ++index)
 	{
 		if(allrows[index]->CanMake == true && allrows[index]->ItemType == type)
-			array.Emplace(FGameItemInfo(0, allrows[index]->ItemReckey));
+			array.Emplace(FGameItemInfo(-1, allrows[index]->ItemReckey));
 	}
 
 	return array;
@@ -354,9 +365,16 @@ EResult UItemMgr::MakeItem(int32 ItemReckey, int32 count, int32& errorcode)
 	
 	// check 
 	FItemInfoRecord* record = GetMgr(UItemMgr)->GetItemInfoRecord(FName(FString::FromInt(ItemReckey)));
-	if (nullptr == record)
+
+	if (record->MakingGold * count > Gold)
 	{
 		errorcode = 1;
+		return EResult::Fail;
+	}
+
+	if (nullptr == record)
+	{
+		errorcode = 2;
 		return EResult::Fail;
 	}
 
@@ -365,7 +383,7 @@ EResult UItemMgr::MakeItem(int32 ItemReckey, int32 count, int32& errorcode)
 		FGameItemInfo info = GetMgr(UItemMgr)->FindItem(record->Materials[matIndex]);
 		if (info.m_ItemCount < record->MatCounts[matIndex] * count)
 		{
-			errorcode = 2;
+			errorcode = 3;
 			return EResult::Fail;
 		}
 	}
@@ -377,6 +395,7 @@ EResult UItemMgr::MakeItem(int32 ItemReckey, int32 count, int32& errorcode)
 	}
 
 	AddItem(ItemReckey, count, EInventoryLocation::InBackpack);
+	AddGold(record->MakingGold * count);
 
 	return EResult::Success;
 }
@@ -397,7 +416,20 @@ FItemEquipmentLevRecord* UItemMgr::GetItemEquipmentLevelRecordByTotalExp(int32 t
 			return record;
 	}
 
-	return nullptr;
+	return allrows[allrows.Num()-1];
+}
+
+int32 UItemMgr::GetMaxEquipmentLevelByTotalExp()
+{
+	UDataTable* ItemEquipmentLevInfoTable = GetMgr(UTableMgr)->ItemEquipmentLevInfoTable;
+	if (nullptr == ItemEquipmentLevInfoTable)
+		return -1;
+
+	TArray<FItemEquipmentLevRecord*> allrows;
+
+	ItemEquipmentLevInfoTable->GetAllRows(FString(), allrows);
+	if (allrows.Num() == 0) return -1;
+	return allrows[allrows.Num() - 1]->Level;
 }
 
 void UItemMgr::AddItem(int32 ItemReckey /*= 1*/, int32 ItemCount /*= 1*/, EInventoryLocation InventoryLocation /*= EInventoryLocation::InInventory*/)

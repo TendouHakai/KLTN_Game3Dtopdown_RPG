@@ -38,6 +38,7 @@ public:
 
 	// Upgrade Item
 	FItemEquipmentLevRecord* GetItemEquipmentLevelRecordByTotalExp(int32 totalExp);
+	int32 GetMaxEquipmentLevelByTotalExp();
 
 	// item normal
 	TArray<FGameItemInfo> GetItemArray();
@@ -88,7 +89,16 @@ public:
 	// Energy
 	int64 GetEnergy() { return Energy; }
 	int64 GetMaxEnergy() { return MaxEnergy; }
-	void AddEnergy(int64 energy) { Energy = Energy + energy; }
+	void AddEnergy(int64 energy, bool isResetTime = false) 
+	{ 
+		if(isResetTime || Energy >= MaxEnergy)
+			EnergyResetTime = FDateTime::Now().GetTimeOfDay().GetTotalSeconds();
+
+		Energy = Energy + energy;
+		if (Energy > MaxEnergy) Energy = MaxEnergy;
+	}
+	float GetEnergyResetTime() { return EnergyResetTime; }
+	float GetEnergyRemainTime() { return EnergyRemainTime; }
 protected:
 	TArray<FGameItemInfo> m_ItemArray;
 	TArray<FGameItemEquipmentInfo> m_ItemEquipmentArray;
@@ -96,4 +106,6 @@ protected:
 
 	int Energy;
 	int MaxEnergy = 30;
+	float EnergyResetTime;
+	float EnergyRemainTime = 30;
 };

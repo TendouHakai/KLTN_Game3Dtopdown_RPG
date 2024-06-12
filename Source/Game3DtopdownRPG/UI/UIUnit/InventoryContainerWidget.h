@@ -75,6 +75,7 @@ public:
 
 	void SetUseCount(int32 count);
 	void SetTextCountPerNumber(int32 number);
+	void ShowInventoryLocation(bool IsShow);
 public:
 	FContainerTap_DelegateEx OwnerDelegateEx;
 	FContainerTapUseSubtract_DelegateEx OwnerUseSubtractDelegateEx;
@@ -85,6 +86,7 @@ protected:
 	void SetImageItem(FString ItemName);
 	void SetTextCount(int32 count);
 	void SetFrameBackground(EItemGrade grade);
+	void SetInventoryLocation(EInventoryLocation location);
 
 	void HideEffect();
 
@@ -101,6 +103,10 @@ protected:
 	// overlay use count
 	UOverlay* OverlayUseCount;
 	UTextBlock* TextUseCount;
+
+	// overlay Inventory location
+	UOverlay* OverlatInventoryLocation;
+	UImage* imageinventoryLocation;
 
 	FGameItemInfo gameItemInfo;
 	FItemInfoRecord* itemInfoRecord;

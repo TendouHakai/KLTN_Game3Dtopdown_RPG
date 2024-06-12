@@ -41,4 +41,8 @@ public:
 	// Character Param
 	UFUNCTION(BlueprintCallable, Category = "CppFunctionLibrary")
 	static FCharacterParam GetHeroParamLevel(const FCharacterParam& HeropramBase, const FCharacterParam& HeroparamUpgrade, int32 Lev);
+
+	// convert to text
+	UFUNCTION(BlueprintPure, Category = "Time To String")
+	static FText ToMinutsText_NoGap(int32 InSeconds);
 };

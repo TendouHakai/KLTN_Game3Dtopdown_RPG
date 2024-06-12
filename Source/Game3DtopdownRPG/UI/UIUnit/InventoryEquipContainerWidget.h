@@ -65,10 +65,12 @@ public:
 
 	void SetTextCountPerNumber(int32 number);
 	void SetTextCount(int32 number);
+	void ShowInventoryLocation(bool IsShow);
 protected:
 	void SetImageItem(FString ItemName);
 	void SetTextUpgrapeLevel(int32 level);
 	void SetFrameBackground(EItemGrade grade);
+	void SetInventoryLocation(EInventoryLocation location);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void setColorBackground(EItemGrade grade);
@@ -82,6 +84,10 @@ protected:
 	UTextBlock* textUpgradeLevel;
 	UWidgetAnimation* SelectAnimation;
 	UWidgetAnimation* ReleaseAnimation;
+
+	// overlay Inventory location
+	UOverlay* OverlatInventoryLocation;
+	UImage* imageinventoryLocation;
 
 	FGameItemEquipmentInfo gameItemInfo;
 	FItemEquipmentInfoRecord* equipmentItemInfoRecord;

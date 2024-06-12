@@ -52,3 +52,52 @@ FCharacterParam UCppFunctionLibrary::GetHeroParamLevel(const FCharacterParam& He
 	return param;
 	//return FCharacterParam();
 }
+
+FText UCppFunctionLibrary::ToMinutsText_NoGap(int32 InSeconds)
+{
+	if (InSeconds < 0)
+		InSeconds = 0;
+
+	static FText temp;
+
+	FTimespan TimeSpan(ETimespan::TicksPerSecond * (int64)InSeconds);
+
+
+	int32 Hours = TimeSpan.GetTotalHours();
+	int32 Minnutes = TimeSpan.GetMinutes();
+	int32 Seconds = TimeSpan.GetSeconds();
+
+	FString strHour, strMin, strSec, strTemp;
+
+	strTemp = TEXT(":");
+
+	if (Hours > 0)
+	{
+		if (Hours < 10)
+			strHour = FString::Printf(TEXT("0%d"), Hours);
+		else
+			strHour = FString::FormatAsNumber(Hours);
+
+		strHour += strTemp;
+	}
+
+
+	if (Minnutes < 10)
+		strMin = FString::Printf(TEXT("0%d"), Minnutes);
+	else
+		strMin = FString::FormatAsNumber(Minnutes);
+
+	strMin += strTemp;
+
+	strHour += strMin;
+
+	if (Seconds < 10)
+		strSec = FString::Printf(TEXT("0%d"), Seconds);
+	else
+		strSec = FString::FormatAsNumber(Seconds);
+
+	strHour += strSec;
+
+	temp = FText::FromString(strHour);
+	return temp;
+}

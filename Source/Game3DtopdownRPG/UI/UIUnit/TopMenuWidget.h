@@ -17,12 +17,14 @@ class GAME3DTOPDOWNRPG_API UTopMenuWidget : public UUIUnitWidget
 public:
 	virtual void CacheOwnUI() override;
 	virtual void NativeConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	virtual void Update() override;
 protected:
 	// UI
 	UTextBlock* textEnergy;
 	UTextBlock* textGold;
+	UTextBlock* textRemainTime;
 
 	// info
 };

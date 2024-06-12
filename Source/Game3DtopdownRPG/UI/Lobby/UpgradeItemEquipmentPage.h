@@ -109,4 +109,6 @@ protected:
 	EUgradeTabCategory m_CurrentCategory;
 	UEquipmentSlotWidget* m_CurrentEquipmentUpgradeItem;
 	FGameItemEquipmentInfo m_CurrentGameItemInfo;
+
+	int32 IncreaseLevel;
 };

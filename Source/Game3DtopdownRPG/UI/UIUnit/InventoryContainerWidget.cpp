@@ -27,6 +27,9 @@ void UInventoryContainerWidget::CacheOwnUI()
 	OverlayUseCount = GetOwnUI<UOverlay>(TEXT("Overlay_UseCount"));
 	TextUseCount = GetOwnUI<UTextBlock>(TEXT("TextBlock_UseCount"));
 
+	OverlatInventoryLocation = GetOwnUI<UOverlay>(TEXT("Overlay_InventoryLocation"));
+	imageinventoryLocation = GetOwnUI<UImage>(TEXT("Image_InventoryLocation"));
+
 	if (gameItemInfo.m_ItemRecKey == 0) EmptyUI();
 }
 
@@ -56,6 +59,7 @@ void UInventoryContainerWidget::SetInfo(FGameItemInfo GameItemInfo)
 	SetImageItem(itemInfoRecord->ItemIcon);
 	SetTextCount(gameItemInfo.m_ItemCount);
 	SetFrameBackground(itemInfoRecord->ItemGrape);
+	SetInventoryLocation(gameItemInfo.m_InventoryLocation);
 	OverlayUseCount->SetVisibility(ESlateVisibility::Collapsed);
 }
 
@@ -70,6 +74,7 @@ void UInventoryContainerWidget::SetInfo(UInventoryContainerWidget* InventoryCont
 	SetImageItem(itemInfoRecord->ItemIcon);
 	SetTextCount(gameItemInfo.m_ItemCount);
 	SetFrameBackground(itemInfoRecord->ItemGrape);
+	SetInventoryLocation(gameItemInfo.m_InventoryLocation);
 	OverlayUseCount->SetVisibility(ESlateVisibility::Collapsed);
 }
 
@@ -80,6 +85,7 @@ void UInventoryContainerWidget::EmptyUI()
 	SetImageItem("");
 	SetTextCount(-1);
 	SetFrameBackground(EItemGrade::Max);
+	ShowInventoryLocation(false);
 	OverlayUseCount->SetVisibility(ESlateVisibility::Collapsed);
 }
 
@@ -155,6 +161,43 @@ void UInventoryContainerWidget::SetTextCount(int32 count)
 	OverlayCount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
+void UInventoryContainerWidget::SetInventoryLocation(EInventoryLocation location)
+{
+	FString PathIcon = "";
+
+	switch (gameItemInfo.m_InventoryLocation)
+	{
+	default:
+		break;
+	case EInventoryLocation::InInventory:
+		PathIcon = "/Game/UI/Sprites/Components/Icon/wooden-crate.wooden-crate";
+		break;
+	case EInventoryLocation::InBackpack:
+		PathIcon = "/Game/UI/Sprites/Components/Icon/knapsack.knapsack";
+		break;
+	case EInventoryLocation::InEquipment:
+		PathIcon = "/Game/UI/Sprites/Components/Icon/brutal-helm.brutal-helm";
+		break;
+	case EInventoryLocation::All:
+		break;
+	case EInventoryLocation::Max:
+		break;
+	}
+
+	UTexture2D* TexIcon = GetMgr(UAssetMgr)->LoadTexture2DFromPath(PathIcon);
+
+	if (nullptr == TexIcon)
+	{
+		imageinventoryLocation->SetVisibility(ESlateVisibility::Hidden);
+		return;
+	}
+	else
+	{
+		imageinventoryLocation->SetBrushFromTexture(TexIcon);
+		imageinventoryLocation->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+}
+
 void UInventoryContainerWidget::SetTextCountPerNumber(int32 number)
 {
 	if (nullptr == TextCount || number <= 0)
@@ -171,6 +214,18 @@ void UInventoryContainerWidget::SetTextCountPerNumber(int32 number)
 	}
 
 	TextCount->SetText(FText::FromString(FString::Printf(TEXT("%d/%d"), iteminfo.m_ItemCount, number)));
+}
+
+void UInventoryContainerWidget::ShowInventoryLocation(bool IsShow)
+{
+	if (IsShow)
+	{
+		OverlatInventoryLocation->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		OverlatInventoryLocation->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void UInventoryContainerWidget::SetFrameBackground(EItemGrade grade)

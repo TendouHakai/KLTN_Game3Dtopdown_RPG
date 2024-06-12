@@ -249,6 +249,9 @@ void UMakingPotionPage::OnTapMakePotionOrMaterial()
 		case EErrorMakingItemCode::Count0:
 			UIMgr->OpenMsgBox(EUIMsgBoxType::Basic, TEXT("Number of item created is 0"), EUIMsgBoxBtnType::Confirm, this);
 			break;
+		case EErrorMakingItemCode::NotEnoughGold:
+			UIMgr->OpenMsgBox(EUIMsgBoxType::Basic, TEXT("Not have enough gold"), EUIMsgBoxBtnType::Confirm, this);
+			break;
 		case EErrorMakingItemCode::NotFindItem:
 			UIMgr->OpenMsgBox(EUIMsgBoxType::Basic, TEXT("Not find item to make"), EUIMsgBoxBtnType::Confirm, this);
 			break;

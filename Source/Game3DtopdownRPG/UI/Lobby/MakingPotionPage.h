@@ -29,6 +29,7 @@ UENUM(BlueprintType)
 enum class EErrorMakingItemCode : uint8
 {
 	Count0 = 0,
+	NotEnoughGold,
 	NotFindItem,
 	NotHaveEnoughMaterial,
 	Max
