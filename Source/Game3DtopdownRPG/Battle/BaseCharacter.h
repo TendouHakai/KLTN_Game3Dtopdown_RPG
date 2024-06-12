@@ -140,6 +140,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Character")
 	EHeroClass GetCurrentHeroClass();
 
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	void FindHaveBuff(const UClass* ClassType, TArray<UBaseBuff*>& BuffArray);
+
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	bool IsValidBuff(const FHeroBuffInfo& HeroBuffInfo);

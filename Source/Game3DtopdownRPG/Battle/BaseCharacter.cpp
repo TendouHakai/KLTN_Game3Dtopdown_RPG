@@ -145,6 +145,14 @@ bool ABaseCharacter::IsCharacterAlive()
 	return (GetAnimState() != EChrAnimState::Die) ? true : false;
 }
 
+void ABaseCharacter::FindHaveBuff(const UClass* ClassType, TArray<UBaseBuff*>& BuffArray)
+{
+	if (false == IsValid(HeroBuffController))
+		return;
+
+	HeroBuffController->FindHaveBuff(ClassType, BuffArray);
+}
+
 bool ABaseCharacter::IsValidBuff(const FHeroBuffInfo& HeroBuffInfo)
 {
 	return (EHeroBuffType::None_Buff <= HeroBuffInfo.BuffType) ? false : true;

@@ -122,9 +122,10 @@ UParticleSystem* ABaseBuffActor::CreateBuffEffectParticle(UBaseBuff* BaseBuff)
 
 	switch (BuffParticleIdx)
 	{
-	case EBuffEffectType::Flame: 
-		BuffParticlePath = "/Game/Effect/SimpleEffect/Buff/FX_DeBuff_Fire001_PS.FX_DeBuff_Fire001_PS";
-		break;
+	case EBuffEffectType::Flame: BuffParticlePath = "/Game/Effect/SimpleEffect/Buff/FX_DeBuff_Fire001_PS.FX_DeBuff_Fire001_PS"; break;
+	case EBuffEffectType::Inc_PhysicsDamage: BuffParticlePath = "/Game/Effect/Common/FX_BuffAtkUp001_PS"; break;
+	case EBuffEffectType::Inc_MagicDamage: BuffParticlePath =  "/Game/Effect/Common/FX_Buff_M_AtkUp001_PS";
+	case EBuffEffectType::Inc_AllDamage: BuffParticlePath =  "/Game/Effect/Common/FX_Buff_A_AtkUp001_PS";
 	default:
 		BuffParticlePath = "";
 		break;

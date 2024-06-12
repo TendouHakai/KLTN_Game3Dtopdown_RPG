@@ -4,6 +4,8 @@
 #include "CppFunctionLibrary.h"
 #include "Game3DtopdownRPG/Game3DtopdownRPG.h"
 #include "Game3DtopdownRPG/RPGGameInstance.h"
+#include "Game3DtopdownRPG/Battle/Buff/BuffControllerComponent.h"
+#include "Game3DtopdownRPG/Battle/BaseCharacter.h"
 
 UTableMgr* UCppFunctionLibrary::GetTableMgr()
 {
@@ -100,4 +102,14 @@ FText UCppFunctionLibrary::ToMinutsText_NoGap(int32 InSeconds)
 
 	temp = FText::FromString(strHour);
 	return temp;
+}
+
+void UCppFunctionLibrary::FindHaveBuff(AActor* Target, const UClass* ClassType, TArray<UBaseBuff*>& BuffArray)
+{
+	ABaseCharacter* BaseCharacter = Cast<ABaseCharacter>(Target);
+
+	if (nullptr == BaseCharacter)
+		return;
+
+	BaseCharacter->FindHaveBuff(ClassType, BuffArray);
 }

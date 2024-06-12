@@ -23,6 +23,8 @@ public:
 	virtual void EndBuff(bool bForcedEnd = false);
 	virtual void TimeEndFunction();
 	virtual void RenewBuff(const FHeroBuffInfo& RenewBuffInfo);
+	virtual void CopyBuff(const UBaseBuff* OriginBuff);
+	virtual float GetBuffAmount() { return 0.0f; }
 
 	virtual void Tick(float DeltaTime);
 	virtual bool IsSameBuff(ABaseCharacter* Caster, const FHeroBuffInfo& CheckBuffInfo);
@@ -60,6 +62,8 @@ public:
 protected:
 	void SetBuffInfoText();
 	void UpdateBuffInfo();
+
+	void ConvertToPercent(float& ConvertPercent);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) bool bIsPassiveBuff;

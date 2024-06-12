@@ -5,6 +5,14 @@
 #include "BattleStruct.generated.h"
 
 UENUM(BlueprintType)
+enum class EDamageType : uint8
+{
+	PhysDamOnly,
+	MagDamOnly,
+	All,
+};
+
+UENUM(BlueprintType)
 enum class EBattleClearStep : uint8
 {
 	None,

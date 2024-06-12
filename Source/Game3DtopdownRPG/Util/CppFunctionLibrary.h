@@ -13,9 +13,8 @@
 #include "Game3DtopdownRPG/DataTable/HeroTable.h"
 #include "CppFunctionLibrary.generated.h"
 
-/**
- * 
- */
+class UBaseBuff;
+
 UCLASS()
 class GAME3DTOPDOWNRPG_API UCppFunctionLibrary : public UObject
 {
@@ -45,4 +44,7 @@ public:
 	// convert to text
 	UFUNCTION(BlueprintPure, Category = "Time To String")
 	static FText ToMinutsText_NoGap(int32 InSeconds);
+
+	UFUNCTION(BlueprintCallable, Category = "CppFunctionLibrary")
+	static void FindHaveBuff(AActor* Target, const UClass* ClassType, TArray<UBaseBuff*>& BuffArray);
 };

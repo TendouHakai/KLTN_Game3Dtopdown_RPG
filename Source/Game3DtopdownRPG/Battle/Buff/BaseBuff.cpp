@@ -56,6 +56,17 @@ void UBaseBuff::RenewBuff(const FHeroBuffInfo& RenewBuffInfo)
 	ElapseTime = 0.0f;
 }
 
+void UBaseBuff::CopyBuff(const UBaseBuff* OriginBuff)
+{
+	if (false == IsValid(OriginBuff))
+		return;
+
+	Duration = OriginBuff->Duration;
+	ElapseTime = OriginBuff->ElapseTime;
+	CurrentStack = OriginBuff->CurrentStack;
+	OwnerCharacter = OriginBuff->OwnerCharacter;
+}
+
 void UBaseBuff::Tick(float DeltaTime)
 {
 	if (true == bIsPassiveBuff || false == bActiveBuff)
@@ -130,4 +141,9 @@ void UBaseBuff::UpdateBuffInfo()
 {
 	if (nullptr == OwnerCharacter) return;
 	UpdateBuffInfoCallBack.ExecuteIfBound(this);
+}
+
+void UBaseBuff::ConvertToPercent(float& ConvertPercent)
+{
+	ConvertPercent = ConvertPercent * 0.01f;
 }
