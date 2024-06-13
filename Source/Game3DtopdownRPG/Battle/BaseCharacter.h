@@ -143,6 +143,23 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	void FindHaveBuff(const UClass* ClassType, TArray<UBaseBuff*>& BuffArray);
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character")
+	float GetDeBuffResistRatio() { return DebuffResistanceRatio/100.f; }
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Character")
+	void ReceiveDamage(ABaseCharacter* Caster, float Amount, bool bMagicDamage, bool bForcedBuff = false);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Character")
+	void BeginStun();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Character")
+	void EndStun();
+
+	void PlayStunStartSound();
+
+	void UpdateAttackSpeedRate();
+	void UpdateMoveSpeedRate();
+
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	bool IsValidBuff(const FHeroBuffInfo& HeroBuffInfo);
@@ -156,12 +173,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) UBuffControllerComponent* HeroBuffController;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default") USoundBase* StunStartSound;
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") int32 HeroID;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo", meta = (ExposeOnSpawn = true)) int32 Level;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float AttackSpeedRate;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float MovementSpeedRate;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float AttackSpeedRate = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float MoveSpeedRate = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float MovementSpeedRate = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float ReduceCoolDownSkillRatio;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float HealHPPerSecond;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float DebuffResistanceRatio;

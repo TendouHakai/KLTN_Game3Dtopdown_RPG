@@ -4,6 +4,8 @@
 #include "Game3DtopdownRPG/Battle/BaseCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Buff/BuffControllerComponent.h"
+#include "Buff/BuffList/SlowDebuff.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter() : HeroID(1), Level(1)
@@ -44,9 +46,17 @@ void ABaseCharacter::Tick(float DeltaTime)
 		return;
 	}
 
-	if (GetAnimInstance() && GetAnimInstance()->IsAnimAttackState())
+	if (GetAnimInstance() && GetAnimInstance()->IsAnimMovable())
+	{
+		GetMesh()->GlobalAnimRateScale = MoveSpeedRate;
+	}
+	else if (GetAnimInstance() && GetAnimInstance()->IsAnimAttackState())
 	{
 		GetMesh()->GlobalAnimRateScale = AttackSpeedRate;
+	}
+	else
+	{
+		GetMesh()->GlobalAnimRateScale = 1.0f;
 	}
 }
 
@@ -151,6 +161,55 @@ void ABaseCharacter::FindHaveBuff(const UClass* ClassType, TArray<UBaseBuff*>& B
 		return;
 
 	HeroBuffController->FindHaveBuff(ClassType, BuffArray);
+}
+
+void ABaseCharacter::PlayStunStartSound()
+{
+	if (nullptr == StunStartSound)
+		return;
+
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), StunStartSound, GetActorLocation());
+}
+
+void ABaseCharacter::UpdateAttackSpeedRate()
+{
+	float TempAttackSpeedRate = 1.0f;
+
+	TArray<UBaseBuff*> SlowBuffArray;
+	FindHaveBuff(USlowDebuff::StaticClass(), SlowBuffArray);
+
+	float MoveIncreasePercent = 0.f;
+	for (UBaseBuff* buff : SlowBuffArray)
+	{
+		MoveIncreasePercent -= Cast<USlowDebuff>(buff)->GetBuffAmount();
+	}
+
+	TempAttackSpeedRate += MoveIncreasePercent * TempAttackSpeedRate;
+
+	AttackSpeedRate = FMath::Max(0.1f, TempAttackSpeedRate);
+}
+
+void ABaseCharacter::UpdateMoveSpeedRate()
+{
+	float TempMoveSpeedRate = 1.0f;
+
+	TArray<UBaseBuff*> SlowBuffArray;
+	FindHaveBuff(USlowDebuff::StaticClass(), SlowBuffArray);
+
+	float MoveIncreasePercent = 0.f;
+	for (UBaseBuff* buff : SlowBuffArray)
+	{
+		MoveIncreasePercent -= Cast<USlowDebuff>(buff)->GetBuffAmount();
+	}
+
+	TempMoveSpeedRate += MoveIncreasePercent * TempMoveSpeedRate;
+
+	MoveSpeedRate = FMath::Max(0.1f, TempMoveSpeedRate);
+
+	if (GetCharacterMovement() != nullptr)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = MovementSpeedRate * MoveSpeedRate;
+	}
 }
 
 bool ABaseCharacter::IsValidBuff(const FHeroBuffInfo& HeroBuffInfo)

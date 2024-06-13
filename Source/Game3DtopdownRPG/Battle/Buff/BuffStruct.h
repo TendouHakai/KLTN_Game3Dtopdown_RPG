@@ -40,7 +40,7 @@ enum class EBuffTargetType : uint8
 USTRUCT(BlueprintType)
 struct FHeroBuffInfo
 {
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) EHeroBuffType BuffType;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) EHeroBuffType BuffType = EHeroBuffType::None_Buff;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 BuffCondition;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) EBuffTargetType BuffTarget;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float Duration;
@@ -80,5 +80,8 @@ enum class EBuffEffectType : uint8
 	Inc_PhysicsDamage,
 	Inc_MagicDamage,
 	Inc_AllDamage,
+	Freezing,
+	Stun,
+	Slow,
 	Max
 };

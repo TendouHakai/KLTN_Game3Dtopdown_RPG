@@ -14,5 +14,6 @@ class GAME3DTOPDOWNRPG_API UFlameDebuff : public UDotDamageDebuff
 {
 	GENERATED_BODY()
 public:
+	virtual float GetBuffAmount() override { return HeroBuffInfo.BuffAmount[0]; }
 	virtual int32 BuffStateIndex() override { return (int32)EBuffEffectType::Flame; };
 };

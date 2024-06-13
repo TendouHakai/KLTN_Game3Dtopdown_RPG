@@ -3,8 +3,10 @@
 
 #include "BaseBuff.h"
 #include "Game3DtopdownRPG/GlobalGetter.h"
+#include "Game3DtopdownRPG/Battle/BaseCharacter.h"
 #include "Game3DtopdownRPG/Util/Managers/HeroBuffMgr.h"
 #include "Game3DtopdownRPG/DataTable/HeroTable.h"
+#include "CoreMinimal.h"
 
 UBaseBuff::UBaseBuff() : bIsPassiveBuff(false), Duration (0.0f), ElapseTime(0.0f), CasterCharacter(nullptr)
 						,bActiveBuff(false), bDuplicated(false), OneSecondElapseTime(0.0f)
@@ -116,6 +118,24 @@ bool UBaseBuff::IsSameBuff(ABaseCharacter* Caster, const FHeroBuffInfo& CheckBuf
 	return true;
 }
 
+bool UBaseBuff::HasOwnerOnlyOneBuffOfThis()
+{
+	TArray<UBaseBuff*> buffArray;
+	OwnerCharacter->FindHaveBuff(GetClass(), buffArray);
+
+	int32 ActiveBuffCount = 0;
+	for (UBaseBuff* BaseBuff : buffArray)
+	{
+		if (false == IsValid(BaseBuff))
+			continue;
+
+		if (BaseBuff->IsActive())
+			++ActiveBuffCount;
+	}
+
+	return (1 < ActiveBuffCount) ? false : true;
+}
+
 const int32 UBaseBuff::GetRemainTime()
 {
 	int32 DurationAsInt = FMath::RoundToInt(GetDuration());
@@ -133,7 +153,20 @@ void UBaseBuff::SetBuffInfoText()
 {
 	FBuffInfoRecord* BuffInfoRecord = GetMgr(UHeroBuffMgr)->GetHeroBuffInfoRecord((int32)HeroBuffInfo.BuffType, HeroBuffInfo.BuffCondition);
 	if (nullptr == BuffInfoRecord) return;
-	BuffInfoText = BuffInfoRecord->BuffText;
+
+	FString bufftext = BuffInfoRecord->BuffText;
+
+	wchar_t FormatStr[256]; 
+	wcscpy_s(FormatStr, TCHAR_TO_WCHAR(*bufftext)); 
+
+	if(HeroBuffInfo.BuffAmount.Num() == 1)
+		bufftext = FString::Printf(FormatStr, HeroBuffInfo.BuffAmount[0]);
+	else if (HeroBuffInfo.BuffAmount.Num() == 2)
+		bufftext = FString::Printf(FormatStr, HeroBuffInfo.BuffAmount[0], HeroBuffInfo.BuffAmount[1]);
+	else if(HeroBuffInfo.BuffAmount.Num() == 3)
+		bufftext = FString::Printf(FormatStr, HeroBuffInfo.BuffAmount[0], HeroBuffInfo.BuffAmount[1], HeroBuffInfo.BuffAmount[2]);
+
+	BuffInfoText = bufftext;
 	//BuffInfoText = HeroBuffInfo
 }
 

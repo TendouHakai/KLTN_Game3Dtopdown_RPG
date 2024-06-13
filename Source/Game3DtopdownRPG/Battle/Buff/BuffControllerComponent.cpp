@@ -4,7 +4,14 @@
 #include "BuffControllerComponent.h"
 #include "Game3DtopdownRPG/Battle/BaseCharacter.h"
 #include "BaseBuff.h"
+
+#include "BuffList/AttackDamageBuff.h"
+#include "BuffList/AttackDamageDebuff.h"
 #include "BuffList/FlameDebuff.h"
+#include "BuffList/FreezeDeBuff.h"
+#include "BuffList/StunDebuff.h"
+#include "BuffList/SlowDebuff.h"
+
 #include "BuffStateActor.h"
 #include "Game3DtopdownRPG/GlobalGetter.h"
 #include "Game3DtopdownRPG/GameMode/BaseGameMode.h"
@@ -237,8 +244,12 @@ UBaseBuff* UBuffControllerComponent::CreateInstance(const EHeroBuffType& type, c
 {
 	switch (type)
 	{
-	case EHeroBuffType::Damage_Increase:	return	nullptr;
-	case EHeroBuffType::Flame:				return NewObject<UFlameDebuff>();
+	case EHeroBuffType::Damage_Increase:	return	NewObject<UAttackDamageBuff>();
+	case EHeroBuffType::Damage_Decrease:	return	NewObject<UAttackDamageDebuff>();
+	case EHeroBuffType::Flame:				return	NewObject<UFlameDebuff>();
+	case EHeroBuffType::Freezing:			return	NewObject<UFreezeDeBuff>();
+	case EHeroBuffType::Stun:				return	NewObject<UStunDebuff>();
+	case EHeroBuffType::Slow:				return	NewObject<USlowDebuff>();
 	default:
 		return nullptr;
 	}

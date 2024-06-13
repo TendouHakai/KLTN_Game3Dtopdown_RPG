@@ -43,6 +43,9 @@ public:
 		UpdateBuffInfoCallBack.BindUObject(Owner, InFunc);
 	}
 
+	UFUNCTION(BlueprintCallable, Category = "BaseBuff")
+	bool HasOwnerOnlyOneBuffOfThis();
+
 	void SetOwnerCharacter(ABaseCharacter* Owner) { OwnerCharacter = Owner; }
 	void SetDuplicated(bool Duplicated) { bDuplicated = Duplicated; }
 	bool IsDuplicated() { return bDuplicated; }
@@ -50,6 +53,7 @@ public:
 
 	FORCEINLINE virtual const float GetDuration() { return Duration; }
 	FORCEINLINE virtual const float GetElapseTime() { return ElapseTime; }
+	FORCEINLINE const bool IsActive() { return bActiveBuff; }
 
 	bool IsNecessaryBuffActor();
 	virtual EBuffActorType GetSpawnActorType() { return EBuffActorType::eBuffStateActor; }
