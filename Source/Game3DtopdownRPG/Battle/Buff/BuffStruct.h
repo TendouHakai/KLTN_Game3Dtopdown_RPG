@@ -83,5 +83,9 @@ enum class EBuffEffectType : uint8
 	Freezing,
 	Stun,
 	Slow,
+	Rec_HealthPoint,
+	Rec_HealthPoint_Loop,
+	Invincible,
+	Shield,
 	Max
 };

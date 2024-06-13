@@ -122,13 +122,16 @@ UParticleSystem* ABaseBuffActor::CreateBuffEffectParticle(UBaseBuff* BaseBuff)
 
 	switch (BuffParticleIdx)
 	{
-	case EBuffEffectType::Flame:				BuffParticlePath = "/Game/Effect/SimpleEffect/Buff/FX_DeBuff_Fire001_PS.FX_DeBuff_Fire001_PS"; break;
-	case EBuffEffectType::Inc_PhysicsDamage:	BuffParticlePath = "/Game/Effect/SimpleEffect/Buff/FX_BuffAtkUp001_PS.FX_BuffAtkUp001_PS"; break;
-	case EBuffEffectType::Inc_MagicDamage:		BuffParticlePath = "/Game/Effect/SimpleEffect/Buff/FX_Buff_M_AtkUp001_PS.FX_Buff_M_AtkUp001_PS"; break;
-	case EBuffEffectType::Inc_AllDamage:		BuffParticlePath = "/Game/Effect/SimpleEffect/Buff/FX_Buff_A_AtkUp001_PS.FX_Buff_A_AtkUp001_PS"; break;
-	case EBuffEffectType::Freezing:				BuffParticlePath = "/Game/Effect/SimpleEffect/FX_DeBuff_Ice001_PS.FX_DeBuff_Ice001_PS"; break;
-	case EBuffEffectType::Stun:					BuffParticlePath = "/Game/Effect/SimpleEffect/FX_DeBuff_Groggy001_PS.FX_DeBuff_Groggy001_PS"; break;
-	case EBuffEffectType::Slow:					BuffParticlePath = "/Game/Effect/SimpleEffect/FX_DeBuff_Slow001_PS.FX_DeBuff_Slow001_PS"; break;
+	case EBuffEffectType::Flame:					BuffParticlePath = "/Game/Effect/SimpleEffect/Buff/FX_DeBuff_Fire001_PS.FX_DeBuff_Fire001_PS"; break;
+	case EBuffEffectType::Inc_PhysicsDamage:		BuffParticlePath = "/Game/Effect/SimpleEffect/Buff/FX_BuffAtkUp001_PS.FX_BuffAtkUp001_PS"; break;
+	case EBuffEffectType::Inc_MagicDamage:			BuffParticlePath = "/Game/Effect/SimpleEffect/Buff/FX_Buff_M_AtkUp001_PS.FX_Buff_M_AtkUp001_PS"; break;
+	case EBuffEffectType::Inc_AllDamage:			BuffParticlePath = "/Game/Effect/SimpleEffect/Buff/FX_Buff_A_AtkUp001_PS.FX_Buff_A_AtkUp001_PS"; break;
+	case EBuffEffectType::Freezing:					BuffParticlePath = "/Game/Effect/SimpleEffect/FX_DeBuff_Ice001_PS.FX_DeBuff_Ice001_PS"; break;
+	case EBuffEffectType::Stun:						BuffParticlePath = "/Game/Effect/SimpleEffect/FX_DeBuff_Groggy001_PS.FX_DeBuff_Groggy001_PS"; break;
+	case EBuffEffectType::Slow:						BuffParticlePath = "/Game/Effect/SimpleEffect/FX_DeBuff_Slow001_PS.FX_DeBuff_Slow001_PS"; break;
+	case EBuffEffectType::Rec_HealthPoint:			BuffParticlePath = "/Game/Effect/SimpleEffect/FX_Buff_MomentHeal001_PS.FX_Buff_MomentHeal001_PS"; break;
+	case EBuffEffectType::Rec_HealthPoint_Loop:		BuffParticlePath = "/Game/Effect/SimpleEffect/FX_Buff_KeepHeal001_PS.FX_Buff_KeepHeal001_PS"; break;
+	case EBuffEffectType::Invincible:				BuffParticlePath = "/Game/Effect/SimpleEffect/FX_BuffInvincible001_PS.FX_BuffInvincible001_PS"; break;
 	default:
 		BuffParticlePath = "";
 		break;
@@ -144,8 +147,18 @@ FName ABaseBuffActor::GetParticleAttachBoneName(int32 BuffParticleIdx, FName Bon
 	switch (static_cast<EBuffEffectType>(BuffParticleIdx))
 	{
 	case EBuffEffectType::Flame:
+	case EBuffEffectType::Inc_PhysicsDamage:
+	case EBuffEffectType::Inc_MagicDamage:
+	case EBuffEffectType::Inc_AllDamage:
+	case EBuffEffectType::Freezing:
+	case EBuffEffectType::Stun:
+	case EBuffEffectType::Slow:
+	case EBuffEffectType::Rec_HealthPoint:
+	case EBuffEffectType::Rec_HealthPoint_Loop:
 		return "root";
-	default: return "";
+	case EBuffEffectType::Invincible:
+		return "spine_03";
+	default: return BoneName;
 	}
 }
 

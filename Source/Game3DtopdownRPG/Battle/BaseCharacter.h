@@ -68,6 +68,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character")
 	float GetHealthRatio();
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character")
+	float GetShieldRatio();
+
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	void SetCharTeam(ECharTeam InCharTeam) { this->CharTeam = InCharTeam; }
 
@@ -160,6 +163,29 @@ public:
 	void UpdateAttackSpeedRate();
 	void UpdateMoveSpeedRate();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Character")
+	void CharacterHeal(float HealPercent);
+
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	bool IsInvincible();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character")
+	float GetShield();
+
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	void SetShield(float shieldHP);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character")
+	float GetMaxShield();
+
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	void SetMaxShield(float maxShieldHP);
+
+	void SetIsShieldOn(bool bOn) { bShieldOn = bOn; }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character")
+	bool GetIsShieldOn() { return bShieldOn; }
+
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	bool IsValidBuff(const FHeroBuffInfo& HeroBuffInfo);
@@ -185,6 +211,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float ReduceCoolDownSkillRatio;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float HealHPPerSecond;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float DebuffResistanceRatio;
+
+protected:
+	float ShieldHP;
+	float MaxShieldHP;
+	bool bShieldOn;
 	
 private:
 	UPROPERTY() USkeletalMeshComponent* SkeletalMesh;

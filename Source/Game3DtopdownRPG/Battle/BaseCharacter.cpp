@@ -5,6 +5,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Buff/BuffControllerComponent.h"
 #include "Buff/BuffList/SlowDebuff.h"
+#include "Buff/BuffList/InvincibleBuff.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -68,6 +69,14 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 float ABaseCharacter::GetHealthRatio()
 {
 	float Ratio = getHP() / getMaxHP();
+	return FMath::Clamp<float>(Ratio, 0.0f, 1.0f);
+}
+
+float ABaseCharacter::GetShieldRatio()
+{
+	float Ratio = 0.f;
+	if(bShieldOn == true)
+		Ratio = GetShield() / GetMaxShield();
 	return FMath::Clamp<float>(Ratio, 0.0f, 1.0f);
 }
 
@@ -210,6 +219,35 @@ void ABaseCharacter::UpdateMoveSpeedRate()
 	{
 		GetCharacterMovement()->MaxWalkSpeed = MovementSpeedRate * MoveSpeedRate;
 	}
+}
+
+bool ABaseCharacter::IsInvincible()
+{
+	TArray<UBaseBuff*> BuffArray;
+
+	FindHaveBuff(UInvincibleBuff::StaticClass(), BuffArray);
+
+	return (0 < BuffArray.Num()) ? true : false;
+}
+
+float ABaseCharacter::GetShield()
+{
+	return ShieldHP;
+}
+
+void ABaseCharacter::SetShield(float shieldHP)
+{
+	ShieldHP = shieldHP;
+}
+
+float ABaseCharacter::GetMaxShield()
+{
+	return MaxShieldHP;
+}
+
+void ABaseCharacter::SetMaxShield(float maxShieldHP)
+{
+	MaxShieldHP = maxShieldHP;
 }
 
 bool ABaseCharacter::IsValidBuff(const FHeroBuffInfo& HeroBuffInfo)

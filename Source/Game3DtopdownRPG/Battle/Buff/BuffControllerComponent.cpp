@@ -11,6 +11,10 @@
 #include "BuffList/FreezeDeBuff.h"
 #include "BuffList/StunDebuff.h"
 #include "BuffList/SlowDebuff.h"
+#include "BuffList/HealBuff.h"
+#include "BuffList/PeriodHealBuff.h"
+#include "BuffList/InvincibleBuff.h"
+#include "BuffList/ShieldBuff.h"
 
 #include "BuffStateActor.h"
 #include "Game3DtopdownRPG/GlobalGetter.h"
@@ -250,6 +254,10 @@ UBaseBuff* UBuffControllerComponent::CreateInstance(const EHeroBuffType& type, c
 	case EHeroBuffType::Freezing:			return	NewObject<UFreezeDeBuff>();
 	case EHeroBuffType::Stun:				return	NewObject<UStunDebuff>();
 	case EHeroBuffType::Slow:				return	NewObject<USlowDebuff>();
+	case EHeroBuffType::HP_Recovery:		return	NewObject<UHealBuff>();
+	case EHeroBuffType::HP_Recovery_Loop:	return	NewObject<UPeriodHealBuff>();
+	case EHeroBuffType::Invincible:			return	NewObject<UInvincibleBuff>();
+	case EHeroBuffType::Shield:				return	NewObject<UShieldBuff>();
 	default:
 		return nullptr;
 	}
