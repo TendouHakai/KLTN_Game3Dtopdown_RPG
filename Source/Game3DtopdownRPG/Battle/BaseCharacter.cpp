@@ -6,6 +6,8 @@
 #include "Buff/BuffControllerComponent.h"
 #include "Buff/BuffList/SlowDebuff.h"
 #include "Buff/BuffList/InvincibleBuff.h"
+#include "Buff/BuffList/AttackSpeedBuff.h"
+#include "Buff/BuffList/MoveSpeedBuff.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -195,6 +197,16 @@ void ABaseCharacter::UpdateAttackSpeedRate()
 
 	TempAttackSpeedRate += MoveIncreasePercent * TempAttackSpeedRate;
 
+	TArray<UBaseBuff*> AttackSpeedBuffArray;
+	FindHaveBuff(UAttackSpeedBuff::StaticClass(), AttackSpeedBuffArray);
+	for (UBaseBuff* Buff : AttackSpeedBuffArray)
+	{
+		if (USpeedBuff* AttackSpeedBuff = Cast<UAttackSpeedBuff>(Buff))
+		{
+			TempAttackSpeedRate += AttackSpeedBuff->GetUpdateSpeed();
+		}
+	}
+
 	AttackSpeedRate = FMath::Max(0.1f, TempAttackSpeedRate);
 }
 
@@ -212,6 +224,16 @@ void ABaseCharacter::UpdateMoveSpeedRate()
 	}
 
 	TempMoveSpeedRate += MoveIncreasePercent * TempMoveSpeedRate;
+
+	TArray<UBaseBuff*> MoveSpeedBuffArray;
+	FindHaveBuff(UMoveSpeedBuff::StaticClass(), MoveSpeedBuffArray);
+	for (UBaseBuff* Buff : MoveSpeedBuffArray)
+	{
+		if (USpeedBuff* MoveSpeedBuff = Cast<UMoveSpeedBuff>(Buff))
+		{
+			TempMoveSpeedRate += MoveSpeedBuff->GetUpdateSpeed();
+		}
+	}
 
 	MoveSpeedRate = FMath::Max(0.1f, TempMoveSpeedRate);
 

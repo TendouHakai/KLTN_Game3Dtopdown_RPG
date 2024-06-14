@@ -132,6 +132,11 @@ UParticleSystem* ABaseBuffActor::CreateBuffEffectParticle(UBaseBuff* BaseBuff)
 	case EBuffEffectType::Rec_HealthPoint:			BuffParticlePath = "/Game/Effect/SimpleEffect/FX_Buff_MomentHeal001_PS.FX_Buff_MomentHeal001_PS"; break;
 	case EBuffEffectType::Rec_HealthPoint_Loop:		BuffParticlePath = "/Game/Effect/SimpleEffect/FX_Buff_KeepHeal001_PS.FX_Buff_KeepHeal001_PS"; break;
 	case EBuffEffectType::Invincible:				BuffParticlePath = "/Game/Effect/SimpleEffect/FX_BuffInvincible001_PS.FX_BuffInvincible001_PS"; break;
+	case EBuffEffectType::Shield:					BuffParticlePath = "/Game/Effect/SimpleEffect/FX_E118_PS.FX_E118_PS"; break;
+	case EBuffEffectType::Inc_AtkSpeed:				BuffParticlePath = "/Game/Effect/SimpleEffect/FX_Buff_AtkSpeed001_PS.FX_Buff_AtkSpeed001_PS"; break;
+	case EBuffEffectType::Immune:					BuffParticlePath = "/Game/Effect/SimpleEffect/FX_CCImmunity001_PS.FX_CCImmunity001_PS"; break;
+	case EBuffEffectType::Bleeding:					BuffParticlePath = "/Game/Effect/SimpleEffect/FX_DeBuff_Bleed001_PS.FX_DeBuff_Bleed001_PS"; break;
+	case EBuffEffectType::Blindness:				BuffParticlePath = "/Game/Effect/SimpleEffect/FX_DeBuff_Blind001_PS.FX_DeBuff_Blind001_PS"; break;
 	default:
 		BuffParticlePath = "";
 		break;
@@ -155,9 +160,14 @@ FName ABaseBuffActor::GetParticleAttachBoneName(int32 BuffParticleIdx, FName Bon
 	case EBuffEffectType::Slow:
 	case EBuffEffectType::Rec_HealthPoint:
 	case EBuffEffectType::Rec_HealthPoint_Loop:
+	case EBuffEffectType::Blindness:
 		return "root";
 	case EBuffEffectType::Invincible:
+	case EBuffEffectType::Shield:
+	case EBuffEffectType::Immune:
 		return "spine_03";
+	case EBuffEffectType::Bleeding:
+		return "pelvis";
 	default: return BoneName;
 	}
 }

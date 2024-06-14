@@ -87,5 +87,9 @@ enum class EBuffEffectType : uint8
 	Rec_HealthPoint_Loop,
 	Invincible,
 	Shield,
+	Inc_AtkSpeed,
+	Immune,
+	Bleeding, 
+	Blindness,
 	Max
 };

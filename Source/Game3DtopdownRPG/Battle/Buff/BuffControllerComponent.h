@@ -72,6 +72,9 @@ protected:
 	ABaseBuffActor* SpawnBuffActor(EBuffActorType BuffActorType, UBaseBuff* BaseBuff);
 	void DestroyBuffStateActor(ABaseBuffActor* BaseBuffActor);
 
+	bool IsBuffCreateException(const FHeroBuffInfo& HeroBuffInfo);
+	bool IsNegativeBuff(const FHeroBuffInfo& HeroBuffInfo);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) ABaseCharacter* OwnerCharacter;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)	TArray<UBaseBuff*> HeroBuffArray;
@@ -84,4 +87,7 @@ private:
 	FUpdateBuffInfo UpdateBuffInfoCallBack;
 
 	UPROPERTY()	ABuffStateActor* BuffStateActor;
+
+	TArray<EHeroBuffType> debuffArray = { EHeroBuffType::Flame, EHeroBuffType::Bleeding, EHeroBuffType::Blindness,
+		EHeroBuffType::Damage_Decrease, EHeroBuffType::Freezing, EHeroBuffType::HealBan, EHeroBuffType::Silence, EHeroBuffType::Slow, EHeroBuffType::Stun };
 };

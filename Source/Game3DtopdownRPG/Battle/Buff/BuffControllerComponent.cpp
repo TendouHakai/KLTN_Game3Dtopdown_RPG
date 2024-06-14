@@ -15,6 +15,11 @@
 #include "BuffList/PeriodHealBuff.h"
 #include "BuffList/InvincibleBuff.h"
 #include "BuffList/ShieldBuff.h"
+#include "BuffList/AttackSpeedBuff.h"
+#include "BuffList/MoveSpeedBuff.h"
+#include "BuffList/CCImmune.h"
+#include "BuffList/BleedingDeBuff.h"
+#include "BuffList/BlindnessDebuff.h"
 
 #include "BuffStateActor.h"
 #include "Game3DtopdownRPG/GlobalGetter.h"
@@ -69,6 +74,9 @@ UBaseBuff* UBuffControllerComponent::CreateBuff(ABaseCharacter* Caster, const FH
 		return nullptr;
 
 	if (HeroBuffInfo.BuffType == EHeroBuffType::None_Buff)
+		return nullptr;
+
+	if (true == IsBuffCreateException(HeroBuffInfo))
 		return nullptr;
 
 	if (EBuffTargetType::Team == HeroBuffInfo.BuffTarget)
@@ -258,6 +266,11 @@ UBaseBuff* UBuffControllerComponent::CreateInstance(const EHeroBuffType& type, c
 	case EHeroBuffType::HP_Recovery_Loop:	return	NewObject<UPeriodHealBuff>();
 	case EHeroBuffType::Invincible:			return	NewObject<UInvincibleBuff>();
 	case EHeroBuffType::Shield:				return	NewObject<UShieldBuff>();
+	case EHeroBuffType::AtkSpeed_Increase:	return	NewObject<UAttackSpeedBuff>();
+	case EHeroBuffType::MoveSpeedIncrease:	return	NewObject<UMoveSpeedBuff>();
+	case EHeroBuffType::CCImmune:			return	NewObject<UCCImmune>();
+	case EHeroBuffType::Bleeding:			return	NewObject<UBleedingDeBuff>();
+	case EHeroBuffType::Blindness:			return	NewObject<UBlindnessDebuff>();
 	default:
 		return nullptr;
 	}
@@ -290,5 +303,28 @@ void UBuffControllerComponent::DestroyBuffStateActor(ABaseBuffActor* BaseBuffAct
 		BaseBuffActor->EndBuffStateActor();
 		BaseBuffActor->Destroy();
 	}
+}
+
+bool UBuffControllerComponent::IsBuffCreateException(const FHeroBuffInfo& HeroBuffInfo)
+{
+	TArray<UBaseBuff*> buffs;
+	FindHaveBuff(UCCImmune::StaticClass(), buffs);
+	if (buffs.Num() != 0 && IsNegativeBuff(HeroBuffInfo) == true)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool UBuffControllerComponent::IsNegativeBuff(const FHeroBuffInfo& HeroBuffInfo)
+{
+	for (int i = 0; i < debuffArray.Num(); ++i)
+	{
+		if (debuffArray[i] == HeroBuffInfo.BuffType)
+			return true;
+	}
+
+	return false;
 }
 
