@@ -6,6 +6,9 @@
 #include "Game3DtopdownRPG/RPGGameInstance.h"
 #include "Game3DtopdownRPG/Battle/Buff/BuffControllerComponent.h"
 #include "Game3DtopdownRPG/Battle/BaseCharacter.h"
+#include "Game3DtopdownRPG/Battle/Buff/BuffStruct.h"
+#include "Game3DtopdownRPG/GlobalGetter.h"
+#include "Game3DtopdownRPG/Util/Managers/HeroBuffMgr.h"
 
 UTableMgr* UCppFunctionLibrary::GetTableMgr()
 {
@@ -112,4 +115,24 @@ void UCppFunctionLibrary::FindHaveBuff(AActor* Target, const UClass* ClassType, 
 		return;
 
 	BaseCharacter->FindHaveBuff(ClassType, BuffArray);
+}
+
+FText UCppFunctionLibrary::GetBuffInfoText(FHeroBuffInfo info)
+{
+	FBuffInfoRecord* BuffInfoRecord = GetMgr(UHeroBuffMgr)->GetHeroBuffInfoRecord((int32)info.BuffType, info.BuffCondition);
+	if (nullptr == BuffInfoRecord) return FText();
+
+	FString bufftext = BuffInfoRecord->BuffText;
+
+	wchar_t FormatStr[256];
+	wcscpy_s(FormatStr, TCHAR_TO_WCHAR(*bufftext));
+
+	if (info.BuffAmount.Num() == 1)
+		bufftext = FString::Printf(FormatStr, info.BuffAmount[0]);
+	else if (info.BuffAmount.Num() == 2)
+		bufftext = FString::Printf(FormatStr, info.BuffAmount[0], info.BuffAmount[1]);
+	else if (info.BuffAmount.Num() == 3)
+		bufftext = FString::Printf(FormatStr, info.BuffAmount[0], info.BuffAmount[1], info.BuffAmount[2]);
+
+	return FText::FromString(bufftext);
 }

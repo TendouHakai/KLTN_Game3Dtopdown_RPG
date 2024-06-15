@@ -47,4 +47,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "CppFunctionLibrary")
 	static void FindHaveBuff(AActor* Target, const UClass* ClassType, TArray<UBaseBuff*>& BuffArray);
+
+	// buff
+	UFUNCTION(BlueprintPure, Category = "Time To String")
+	static FText GetBuffInfoText(FHeroBuffInfo info);
 };

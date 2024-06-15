@@ -36,6 +36,7 @@ enum class EUIName : uint8
 	MakingPotionPage,
 	RuneBuffPage,
 	BattleStagePage,
+	SelectBuffPage,
 
 	Max,
 };

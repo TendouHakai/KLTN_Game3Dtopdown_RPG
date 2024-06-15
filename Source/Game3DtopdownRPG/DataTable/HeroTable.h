@@ -133,6 +133,7 @@ struct FBuffInfoRecord : public FTableRowBase
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 BuffType;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 BuffCondition;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString BuffName;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString BuffText;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString BuffIcon;
 };
