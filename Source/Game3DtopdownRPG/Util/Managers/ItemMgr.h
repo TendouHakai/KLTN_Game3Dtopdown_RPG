@@ -67,8 +67,10 @@ public:
 	EResult MakeItem(int32 ItemReckey, int32 count, int32& errorcode);
 
 	// Cheat Item
+	UFUNCTION(BlueprintCallable)
 	void AddItem(int32 ItemReckey = 1, int32 ItemCount = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
 	void RemoveItem(int32 ItemReckey = 1, int32 ItemCount = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
+	UFUNCTION(BlueprintCallable)
 	void AddItemEquipment(int32 ItemEquipmentReckey = 1, int32 ItemUpgradeLevel = 1, EInventoryLocation InventoryLocation = EInventoryLocation::InInventory);
 	void RemoveItemEquipment(FGameItemEquipmentInfo iteminfo);
 
@@ -84,6 +86,7 @@ public:
 
 	// Gold
 	int64 GetGold() { return Gold; }
+	UFUNCTION(BlueprintCallable)
 	void AddGold(int64 gold) { Gold = Gold + gold; }
 
 	// Energy
