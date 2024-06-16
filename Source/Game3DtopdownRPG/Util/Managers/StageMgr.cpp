@@ -124,6 +124,16 @@ TArray<FGameStageInfo> UStageMgr::GetStageArrayByChapter(int32 chapterReckey)
 	return StageArray;
 }
 
+void UStageMgr::SetStage(int32 stageReckey)
+{
+	m_currentStageReckey = stageReckey;
+}
+
+int32 UStageMgr::GetCurrentStage()
+{
+	return m_currentStageReckey;
+}
+
 void UStageMgr::ClearStage(int32 stageReckey, int32 star)
 {
 	if (stageReckey == 0) return;
@@ -147,6 +157,41 @@ void UStageMgr::ClearStage(int32 stageReckey, int32 star)
 
 	// unlock nextstage
 	FStageInfoRecord* record = GetStageInfoRecord(FName(FString::FromInt(stageReckey)));
+	UnlockStage(record->NextStageReckey);
+
+	// save data
+	bool bSuccess = true;
+	USavedStageConfig* config = USavedStageConfig::LoadStageCfgFromFile(bSuccess);
+	if (nullptr != config)
+	{
+		config->m_StageArray = m_StageArray;
+	}
+
+	USavedStageConfig::SaveStageCfgToFile(config);
+}
+
+void UStageMgr::ClearCurrentStage(int32 star)
+{
+	if (star == 0) return;
+
+	// create data
+	FGameStageInfo info;
+	info.m_StageReckey = m_currentStageReckey;
+	info.m_bClear = true;
+	info.m_bLock = true;
+	info.m_star = star;
+
+	for (int stageIndex = 0; stageIndex < m_StageArray.Num(); ++stageIndex)
+	{
+		if (m_StageArray[stageIndex].m_StageReckey == m_currentStageReckey)
+		{
+			m_StageArray[stageIndex] = info;
+			break;
+		}
+	}
+
+	// unlock nextstage
+	FStageInfoRecord* record = GetStageInfoRecord(FName(FString::FromInt(m_currentStageReckey)));
 	UnlockStage(record->NextStageReckey);
 
 	// save data

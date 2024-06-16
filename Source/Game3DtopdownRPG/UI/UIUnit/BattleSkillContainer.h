@@ -6,6 +6,7 @@
 #include "../UIUnitWidget.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+#include "Game3DtopdownRPG/Define/HeroStruct.h"
 
 #include "BattleSkillContainer.generated.h"
 
@@ -22,7 +23,11 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
+	UFUNCTION(BlueprintCallable)
 	void SetSkillIndex(uint8 skillIdx) { this->SkillIndex = skillIdx; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetSkillInfo(EHeroClass heroclass);
 
 protected:
 	uint8 SkillIndex = -1;

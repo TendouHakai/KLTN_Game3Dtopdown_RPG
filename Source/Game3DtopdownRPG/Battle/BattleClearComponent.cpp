@@ -4,6 +4,10 @@
 #include "BattleClearComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Game3DtopdownRPG/Util/Managers/UIBaseMgr.h"
+#include "Game3DtopdownRPG/Battle/BaseCharacter.h"
+#include "Game3DtopdownRPG/UI/Battle/BattleVictoryWidget.h"
+#include "Game3DtopdownRPG/Util/Managers/StageMgr.h"
+#include "Game3DtopdownRPG/GlobalGetter.h"
 
 
 // Sets default values for this component's properties
@@ -29,6 +33,13 @@ void UBattleClearComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	ABaseCharacter* character = nullptr;
+	if (PlayerCharacter != nullptr)
+		character = Cast<ABaseCharacter>(PlayerCharacter);
+
+	UBaseWidget* widget = nullptr;
+
 	switch (BattleClearStep)
 	{
 	case EBattleClearStep::None:
@@ -42,7 +53,27 @@ void UBattleClearComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 		BattleClearStep = EBattleClearStep::None;
 		break;
 	case EBattleClearStep::Victory:
-		BattleGameMode->UIMgr->OpenUI(EUIName::BattleVictoryWidget);
+		widget = Cast<UBattleVictoryWidget>(BattleGameMode->UIMgr->OpenUI(EUIName::BattleVictoryWidget));
+
+		if (character != nullptr)
+		{
+			if (character->GetHealthRatio() >= 0.9f)
+			{
+				Cast<UBattleVictoryWidget>(widget)->SetStar(3);
+				GetMgr(UStageMgr)->ClearCurrentStage(3);
+			}
+			else if (character->GetHealthRatio() >= 0.7f)
+			{
+				Cast<UBattleVictoryWidget>(widget)->SetStar(2);
+				GetMgr(UStageMgr)->ClearCurrentStage(3);
+			}
+			else 
+			{
+				Cast<UBattleVictoryWidget>(widget)->SetStar(1);
+				GetMgr(UStageMgr)->ClearCurrentStage(1);
+			}
+		}
+
 		BattleClearStep = EBattleClearStep::None;
 		break;
 	default:

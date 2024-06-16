@@ -33,6 +33,7 @@ public:
 	FItemParamLevRecord* GetItemParamLevRecord(FName Index);
 	FExpForGradeRecord* GetExpForGradeRecord(FName Index);
 	FItemTypeInfoRecord* GetItemTypeInfoRecord(FName Index);
+	FItemBuffRecord* GetItemBufInfoRecord(FName Index);
 	
 	TArray<FGameItemInfo> GetAllItemRecipeByItemType(EItemType type);
 

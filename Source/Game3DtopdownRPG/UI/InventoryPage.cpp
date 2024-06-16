@@ -6,11 +6,24 @@
 #include "UIUnit/InventoryContainerWidget.h"
 #include "Game3DtopdownRPG/DataTable/ItemTable.h"
 #include "Game3DtopdownRPG/Util/Managers/ItemMgr.h"
+#include "Game3DtopdownRPG/Battle/BaseCharacter.h"
+#include "Game3DtopdownRPG/Battle/Buff/BuffControllerComponent.h"
+#include "Game3DtopdownRPG/Battle/Buff/BaseBuff.h"
 #include "Game3DtopdownRPG/GlobalGetter.h"
+#include "Game3DtopdownRPG/Battle/Buff/BuffList/FlameDebuff.h"
+#include "Game3DtopdownRPG/Battle/Buff/BuffList/FreezeDeBuff.h"
+#include "Game3DtopdownRPG/Battle/Buff/BuffList/BleedingDeBuff.h"
+#include "Game3DtopdownRPG/Battle/Buff/BuffList/BlindnessDebuff.h"
+#include "Game3DtopdownRPG/Battle/Buff/BuffList/AttackDamageDebuff.h"
+#include "Game3DtopdownRPG/Battle/Buff/BuffList/SlowDebuff.h"
+#include "Game3DtopdownRPG/Battle/Buff/BuffList/StunDebuff.h"
 
 #include "UIUnit/UIBaseButton.h"
 #include "UIUnit/TopMenuWidget.h"
 #include "Popup/Inventory_ItemSell_Popup.h"
+
+#include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 
 void UInventoryPage::CacheOwnUI()
 {
@@ -117,10 +130,48 @@ void UInventoryPage::OnTapUseItem()
 	if (nullptr == iteminfo)
 		return;
 
-	if (iteminfo->ItemType == EItemType::Max)
+	if (iteminfo->ItemType == EItemType::Potion)
 	{
-		UIMgr->OpenMsgBox(EUIMsgBoxType::Basic, FString(TEXT("test message Box")));
+		FItemBuffRecord* record = GetMgr(UItemMgr)->GetItemBufInfoRecord(FName(FString::FromInt(gameinfo.m_ItemRecKey)));
+		if (record == nullptr) return;
+
+		ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+		if (PlayerCharacter == nullptr) return;
+		ABaseCharacter* character = Cast<ABaseCharacter>(PlayerCharacter);
+		if (character == nullptr) return;
+
+		if (record->IsBuff)
+		{
+			character->HeroBuffController->CreateBuff(character, record->buffinfo);
+		}
+		else
+		{
+			TArray<UBaseBuff*> buffs;
+			switch (record->buffinfo.BuffType)
+			{
+			case EHeroBuffType::Flame:				character->FindHaveBuff(UFlameDebuff::StaticClass(), buffs); break;
+			case EHeroBuffType::Freezing:			character->FindHaveBuff(UFreezeDeBuff::StaticClass(), buffs); break;
+			case EHeroBuffType::Bleeding:			character->FindHaveBuff(UBleedingDeBuff::StaticClass(), buffs); break;
+			case EHeroBuffType::Blindness:			character->FindHaveBuff(UBlindnessDebuff::StaticClass(), buffs); break;
+			case EHeroBuffType::Damage_Decrease:	character->FindHaveBuff(UAttackDamageDebuff::StaticClass(), buffs); break;
+			case EHeroBuffType::Slow:				character->FindHaveBuff(USlowDebuff::StaticClass(), buffs); break;
+			case EHeroBuffType::Stun:				character->FindHaveBuff(UStunDebuff::StaticClass(), buffs); break;
+			default:
+				break;
+			}
+
+			for (UBaseBuff* buff : buffs)
+			{
+				buff->EndBuff();
+			}
+		}
+		FString str = FString::Printf(TEXT("Used %s"), *iteminfo->DesName);
+		UIMgr->OpenMsgBox(EUIMsgBoxType::Basic, str);
 	}
+
+	GetMgr(UItemMgr)->RemoveItem(gameinfo.m_ItemRecKey, 1, gameinfo.m_InventoryLocation);
+
+	Update();
 }
 
 void UInventoryPage::OnTapClose()

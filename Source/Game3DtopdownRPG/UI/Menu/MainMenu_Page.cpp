@@ -2,6 +2,8 @@
 
 
 #include "MainMenu_Page.h"
+#include "Game3DtopdownRPG/UI/WaitingWidget/LoadingWidget.h"
+#include "Game3DtopdownRPG/GlobalGetter.h"
 
 bool UMainMenu_Page::Initialize()
 {
@@ -37,7 +39,10 @@ void UMainMenu_Page::NativeConstruct()
 
 void UMainMenu_Page::OnTapPlayBtn()
 {
-	GameMode->OpenReservedLevel(FName("StartZone"), FString("?Game=/Game/Blueprints/Battle/BattleGameModeBP.BattleGameModeBP_C"));
+	ULoadingWidget* loadingWidget = Cast<ULoadingWidget>(GetMgr(UUIBaseMgr)->OpenUI(EUIName::LoadingWidget));
+	if (loadingWidget != nullptr)
+		loadingWidget->SetInfoScene(FName("StartZone"), FString("?Game=/Game/Blueprints/Battle/BattleGameModeBP.BattleGameModeBP_C"));
+	//GameMode->OpenReservedLevel(FName("StartZone"), FString("?Game=/Game/Blueprints/Battle/BattleGameModeBP.BattleGameModeBP_C"));
 }
 
 void UMainMenu_Page::OnTapOptionsBtn()

@@ -23,8 +23,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void SetHeroCharacter(ABaseCharacter* hero);
 
+	UFUNCTION()
+	void OnTapItemSlot(int32 rec_key, UItemSlotWidget* Container);
+
+	UFUNCTION(BlueprintCallable)
+	void OnTapItemEquipSlot(int32 index);
+
 protected:
 	void UpdateNormalEquipmentSlots();
+	void UpdateSkillSlot();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) ABaseCharacter* character;

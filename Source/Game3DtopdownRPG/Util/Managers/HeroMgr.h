@@ -35,6 +35,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UnEquipHeroNormalItem(ABaseCharacter* hero, FGameItemInfo iteminfo, int32 position);
 
+	UFUNCTION(BlueprintCallable)
+	void UseEquipHeroNormalItem(ABaseCharacter* hero, int32 position);
 
 	UFUNCTION(BlueprintCallable)
 	void ChangeHeroParam(FCharacterParam& heroParam, const FCharacterParam& AddParam, bool IsAddParam = true);

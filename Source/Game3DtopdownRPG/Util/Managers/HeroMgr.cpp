@@ -103,6 +103,7 @@ void UHeroMgr::UnEquipHeroItemByClass(ABaseCharacter* hero)
 
 void UHeroMgr::EquipHeroNormalItem(ABaseCharacter* hero, FGameItemInfo iteminfo, int32 position)
 {
+	if (iteminfo.m_InventoryLocation == EInventoryLocation::InEquipment) return;
 	FHeroInfo HeroInfo = hero->GetHeroInfo();
 
 	FGameItemInfo OldItemInfo = HeroInfo.m_EquipNormal[position];
@@ -137,6 +138,29 @@ void UHeroMgr::UnEquipHeroNormalItem(ABaseCharacter* hero, FGameItemInfo iteminf
 
 	// update equip
 	HeroInfo.m_EquipNormal[position] = FGameItemInfo();
+
+	hero->SetHeroInfo(HeroInfo);
+
+	// update UI
+	ABaseGameMode* GameMode = GetGameModeAs(ABaseGameMode);
+	if (nullptr == GameMode) return;
+	GameMode->UIMgr->Update();
+}
+
+void UHeroMgr::UseEquipHeroNormalItem(ABaseCharacter* hero, int32 position)
+{
+	FHeroInfo HeroInfo = hero->GetHeroInfo();
+	FGameItemInfo iteminfo = HeroInfo.m_EquipNormal[position];
+
+	// update Item Mgr
+	GetMgr(UItemMgr)->RemoveItem(iteminfo.m_ItemRecKey, 1, EInventoryLocation::InEquipment);
+
+	// update equip
+	HeroInfo.m_EquipNormal[position].m_ItemCount -= 1;
+	if (HeroInfo.m_EquipNormal[position].m_ItemCount <= 0)
+	{
+		HeroInfo.m_EquipNormal[position] = FGameItemInfo();
+	}
 
 	hero->SetHeroInfo(HeroInfo);
 

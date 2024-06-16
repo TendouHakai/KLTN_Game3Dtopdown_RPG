@@ -63,3 +63,8 @@ void UBattleSkillContainer::NativeTick(const FGeometry& MyGeometry, float InDelt
 		}
 	}
 }
+
+void UBattleSkillContainer::SetSkillInfo(EHeroClass heroclass)
+{
+
+}

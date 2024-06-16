@@ -6,6 +6,7 @@
 #include "Game3DtopdownRPG/Define/ItemStruct.h"
 #include "HeroTable.h"
 #include "Game3DtopdownRPG/Define/HeroStruct.h"
+#include "Game3DtopdownRPG/Battle/Buff/BuffStruct.h"
 #include "Engine/SkeletalMesh.h"
 #include "Engine/StaticMesh.h"
 #include "ItemTable.generated.h"
@@ -32,6 +33,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) TArray<int32> MatCounts;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString ItemIcon;	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString Description;		
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) bool CanUse;		
 };
 
 USTRUCT(BlueprintType)
@@ -121,4 +123,15 @@ struct FItemParamLevRecord : public FTableRowBase
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FCharacterParam ParamUpgrade;
+};
+
+USTRUCT(BlueprintType)
+struct FItemBuffRecord : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 ItemReckey;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) FHeroBuffInfo buffinfo;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) bool IsBuff;
 };

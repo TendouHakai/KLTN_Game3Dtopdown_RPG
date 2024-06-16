@@ -29,9 +29,17 @@ public:
 	TArray<FGameStageInfo> GetStageArray() { return m_StageArray; }
 	TArray<FGameStageInfo> GetStageArrayByChapter(int32 chapterReckey);
 
+	UFUNCTION(BlueprintCallable)
+	void SetStage(int32 stageReckey);
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetCurrentStage();
+
 	// cheat
 	void ClearStage(int32 stageReckey, int32 star);
+	void ClearCurrentStage(int32 star);
 	void UnlockStage(int32 stageReckey);
 protected:
 	TArray<FGameStageInfo> m_StageArray;
+	int m_currentStageReckey;
 };

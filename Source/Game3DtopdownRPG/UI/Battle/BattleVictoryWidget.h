@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "../UIWidget.h"
+#include "Components/SizeBox.h"
 #include "Game3DtopdownRPG/UI/UIUnit/UIBaseButton.h"
 #include "BattleVictoryWidget.generated.h"
 
@@ -22,7 +23,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnTapNextLevel();
 
+	UFUNCTION(BlueprintCallable)
+	void SetStar(int starcount);
+
 private:
 	UUIBaseButton* NextLevelBtn;
 	UUIBaseButton* BackBtn;
+
+	TArray<USizeBox*> stars;
 };

@@ -75,6 +75,8 @@ void UStageButton::OnTapButton()
 	FStageInfoRecord* record = GetMgr(UStageMgr)->GetStageInfoRecord(FName(FString::FromInt(m_info.m_StageReckey)));
 	if (nullptr == record) return;
 
+	GetMgr(UStageMgr)->SetStage(record->StageReckey);
+
 	ULoadingWidget* loadingWidget = Cast<ULoadingWidget>(GetMgr(UUIBaseMgr)->OpenUI(EUIName::LoadingWidget));
 	if (loadingWidget != nullptr)
 		loadingWidget->SetInfoScene(FName(record->MapName), FString("?Game=/Game/Blueprints/Battle/BattleGameModeBP.BattleGameModeBP_C"));

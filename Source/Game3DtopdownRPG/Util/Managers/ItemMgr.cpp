@@ -142,6 +142,19 @@ FItemTypeInfoRecord* UItemMgr::GetItemTypeInfoRecord(FName Index)
 	return ItemTypeInfoRecord;
 }
 
+FItemBuffRecord* UItemMgr::GetItemBufInfoRecord(FName Index)
+{
+	UDataTable* ItemBuffTable = GetMgr(UTableMgr)->ItemBuffTable;
+	if (nullptr == ItemBuffTable)
+		return nullptr;
+
+	FItemBuffRecord* ItemBuffRecord = ItemBuffTable->FindRow<FItemBuffRecord>(Index, FString(""));
+
+	if (nullptr == ItemBuffRecord) return nullptr;
+
+	return ItemBuffRecord;
+}
+
 TArray<FGameItemInfo> UItemMgr::GetAllItemRecipeByItemType(EItemType type)
 {
 	TArray<FGameItemInfo> array;
@@ -560,26 +573,61 @@ void UItemMgr::RemoveItemEquipment(FGameItemEquipmentInfo iteminfo)
 
 void UItemMgr::ChangeItemInventoryLocation(FGameItemInfo iteminfo, int ItemCount, EInventoryLocation Inventorylocation)
 {
+	int existIndex = -1;
+
+	if (Inventorylocation != EInventoryLocation::InEquipment)
+	{
+		for (int index = 0; index < m_ItemArray.Num(); ++index)
+		{
+			if (m_ItemArray[index].m_ItemRecKey == iteminfo.m_ItemRecKey && m_ItemArray[index].m_InventoryLocation == Inventorylocation)
+			{
+				existIndex = index;
+				break;
+			}
+		}
+	}
+
+	int delIndex = -1;
+
 	for (int index = 0; index < m_ItemArray.Num(); ++index)
 	{
 		if (m_ItemArray[index].m_ItemRecKey == iteminfo.m_ItemRecKey && m_ItemArray[index].m_ItemCount == iteminfo.m_ItemCount && m_ItemArray[index].m_InventoryLocation == iteminfo.m_InventoryLocation)
 		{
-			if (m_ItemArray[index].m_ItemCount < ItemCount)
+			if (m_ItemArray[index].m_ItemCount > ItemCount)
 			{
-				FGameItemInfo info;
-				info.m_ItemRecKey = m_ItemArray[index].m_ItemRecKey;
-				info.m_ItemCount = ItemCount;
-				info.m_InventoryLocation = Inventorylocation;
+				if (existIndex == -1)
+				{
+					FGameItemInfo info;
+					info.m_ItemRecKey = m_ItemArray[index].m_ItemRecKey;
+					info.m_ItemCount = ItemCount;
+					info.m_InventoryLocation = Inventorylocation;
 
-				m_ItemArray.Emplace(info);
+					m_ItemArray.Emplace(info);
+				}
+				else
+				{
+					m_ItemArray[existIndex].m_ItemCount += ItemCount;
+				}
+
+				m_ItemArray[index].m_ItemCount -= ItemCount;
 			}
 			else
 			{
-				m_ItemArray[index].m_InventoryLocation = Inventorylocation;
+				if (existIndex == -1)
+				{
+					m_ItemArray[index].m_InventoryLocation = Inventorylocation;
+				}
+				else
+				{
+					m_ItemArray[existIndex].m_ItemCount += ItemCount;
+					delIndex = index;
+				}
 			}
 			break;
 		}
 	}
+	if(delIndex != -1)
+		m_ItemArray.RemoveAt(delIndex);
 
 	// save data
 	bool bSuccess = true;
