@@ -31,6 +31,9 @@ public:
 	virtual void OnTapContainer(int32 rec_key, UInventoryContainerWidget* Container);
 
 	UFUNCTION()
+	virtual void OnCtrlTapInventoryContainer(int32 rec_key, UInventoryContainerWidget* Container);
+
+	UFUNCTION()
 	virtual void OnTapSellItem();
 
 	UFUNCTION()

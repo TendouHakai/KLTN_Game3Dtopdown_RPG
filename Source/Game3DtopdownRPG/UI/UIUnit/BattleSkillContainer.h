@@ -6,6 +6,7 @@
 #include "../UIUnitWidget.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+#include "Components/Image.h"
 #include "Game3DtopdownRPG/Define/HeroStruct.h"
 
 #include "BattleSkillContainer.generated.h"
@@ -34,4 +35,5 @@ protected:
 
 	UProgressBar* ProgressBarCooldown;
 	UTextBlock* TextNumberCooldown;
+	UImage* imageSkillIcon;
 };

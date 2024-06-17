@@ -93,6 +93,40 @@ void UHeroEquipmentPage::CacheOwnUI()
 		TopMenu->InitUnit(GameMode);
 	}
 
+	// Item Des
+	ItemDesPopup = GetOwnUI<USizeBox>(TEXT("SizeBox_ItemDescriptionPopup"));
+	m_currentItemWidget = GetOwnUI<UInventoryContainerWidget>(TEXT("InventoryContainerWidget_Des"));
+	if (nullptr == m_currentItemWidget) m_currentItemWidget->IsInteract = false;
+	textGradeItem = GetOwnUI<UTextBlock>(TEXT("TextBlock_DesGradeItem"));
+	textNameItem = GetOwnUI<UTextBlock>(TEXT("TextBlock_DesNameItem"));
+	textDecriptionItem = GetOwnUI<URichTextBlock>(TEXT("RichTextBlock_DesDescriptionItem"));
+
+	// Item equpiment Des
+	ItemequipDesPopup = GetOwnUI<USizeBox>(TEXT("SizeBox_ItemequipDes"));
+	m_currentEquipSlot = GetOwnUI<UEquipmentSlotWidget>(TEXT("CurrentEquipmentSlotWidget"));
+	if (nullptr != m_currentEquipSlot)
+	{
+		m_currentEquipSlot->InitUnit(GameMode);
+	}
+
+	textGrade = GetOwnUI<UTextBlock>(TEXT("TextBlock_DesGradeItemEquip"));
+	textName = GetOwnUI<UTextBlock>(TEXT("TextBlock_DesNameItemEquip"));
+	textDecription = GetOwnUI<UTextBlock>(TEXT("RichTextBlock_DesDescriptionItemEquip"));
+
+	// text Param
+	for (int indexParam = 0; indexParam < 5; ++indexParam)
+	{
+		UOverlay* overlayParam = GetOwnUI<UOverlay>(FString::Printf(TEXT("Overlay_Stat_%d"), indexParam));
+		UTextBlock* textCurrentParam = GetOwnUI<UTextBlock>(FString::Printf(TEXT("TextBlock_Param_%d"), indexParam));
+		UTextBlock* textAddParam = GetOwnUI<UTextBlock>(FString::Printf(TEXT("TextBlock_ParamAdd_%d"), indexParam));
+		if (nullptr != overlayParam && nullptr != textCurrentParam && nullptr != textAddParam)
+		{
+			statInfos.Emplace(overlayParam);
+			statParamCurrent.Emplace(textCurrentParam);
+			statParamAdd.Emplace(textAddParam);
+		}
+	}
+
 	OnTapTabEquipmentItemCategory(EEquipmentItemTabCategory::All);
 	OnTapTabItemCategory(EItemTabCategory::All);
 }
@@ -157,6 +191,12 @@ void UHeroEquipmentPage::Update()
 	if(nullptr != TopMenu) TopMenu->Update();
 }
 
+void UHeroEquipmentPage::OnTapEquipContainer(int32 rec_key, UInventoryEquipContainerWidget* Container)
+{
+	if (nullptr == Container) return;
+	SetCurrentItemEquipDes(Container->GetGameItemInfo());
+}
+
 void UHeroEquipmentPage::OnDropEquipSlot(int32 rec_key, UEquipmentSlotWidget* Container)
 {
 	if (nullptr == Container) return;
@@ -186,6 +226,21 @@ void UHeroEquipmentPage::OnCtrlTapEquipContainer(int32 rec_key, UInventoryEquipC
 	if (infoRecord == nullptr) return;
 	UIMgr->OpenMsgBox(EUIMsgBoxType::Basic, FString::Printf(TEXT("Change %s to inventory success"), *infoRecord->DesName));
 	GetMgr(UItemMgr)->ChangeItemEquipmentInventoryLocation(container->GetGameItemInfo(), EInventoryLocation::InInventory);
+
+	Update();
+}
+
+void UHeroEquipmentPage::OnTapContainer(int32 rec_key, UInventoryContainerWidget* Container)
+{
+	if (nullptr == Container) return;
+	SetCurrentItemDes(Container->GetGameItemInfo());
+}
+
+void UHeroEquipmentPage::OnCtrlTapInventoryContainer(int32 rec_key, UInventoryContainerWidget* Container)
+{
+	if (nullptr == Container) return;
+
+	GetMgr(UItemMgr)->ChangeItemInventoryLocation(Container->GetGameItemInfo(), Container->GetGameItemInfo().m_ItemCount, EInventoryLocation::InInventory);
 
 	Update();
 }
@@ -271,7 +326,9 @@ void UHeroEquipmentPage::UpdateChildItem(UWidget* Child, int32 ChildDataIdx)
 
 	InventoryContainer->SetInfo(info);
 
-	//InventoryContainer->SetButtonEventEx(this);
+	InventoryContainer->SetCtrlTapEventEx(this);
+
+	InventoryContainer->SetButtonEventEx(this);
 }
 
 void UHeroEquipmentPage::UpdateChildItemEquipment(UWidget* Child, int32 ChildDataIdx)
@@ -285,7 +342,7 @@ void UHeroEquipmentPage::UpdateChildItemEquipment(UWidget* Child, int32 ChildDat
 
 	InventoryContainer->SetInfo(info);
 
-	//InventoryContainer->SetButtonEventEx(this);
+	InventoryContainer->SetButtonEventEx(this);
 
 	InventoryContainer->SetCtrlButtonEventEx(this);
 }
@@ -361,6 +418,103 @@ void UHeroEquipmentPage::UpdateHeroParams()
 		if (HeroParam.IsValidIndex(index))
 		{
 			HeroParam[index]->SetText(FText::AsNumber(paramvalue));
+		}
+	}
+}
+
+void UHeroEquipmentPage::SetCurrentItemDes(FGameItemInfo info)
+{
+	if (info.m_ItemRecKey == 0) return;
+
+	ItemDesPopup->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	m_currentItemWidget->SetInfo(info);
+
+	FItemInfoRecord* iteminfo = GetMgr(UItemMgr)->GetItemInfoRecord(FName(FString::FromInt(info.m_ItemRecKey)));
+	if (nullptr == iteminfo) return;
+
+	if (nullptr == textGradeItem || nullptr == textNameItem || nullptr == textDecriptionItem) return;
+
+	textGradeItem->SetText(FText::FromString(GetMgr(UItemMgr)->GetItemGradeText(iteminfo->ItemGrape)));
+	textNameItem->SetText(FText::FromString(iteminfo->DesName));
+	textDecriptionItem->SetText(FText::FromString(GetMgr(UItemMgr)->GetDescriptionItem(*iteminfo)));
+}
+
+void UHeroEquipmentPage::SetCurrentItemEquipDes(FGameItemEquipmentInfo info)
+{
+	if (info.m_ItemRecKey == 0) return;
+
+	ItemequipDesPopup->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	m_currentEquipSlot->EquipItemToSlot(info);
+
+	FItemEquipmentInfoRecord* infoRecord = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(info.m_ItemRecKey)));
+	if (nullptr != infoRecord)
+	{
+		textGrade->SetText(FText::FromString(GetMgr(UItemMgr)->GetItemGradeText(infoRecord->EquipmentGrape)));
+		textName->SetText(FText::FromString(infoRecord->DesName));
+	}
+	else
+	{
+		textGrade->SetText(FText::FromString(TEXT("")));
+		textName->SetText(FText::FromString(TEXT("")));
+	}
+
+	// update ITem Param
+	// set current item param
+
+	if (infoRecord != nullptr)
+	{
+		FItemParamLevRecord* paramRecord = GetMgr(UItemMgr)->GetItemParamLevRecord(FName(FString::FromInt(infoRecord->ItemParamLevID)));
+
+		for (int indexParam = 0; indexParam < 5; ++indexParam)
+		{
+			float paramvalue = 0;
+			float paramvalueAdd = 0;
+			switch ((ECharacterParam)indexParam)
+			{
+			case ECharacterParam::PhysicDamage:
+				paramvalue = infoRecord->ItemEquipParam.PhysicDamage + paramRecord->ParamUpgrade.PhysicDamage * info.m_ItemUgrapeLevel;
+				break;
+			case ECharacterParam::MagicDamage:
+				paramvalue = infoRecord->ItemEquipParam.MagicDamage + paramRecord->ParamUpgrade.MagicDamage * info.m_ItemUgrapeLevel;
+				break;
+			case ECharacterParam::HP:
+				paramvalue = infoRecord->ItemEquipParam.HP + paramRecord->ParamUpgrade.HP * info.m_ItemUgrapeLevel;
+				break;
+			case ECharacterParam::Def:
+				paramvalue = infoRecord->ItemEquipParam.Def + paramRecord->ParamUpgrade.Def * info.m_ItemUgrapeLevel;
+				break;
+			case ECharacterParam::MagicDef:
+				paramvalue = infoRecord->ItemEquipParam.MagicDef + paramRecord->ParamUpgrade.MagicDef * info.m_ItemUgrapeLevel;
+				break;
+			default:
+				break;
+			}
+
+			if (0 == paramvalue && 0 == paramvalueAdd)
+			{
+				statInfos[indexParam]->SetVisibility(ESlateVisibility::Collapsed);
+				continue;
+			}
+
+			statParamCurrent[indexParam]->SetText(FText::FromString(FString::Printf(TEXT("+%.0f"), paramvalue)));
+
+			if (0 == paramvalueAdd)
+				statParamAdd[indexParam]->SetVisibility(ESlateVisibility::Hidden);
+			else
+			{
+				statParamAdd[indexParam]->SetText(FText::FromString(FString::Printf(TEXT("+%.0f"), paramvalueAdd)));
+				statParamAdd[indexParam]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			}
+			statInfos[indexParam]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		}
+	}
+	else
+	{
+		for (int indexParam = 0; indexParam < 5; ++indexParam)
+		{
+			statInfos[indexParam]->SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
 }

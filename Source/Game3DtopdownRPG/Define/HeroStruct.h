@@ -6,19 +6,6 @@
 #include "Game3DtopdownRPG/Define/ItemStruct.h"
 #include "HeroStruct.generated.h"
 
-UENUM(BlueprintType)
-enum class EHeroClass : uint8
-{
-	NoWeapon = 0, 
-	SwordAndShield,
-	Bow,
-	DoubleSword,
-	MagicWand,
-	SingleSword,
-	All,
-	Max
-};
-
 USTRUCT(BlueprintType)
 struct FHeroExpInfo
 {

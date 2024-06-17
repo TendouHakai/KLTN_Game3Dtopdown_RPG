@@ -131,6 +131,14 @@ void UInventoryContainerWidget::OnDropEvent(FGameItemInfo info)
 	}
 }
 
+void UInventoryContainerWidget::OnCtrlTapEvent()
+{
+	if (OwnerCtrlTapDelegateEx.IsBound())
+	{
+		OwnerCtrlTapDelegateEx.ExecuteIfBound(gameItemInfo.m_ItemRecKey, this);
+	}
+}
+
 void UInventoryContainerWidget::SetImageItem(FString ItemName)
 {
 	if (ItemName.IsEmpty())

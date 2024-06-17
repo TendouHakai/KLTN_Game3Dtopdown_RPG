@@ -4,6 +4,9 @@
 #include "BattleSkillContainer.h"
 #include "Game3DtopdownRPG/Battle/BaseCharacter.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Game3DtopdownRPG/GlobalGetter.h"
+#include "Game3DtopdownRPG/Util/Managers/HeroMgr.h"
+#include "Game3DtopdownRPG/Util/Managers/AssetMgr.h"
 
 bool UBattleSkillContainer::Initialize()
 {
@@ -22,6 +25,7 @@ void UBattleSkillContainer::NativeConstruct()
 
 	ProgressBarCooldown = GetOwnUI<UProgressBar>(TEXT("ProgressBar_Cooldown"));
 	TextNumberCooldown = GetOwnUI<UTextBlock>(TEXT("TextBlock_Number"));
+	imageSkillIcon = GetOwnUI<UImage>(TEXT("Image_icon"));
 }
 
 void UBattleSkillContainer::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -66,5 +70,14 @@ void UBattleSkillContainer::NativeTick(const FGeometry& MyGeometry, float InDelt
 
 void UBattleSkillContainer::SetSkillInfo(EHeroClass heroclass)
 {
+	FSkillInfoRecord* record = GetMgr(UHeroMgr)->GetSkillInfoRecord(heroclass, SkillIndex);
+	if (nullptr == record) return;
+	if (nullptr == imageSkillIcon) return;
 
+	UTexture2D* Tex = GetMgr(UAssetMgr)->LoadTexture2D(record->SkillImage, EGameTextureType::Skill);
+
+	if (nullptr == Tex)
+		return;
+
+	imageSkillIcon->SetBrushFromTexture(Tex);
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "../Singleton/Singleton.h"
+#include "Game3DtopdownRPG/DataTable/HeroTable.h"
 #include "HeroMgr.generated.h"
 
 class ABaseCharacter;
@@ -17,6 +18,19 @@ class GAME3DTOPDOWNRPG_API UHeroMgr : public USingleton
 public:
 	virtual void Init() override;
 	virtual void EndPlay() override;
+
+	// record
+	FHeroRecord* GetHeroRecord(FName HeroIndex);
+	FHeroParamLevelRecord* GetHeroLevelParamRecord(FName HeroLevIndex);
+	FSkillInfoRecord* GetSkillInfoRecord(FName skillIndex);
+	FSkillInfoRecord* GetSkillInfoRecord(EHeroClass heroclass, uint8 skillIndex);
+
+	// Level Up Param
+	UFUNCTION(BlueprintCallable)
+	void LevelUpHeroParam(ABaseCharacter* hero, int32 levelup);
+
+	UFUNCTION(BlueprintCallable)
+	void LevelUpItemEquipmentHeroParam(ABaseCharacter* hero, FGameItemEquipmentInfo info);
 
 	// Equip item 
 	UFUNCTION(BlueprintCallable)

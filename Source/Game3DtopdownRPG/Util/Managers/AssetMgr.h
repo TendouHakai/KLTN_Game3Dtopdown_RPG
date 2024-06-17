@@ -28,6 +28,7 @@ enum class EGameTextureType : uint8
 	Buff,
 	Item,
 	ItemEquipment,
+	Skill,
 	Max,
 };
 

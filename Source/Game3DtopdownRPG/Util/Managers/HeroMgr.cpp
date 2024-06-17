@@ -9,6 +9,8 @@
 #include "Game3DtopdownRPG/Util/Managers/ItemMgr.h"
 #include "Game3DtopdownRPG/GameMode/BaseGameMode.h"
 #include "Game3DtopdownRPG/Util/Managers/UIBaseMgr.h"
+#include "Game3DtopdownRPG/Util/Managers/TableMgr.h"
+#include "Game3DtopdownRPG/Util/CppFunctionLibrary.h"
 
 void UHeroMgr::Init()
 {
@@ -18,6 +20,96 @@ void UHeroMgr::Init()
 void UHeroMgr::EndPlay()
 {
 	Super::EndPlay();
+}
+
+FHeroRecord* UHeroMgr::GetHeroRecord(FName HeroIndex)
+{
+	UDataTable* HeroInfoTable = GetMgr(UTableMgr)->HeroInfoTable;
+	if (nullptr == HeroInfoTable)
+		return nullptr;
+
+	FHeroRecord* HeroRecord = HeroInfoTable->FindRow<FHeroRecord>(HeroIndex, FString(""));
+
+	if (nullptr == HeroRecord) return nullptr;
+
+	return HeroRecord;
+}
+
+FHeroParamLevelRecord* UHeroMgr::GetHeroLevelParamRecord(FName HeroLevIndex)
+{
+	UDataTable* HeroLevParamTable = GetMgr(UTableMgr)->HeroLevParamTable;
+	if (nullptr == HeroLevParamTable)
+		return nullptr;
+
+	FHeroParamLevelRecord* HeroParamLevelRecord = HeroLevParamTable->FindRow<FHeroParamLevelRecord>(HeroLevIndex, FString(""));
+
+	if (nullptr == HeroParamLevelRecord) return nullptr;
+
+	return HeroParamLevelRecord;
+}
+
+FSkillInfoRecord* UHeroMgr::GetSkillInfoRecord(FName skillIndex)
+{
+	UDataTable* SkillInfoTable = GetMgr(UTableMgr)->SkillInfoTable;
+	if (nullptr == SkillInfoTable)
+		return nullptr;
+
+	FSkillInfoRecord* SkillInfoRecord = SkillInfoTable->FindRow<FSkillInfoRecord>(skillIndex, FString(""));
+
+	if (nullptr == SkillInfoRecord) return nullptr;
+
+	return SkillInfoRecord;
+}
+
+FSkillInfoRecord* UHeroMgr::GetSkillInfoRecord(EHeroClass heroclass, uint8 skillIndex)
+{
+		UDataTable* SkillInfoTable = GetMgr(UTableMgr)->SkillInfoTable;
+	if (nullptr == SkillInfoTable)
+		return nullptr;
+
+	TArray<FSkillInfoRecord*> allrows;
+
+	SkillInfoTable->GetAllRows(FString(), allrows);
+
+	for (auto record : allrows)
+	{
+		if (record->HeroClass == heroclass && record->SkillIndex == skillIndex)
+			return record;
+	}
+
+	return nullptr;
+}
+
+void UHeroMgr::LevelUpHeroParam(ABaseCharacter* hero, int32 levelup)
+{
+	FHeroInfo HeroInfo = hero->GetHeroInfo();
+
+	FHeroRecord* record = GetHeroRecord(FName(FString::FromInt(hero->HeroID)));
+	if (nullptr == record) return;
+	FHeroParamLevelRecord* paramrecord = GetHeroLevelParamRecord(FName(FString::FromInt(record->HeroLevParamID)));
+	if (nullptr == paramrecord) return;
+
+	HeroInfo.m_Param = UCppFunctionLibrary::GetHeroParamLevel(HeroInfo.m_Param, paramrecord->ParamUpgrape, levelup);
+
+	hero->SetHeroInfo(HeroInfo);
+	// update UI
+	ABaseGameMode* GameMode = GetGameModeAs(ABaseGameMode);
+	if (nullptr == GameMode) return;
+	GameMode->UIMgr->Update();
+}
+
+void UHeroMgr::LevelUpItemEquipmentHeroParam(ABaseCharacter* hero, FGameItemEquipmentInfo info)
+{
+	if (info.m_ItemRecKey == 0) return;
+	if (info.m_InventoryLocation != EInventoryLocation::InEquipment) return;
+
+	FItemEquipmentInfoRecord* record = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(info.m_ItemRecKey)));
+	if (record == nullptr) return;
+
+	FHeroInfo HeroInfo = hero->GetHeroInfo();
+
+	UnEquipHeroItem(hero, HeroInfo.m_Equip[(int32)record->EquipPosition]);
+	EquipHeroItem(hero, info);
 }
 
 void UHeroMgr::EquipHeroItem(ABaseCharacter* hero, FGameItemEquipmentInfo iteminfo)
@@ -31,9 +123,27 @@ void UHeroMgr::EquipHeroItem(ABaseCharacter* hero, FGameItemEquipmentInfo itemin
 	if (nullptr == recordNew) return;
 
 	// udpate param
-	if(nullptr != recordOld)
-		ChangeHeroParam(HeroInfo.m_Param, recordOld->ItemEquipParam, false);
-	ChangeHeroParam(HeroInfo.m_Param, recordNew->ItemEquipParam, true);
+	FCharacterParam tempParam;
+	if (nullptr != recordOld)
+	{
+		tempParam = recordOld->ItemEquipParam;
+		if (OldItemInfo.m_ItemUgrapeLevel >= 1)
+		{
+			FItemParamLevRecord* levelParam = GetMgr(UItemMgr)->GetItemParamLevRecord(FName(FString::FromInt(recordOld->ItemParamLevID)));
+			if (levelParam != nullptr)
+				tempParam = UCppFunctionLibrary::GetHeroParamLevel(recordOld->ItemEquipParam, levelParam->ParamUpgrade, iteminfo.m_ItemUgrapeLevel);
+		}
+		ChangeHeroParam(HeroInfo.m_Param, tempParam, false);
+	}
+		
+	tempParam = recordNew->ItemEquipParam;
+	if (iteminfo.m_ItemUgrapeLevel >= 1)
+	{
+		FItemParamLevRecord* levelParam = GetMgr(UItemMgr)->GetItemParamLevRecord(FName(FString::FromInt(recordNew->ItemParamLevID)));
+		if (levelParam != nullptr)
+			tempParam = UCppFunctionLibrary::GetHeroParamLevel(recordNew->ItemEquipParam, levelParam->ParamUpgrade, iteminfo.m_ItemUgrapeLevel);
+	}
+	ChangeHeroParam(HeroInfo.m_Param, tempParam, true);
 
 	// update Item in Backpack
 	if (OldItemInfo.m_ItemRecKey == 0)
@@ -64,7 +174,15 @@ void UHeroMgr::UnEquipHeroItem(ABaseCharacter* hero, FGameItemEquipmentInfo item
 	if (nullptr == record) return;
 
 	// update param
-	ChangeHeroParam(HeroInfo.m_Param, record->ItemEquipParam, false);
+	FCharacterParam tempParam;
+	tempParam = record->ItemEquipParam;
+	if (iteminfo.m_ItemUgrapeLevel >= 1)
+	{
+		FItemParamLevRecord* levelParam = GetMgr(UItemMgr)->GetItemParamLevRecord(FName(FString::FromInt(record->ItemParamLevID)));
+		if(levelParam != nullptr)
+			tempParam = UCppFunctionLibrary::GetHeroParamLevel(record->ItemEquipParam, levelParam->ParamUpgrade, iteminfo.m_ItemUgrapeLevel);
+	}
+	ChangeHeroParam(HeroInfo.m_Param, tempParam, false);
 
 	// update Item Mgr
 	GetMgr(UItemMgr)->ChangeItemEquipmentInventoryLocation(iteminfo, EInventoryLocation::InBackpack);

@@ -8,6 +8,9 @@
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/VerticalBox.h"
+#include "Components/SizeBox.h"
+#include "Components/RichTextBlock.h"
+#include "Components/Overlay.h"
 #include "HeroEquipmentPage.generated.h"
 
 struct FGameItemInfo;
@@ -50,10 +53,23 @@ public:
 
 	// function for equipment item
 	UFUNCTION()
-	virtual void OnTapEquipContainer(int32 rec_key, UInventoryEquipContainerWidget* Container) {}
+	virtual void OnTapEquipContainer(int32 rec_key, UInventoryEquipContainerWidget* Container);
 
 	UFUNCTION()
 	void OnCtrlTapEquipContainer(int32 rec_key, UInventoryEquipContainerWidget* container);
+
+	UFUNCTION(BlueprintCallable)
+	void OnCloseEquipItemDes() { ItemequipDesPopup->SetVisibility(ESlateVisibility::Collapsed); }
+
+	// function for item
+	UFUNCTION()
+	virtual void OnTapContainer(int32 rec_key, UInventoryContainerWidget* Container);
+
+	UFUNCTION()
+	virtual void OnCtrlTapInventoryContainer(int32 rec_key, UInventoryContainerWidget* Container);
+
+	UFUNCTION(BlueprintCallable)
+	void OnCloseItemDes() { ItemDesPopup->SetVisibility(ESlateVisibility::Collapsed); }
 
 	// Function for slot equipmnet
 	UFUNCTION()
@@ -84,6 +100,9 @@ protected:
 	void UpdateEquipmentSlots();
 	void UpdateNormalEquipmentSlots();
 	void UpdateHeroParams();
+
+	void SetCurrentItemDes(FGameItemInfo info);
+	void SetCurrentItemEquipDes(FGameItemEquipmentInfo info);
 
 protected:
 	// Tab Bar
@@ -116,4 +135,21 @@ protected:
 
 	// Hero param
 	TArray<UTextBlock*> HeroParam;
+
+	// Pop up description item
+	USizeBox* ItemDesPopup;
+	UInventoryContainerWidget* m_currentItemWidget;
+	UTextBlock* textGradeItem;
+	UTextBlock* textNameItem;
+	URichTextBlock* textDecriptionItem;
+
+	// Pop up description item equipment
+	USizeBox* ItemequipDesPopup;
+	UEquipmentSlotWidget* m_currentEquipSlot;
+	UTextBlock* textGrade;
+	UTextBlock* textName;
+	UTextBlock* textDecription;
+	TArray<UOverlay*> statInfos;
+	TArray<UTextBlock*> statParamCurrent;
+	TArray<UTextBlock*> statParamAdd;
 };

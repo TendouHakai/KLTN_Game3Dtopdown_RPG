@@ -18,6 +18,7 @@ void UTableMgr::Init()
 	HeroLevTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Hero/HeroLevTable.HeroLevTable"));
 	HeroLevParamTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Hero/HeroParamLevTable.HeroParamLevTable"));
 	BuffInfoTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Buff/BuffInfoTable.BuffInfoTable"));
+	SkillInfoTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Hero/Skill/SkillInfoTable.SkillInfoTable"));
 
 	ItemInfoTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Item/ItemInfoTable.ItemInfoTable"));
 	ItemTypeInfoTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/DataTable/Item/ItemTypeInfoTable.ItemTypeInfoTable"));

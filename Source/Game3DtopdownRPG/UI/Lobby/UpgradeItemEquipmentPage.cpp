@@ -6,6 +6,7 @@
 #include "Game3DtopdownRPG/GlobalGetter.h"
 #include "Game3DtopdownRPG/Util/Managers/ItemMgr.h"
 #include "Game3DtopdownRPG/Util/Managers/TableMgr.h"
+#include "Game3DtopdownRPG/Util/Managers/HeroMgr.h"
 #include "Game3DtopdownRPG/UI/UIUnit/InventoryEquipContainerWidget.h"
 #include "Game3DtopdownRPG/UI//UIUnit/InventoryContainerWidget.h"
 #include "Game3DtopdownRPG/UI/UIUnit/EquipmentSlotWidget.h"
@@ -13,6 +14,8 @@
 #include "Game3DtopdownRPG/UI/UIUnit/TopMenuWidget.h"
 #include "Game3DtopdownRPG/DataTable/ItemTable.h"
 #include "Game3DtopdownRPG/UI/MsgBox/MsgBoxReward.h"
+#include "Game3DtopdownRPG/Battle/BaseCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 void UUpgradeItemEquipmentPage::CacheOwnUI()
 {
@@ -265,6 +268,13 @@ void UUpgradeItemEquipmentPage::OnTapLevelUpBtn(EUgradeTabCategory category)
 	FGameItemEquipmentInfo newinfo = GetMgr(UItemMgr)->UpgradeLevelItemEquipment(m_CurrentGameItemInfo, m_ConsumeMaterialArray);
 	if (0 == newinfo.m_ItemRecKey) return;
 
+	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(this, 0);
+	if (PlayerCharacter != nullptr)
+	{
+		ABaseCharacter* character = Cast<ABaseCharacter>(PlayerCharacter);
+		if (character != nullptr)
+			GetMgr(UHeroMgr)->LevelUpItemEquipmentHeroParam(character, newinfo);
+	}
 	m_ConsumeMaterialArray.Empty();
 
 	SetCurrentUpgradeEquipItem(newinfo);

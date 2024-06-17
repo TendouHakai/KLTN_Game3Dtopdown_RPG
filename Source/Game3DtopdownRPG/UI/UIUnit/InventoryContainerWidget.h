@@ -14,6 +14,7 @@
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FContainerTap_DelegateEx, int32, Output, UInventoryContainerWidget*, Output02);
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FContainerTapUseSubtract_DelegateEx, int32, Output, UInventoryContainerWidget*, Output02);
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FContainerDrop_DelegateEx, int32, Output, UInventoryContainerWidget*, Output02);
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FContainerCtrlTap_DelegateEx, int32, Output, UInventoryContainerWidget*, Output02);
 
 struct FItemInfoRecord;
 
@@ -49,6 +50,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void OnDropEvent(FGameItemInfo info);
 
+	UFUNCTION(BlueprintCallable)
+	virtual void OnCtrlTapEvent();
+
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FGameItemInfo GetGameItemInfo() { return gameItemInfo; }
 
@@ -73,6 +77,13 @@ public:
 		OwnerDropDelefateEx.BindDynamic(owner, &T::OnDropInventoryContainer);
 	}
 
+	template<class T>
+	void SetCtrlTapEventEx(T* owner)
+	{
+		OwnerCtrlTapDelegateEx.Unbind();
+		OwnerCtrlTapDelegateEx.BindDynamic(owner, &T::OnCtrlTapInventoryContainer);
+	}
+
 	void SetUseCount(int32 count);
 	void SetTextCountPerNumber(int32 number);
 	void ShowInventoryLocation(bool IsShow);
@@ -80,6 +91,7 @@ public:
 	FContainerTap_DelegateEx OwnerDelegateEx;
 	FContainerTapUseSubtract_DelegateEx OwnerUseSubtractDelegateEx;
 	FContainerDrop_DelegateEx OwnerDropDelefateEx;
+	FContainerCtrlTap_DelegateEx OwnerCtrlTapDelegateEx;
 
 	bool IsInteract = true;
 protected:

@@ -107,6 +107,15 @@ void UInventoryPage::OnTapContainer(int32 rec_key, UInventoryContainerWidget* Co
 	setCurrentSelectedItem(Container);
 }
 
+void UInventoryPage::OnCtrlTapInventoryContainer(int32 rec_key, UInventoryContainerWidget* Container)
+{
+	if (nullptr == Container) return;
+
+	GetMgr(UItemMgr)->ChangeItemInventoryLocation(Container->GetGameItemInfo(), Container->GetGameItemInfo().m_ItemCount, EInventoryLocation::InBackpack);
+
+	Update();
+}
+
 void UInventoryPage::OnTapSellItem()
 {
 	UInventory_ItemSell_Popup* SellPopup = Cast<UInventory_ItemSell_Popup>(UIMgr->OpenUI(EUIName::InventoryItemSellPopup));
@@ -192,6 +201,7 @@ void UInventoryPage::UpdateChildItem(UWidget* Child, int32 ChildDataIdx)
 	InventoryContainer->SetInfo(info);
 	//InventoryContainer->OwnerDelegateEx.Unbind();
 	InventoryContainer->SetButtonEventEx(this);
+	InventoryContainer->SetCtrlTapEventEx(this);
 }
 
 bool UInventoryPage::IsItemInCategory(EItemCategory category)

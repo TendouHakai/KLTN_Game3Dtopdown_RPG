@@ -7,6 +7,18 @@
 #include "HeroTable.generated.h"
 
 // Hero Data
+UENUM(BlueprintType)
+enum class EHeroClass : uint8
+{
+	NoWeapon = 0, 
+	SwordAndShield,
+	Bow,
+	DoubleSword,
+	MagicWand,
+	SingleSword,
+	All,
+	Max
+};
 
 UENUM(BlueprintType)
 enum class ECharacterStat : uint8
@@ -136,4 +148,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString BuffName;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString BuffText;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString BuffIcon;
+};
+
+USTRUCT(BlueprintType)
+struct FSkillInfoRecord : public FTableRowBase
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) EHeroClass HeroClass;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) uint8 SkillIndex;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString SkillImage;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) FString SkillDecription;
 };
