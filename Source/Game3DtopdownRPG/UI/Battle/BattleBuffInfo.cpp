@@ -51,10 +51,11 @@ void UBattleBuffInfo::ShowBuffInfo(UBuffStateComponent* BuffStateComponent, bool
 
 	bufftextinfo->SetText(FText::FromString(BuffStateComponent->GetBuffTextInfo()));
 
-	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
 void UBattleBuffInfo::HideBuffInfo()
 {
+	StopAnimation(AnimHide);
 	SetVisibility(ESlateVisibility::Collapsed);
 }

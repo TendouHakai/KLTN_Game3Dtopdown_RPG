@@ -26,4 +26,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FHeroInfo HeroInfo;
+
+	// setting
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float EffectSoundVolume;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float BGMVolume;
 };

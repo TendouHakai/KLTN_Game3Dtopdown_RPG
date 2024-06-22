@@ -76,6 +76,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int32 PreviousItem;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int64 NeedGold;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int64 SellGold;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) bool CanMake;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) TArray<int32> Materials;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) TArray<int32> MatCounts;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) USkeletalMesh* MeshSkeletal;

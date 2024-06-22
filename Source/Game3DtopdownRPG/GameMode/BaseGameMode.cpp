@@ -4,6 +4,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Game3DtopdownRPG/Util/Managers/UIBaseMgr.h"
 #include "Game3DtopdownRPG/RPGGameInstance.h"
+#include "Game3DtopdownRPG/SavedUserConfig.h"
+#include "AudioDevice.h"
 
 
 void ABaseGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
@@ -19,6 +21,8 @@ void ABaseGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	InitInitialUI();
+	InitSoundClass();
+	OnStartBGM();
 }
 
 void ABaseGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -37,4 +41,30 @@ void ABaseGameMode::OpenReservedLevel(const FName NameLevel, const FString Optio
 {
 	UIMgr->CloseAllUI();
 	UGameplayStatics::OpenLevel(GetWorld(), NameLevel, false, Options);
+}
+
+void ABaseGameMode::InitSoundClass()
+{
+	if (!GEngine) return;
+
+	bool bSuccess = true;
+	USavedUserConfig* Config = USavedUserConfig::LoadUserCfgFromFile(bSuccess);
+	FAudioDevice* AudioDevice = GEngine->GetMainAudioDeviceRaw();
+	if (!AudioDevice) return;
+
+	for (TObjectIterator<USoundClass> It; It; ++It)
+	{
+		USoundClass* SoundClass = *It;
+		FString SoundClassName = SoundClass->GetName();
+		if (-1 != Config->BGMVolume &&
+			(SoundClassName == FString(TEXT("BGM")) ||
+				SoundClassName == FString(TEXT("AMB"))))
+		{
+			SoundClass->Properties.Volume = Config->BGMVolume;
+		}
+		else if (-1 != Config->EffectSoundVolume && SoundClassName == FString(TEXT("SFX")))
+		{
+			SoundClass->Properties.Volume = Config->EffectSoundVolume;
+		}
+	}
 }

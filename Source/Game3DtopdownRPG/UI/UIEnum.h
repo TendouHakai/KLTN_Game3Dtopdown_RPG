@@ -8,7 +8,7 @@ enum class EUIName : uint8
 	None = 0,
 	// Page 
 	LoginPage,
-	SettingMenu,
+	SettingMenuPopUp,
 	LoadingWidget,
 
 	// Battle
@@ -37,6 +37,9 @@ enum class EUIName : uint8
 	RuneBuffPage,
 	BattleStagePage,
 	SelectBuffPage,
+
+	PauseMenu,
+	SettingMenu,
 
 	Max,
 };

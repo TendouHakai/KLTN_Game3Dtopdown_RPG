@@ -55,7 +55,7 @@ void ABaseCharacter::Tick(float DeltaTime)
 	}
 	else if (GetAnimInstance() && GetAnimInstance()->IsAnimAttackState())
 	{
-		GetMesh()->GlobalAnimRateScale = AttackSpeedRate;
+		GetMesh()->GlobalAnimRateScale = AtkSpeedRate;
 	}
 	else
 	{
@@ -207,7 +207,8 @@ void ABaseCharacter::UpdateAttackSpeedRate()
 		}
 	}
 
-	AttackSpeedRate = FMath::Max(0.1f, TempAttackSpeedRate);
+	AtkSpeedRate = FMath::Max(0.1f, TempAttackSpeedRate);
+	AtkSpeedRate = AttackSpeedRate * AtkSpeedRate;
 }
 
 void ABaseCharacter::UpdateMoveSpeedRate()

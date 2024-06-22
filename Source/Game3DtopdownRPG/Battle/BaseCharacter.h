@@ -163,7 +163,10 @@ public:
 
 	void PlayStunStartSound();
 
+	UFUNCTION(BlueprintCallable)
 	void UpdateAttackSpeedRate();
+
+	UFUNCTION(BlueprintCallable)
 	void UpdateMoveSpeedRate();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Character")
@@ -208,6 +211,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo") int32 HeroID;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HeroInfo", meta = (ExposeOnSpawn = true)) int32 Level;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float AtkSpeedRate = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float AttackSpeedRate = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float MoveSpeedRate = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat") float MovementSpeedRate = 1.0f;

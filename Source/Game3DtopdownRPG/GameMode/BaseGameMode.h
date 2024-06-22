@@ -20,6 +20,8 @@ public:
 	virtual void InitInitialUI();
 
 	UFUNCTION(BlueprintCallable) void OpenReservedLevel(const FName NameLevel, const FString Options);
+	UFUNCTION(BlueprintImplementableEvent, Category = "GameMode")
+	void OnStartBGM();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UUIBaseMgr* UIMgr;
@@ -27,4 +29,5 @@ public:
 protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "UI Manager")
 	void OnInitInitialUI();
+	void InitSoundClass();
 };

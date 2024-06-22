@@ -128,7 +128,7 @@ void UBuffStateComponent::ShowComponent(bool bShow)
 void UBuffStateComponent::OnTapBuffIcon(bool bshow)
 {
 	OnSelectCallBack.ExecuteIfBound(this, bshow);
-}
+}	
 
 bool UBuffStateComponent::IsTimeShowException(UBaseBuff* BaseBuff)
 {

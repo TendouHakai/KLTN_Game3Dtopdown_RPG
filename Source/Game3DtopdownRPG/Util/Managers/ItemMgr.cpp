@@ -318,7 +318,8 @@ TArray<FGameItemEquipmentInfo> UItemMgr::GetAllItemEquipmentRecipe()
 
 	for (int index = 0; index < allrows.Num(); ++index)
 	{
-		array.Emplace(FGameItemEquipmentInfo(index+1));
+		if(allrows[index]->CanMake == true)
+			array.Emplace(FGameItemEquipmentInfo(index+1));
 	}
 
 	return array;
