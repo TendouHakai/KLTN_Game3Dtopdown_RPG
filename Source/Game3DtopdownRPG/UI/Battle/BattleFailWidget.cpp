@@ -4,6 +4,8 @@
 #include "BattleFailWidget.h"
 #include "Game3DtopdownRPG/GameMode/BattleGameMode.h"
 #include "Game3DtopdownRPG/Game3DtopdownRPG.h"
+#include "Game3DtopdownRPG/GlobalGetter.h"
+#include "Game3DtopdownRPG/Util/Managers/HeroMgr.h"
 
 bool UBattleFailWidget::Initialize()
 {
@@ -47,4 +49,7 @@ void UBattleFailWidget::OnTapBackToBtn()
 	{
 		battlegamemode->BackToStartZone();
 	}
+
+	GetMgr(UHeroMgr)->IsStartZone = true;
+	GetMgr(UHeroMgr)->startPosition = EStartPosition::StartZone_Stage;
 }

@@ -18,10 +18,12 @@ public:
 
 	UFUNCTION() void OnResumeButton();
 	UFUNCTION() void OnBackButton();
+	UFUNCTION() void OnInstructionButton();
 	UFUNCTION() void OnSettingButton();
 
 protected:
 	UUIBaseButton* ResumeButton;
 	UUIBaseButton* BackButton;
+	UUIBaseButton* InstructButton;
 	UUIBaseButton* SettingButton;
 };

@@ -6,6 +6,7 @@
 #include "Game3DtopdownRPG/Game3DtopdownRPG.h"
 #include "Game3DtopdownRPG/GlobalGetter.h"
 #include "Game3DtopdownRPG/Util/Managers/StageMgr.h"
+#include "Game3DtopdownRPG/Util/Managers/HeroMgr.h"
 #include "Game3DtopdownRPG/DataTable/StageTable.h"
 #include "Game3DtopdownRPG/UI/WaitingWidget/LoadingWidget.h"
 
@@ -50,6 +51,9 @@ void UBattleVictoryWidget::OnTapBacktoStartZone()
 	{
 		battlegamemode->BackToStartZone();
 	}
+
+	GetMgr(UHeroMgr)->IsStartZone = true;
+	GetMgr(UHeroMgr)->startPosition = EStartPosition::StartZone_Stage;
 }
 
 void UBattleVictoryWidget::OnTapNextLevel()
@@ -68,8 +72,14 @@ void UBattleVictoryWidget::OnTapNextLevel()
 void UBattleVictoryWidget::SetStar(int starcount)
 {
 	int count = stars.Num() >= starcount ? starcount : stars.Num();
-	for (int starIndex = 0; starIndex < count; ++starIndex)
+	int starIndex = 0;
+	for (starIndex = 0; starIndex < count; ++starIndex)
 	{
-		stars[starIndex]->SetVisibility(ESlateVisibility::Collapsed);
+		stars[starIndex]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+
+	for (; starIndex < stars.Num(); ++starIndex)
+	{
+		stars[starIndex]->SetVisibility(ESlateVisibility::Hidden);
 	}
 }

@@ -40,6 +40,9 @@ enum class EUIName : uint8
 
 	PauseMenu,
 	SettingMenu,
+	IntroSceenWidget,
+	InstructionWidget,
+	NPCTalkWidget,
 
 	Max,
 };

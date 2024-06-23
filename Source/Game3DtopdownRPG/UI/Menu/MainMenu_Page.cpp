@@ -4,6 +4,7 @@
 #include "MainMenu_Page.h"
 #include "Game3DtopdownRPG/UI/WaitingWidget/LoadingWidget.h"
 #include "Game3DtopdownRPG/GlobalGetter.h"
+#include "Game3DtopdownRPG/SavedUserConfig.h"
 
 bool UMainMenu_Page::Initialize()
 {
@@ -39,6 +40,18 @@ void UMainMenu_Page::NativeConstruct()
 
 void UMainMenu_Page::OnTapPlayBtn()
 {
+	bool bSuccess = true;
+	USavedUserConfig* Config = USavedUserConfig::LoadUserCfgFromFile(bSuccess);
+	if (nullptr != Config)
+	{
+		if (Config->IsFirstTime == true)
+		{
+			GetMgr(UUIBaseMgr)->OpenUI(EUIName::IntroSceenWidget);
+			Config->IsFirstTime = false;
+			USavedUserConfig::SaveUserCfgToFile(Config);
+			return;
+		}
+	}
 	ULoadingWidget* loadingWidget = Cast<ULoadingWidget>(GetMgr(UUIBaseMgr)->OpenUI(EUIName::LoadingWidget));
 	if (loadingWidget != nullptr)
 		loadingWidget->SetInfoScene(FName("StartZone"), FString("?Game=/Game/Blueprints/Battle/BattleGameModeBP.BattleGameModeBP_C"));

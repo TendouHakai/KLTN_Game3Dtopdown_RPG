@@ -65,7 +65,7 @@ void UBattleClearComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 			else if (character->GetHealthRatio() >= 0.7f)
 			{
 				Cast<UBattleVictoryWidget>(widget)->SetStar(2);
-				GetMgr(UStageMgr)->ClearCurrentStage(3);
+				GetMgr(UStageMgr)->ClearCurrentStage(2);
 			}
 			else 
 			{

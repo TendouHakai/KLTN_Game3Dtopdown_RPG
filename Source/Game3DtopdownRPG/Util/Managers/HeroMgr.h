@@ -10,6 +10,14 @@
 class ABaseCharacter;
 struct FGameItemEquipmentInfo;
 
+UENUM(BlueprintType)
+enum class EStartPosition : uint8
+{
+	StartZone,
+	StartZone_Stage,
+	Max,
+};
+
 UCLASS()
 class GAME3DTOPDOWNRPG_API UHeroMgr : public USingleton
 {
@@ -55,6 +63,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ChangeHeroParam(FCharacterParam& heroParam, const FCharacterParam& AddParam, bool IsAddParam = true);
 
-protected:
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) bool IsStartZone = true;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) EStartPosition startPosition = EStartPosition::StartZone;
 };

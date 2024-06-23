@@ -6,6 +6,7 @@
 #include "Game3DtopdownRPG/DataTable/StageTable.h"
 #include "Game3DtopdownRPG/UI/WaitingWidget/LoadingWidget.h"
 #include "Game3DtopdownRPG/Util/Managers/StageMgr.h"
+#include "Game3DtopdownRPG/Util/Managers/HeroMgr.h"
 
 void UStageButton::CacheOwnUI()
 {
@@ -74,6 +75,8 @@ void UStageButton::OnTapButton()
 {
 	FStageInfoRecord* record = GetMgr(UStageMgr)->GetStageInfoRecord(FName(FString::FromInt(m_info.m_StageReckey)));
 	if (nullptr == record) return;
+
+	GetMgr(UHeroMgr)->IsStartZone = false;
 
 	GetMgr(UStageMgr)->SetStage(record->StageReckey);
 

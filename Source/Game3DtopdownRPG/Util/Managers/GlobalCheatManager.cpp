@@ -7,6 +7,9 @@
 #include "Game3DtopdownRPG/Util/Managers/UIBaseMgr.h"
 #include "Game3DtopdownRPG/Util/Managers/ItemMgr.h"
 #include "Game3DtopdownRPG/Util/Managers/StageMgr.h"
+#include "Kismet/GameplayStatics.h"
+#include "Game3DtopdownRPG/Battle/BaseCharacter.h"
+#include "Game3DtopdownRPG/Battle/Buff/BuffControllerComponent.h"
 
 
 void UGlobalCheatManager::ItemAdd(int32 ItemReckey /*= 1*/, int32 ItemCount /*= 1*/, EInventoryLocation InventoryLocation)
@@ -57,6 +60,26 @@ void UGlobalCheatManager::MapClear(int32 StageReckey)
 
 	// endcheat
 	Endcheat();
+}
+
+void UGlobalCheatManager::AddBuff(EHeroBuffType bufftype, int32 buffCondition, EBuffTargetType target, float duration, float bufffamount1, float buffamount2, float buffamount3)
+{
+	ACharacter* MyCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (MyCharacter != nullptr)
+	{
+		ABaseCharacter* playercharacter = Cast<ABaseCharacter>(MyCharacter);
+		if (playercharacter == nullptr) return;
+		FHeroBuffInfo info;
+		info.BuffType = bufftype;
+		info.Duration = duration;
+		info.BuffCondition = buffCondition;
+		info.BuffTarget = target;
+		info.BuffAmount.Add(bufffamount1);
+		info.BuffAmount.Add(buffamount2);
+		info.BuffAmount.Add(buffamount3);
+
+		playercharacter->HeroBuffController->CreateBuff(playercharacter, info);
+	}
 }
 
 void UGlobalCheatManager::Endcheat()

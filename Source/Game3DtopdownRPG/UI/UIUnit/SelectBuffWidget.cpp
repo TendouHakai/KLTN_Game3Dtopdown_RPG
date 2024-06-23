@@ -8,6 +8,7 @@
 #include "Game3DtopdownRPG/Util/Managers/AssetMgr.h"
 #include "Game3DtopdownRPG/Util/CppFunctionLibrary.h"
 #include "Game3DtopdownRPG/Battle/Buff/BuffControllerComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 void USelectBuffWidget::CacheOwnUI()
 {
@@ -26,7 +27,12 @@ void USelectBuffWidget::NativeConstruct()
 
 void USelectBuffWidget::OnTapSelect()
 {
-	caster->HeroBuffController->CreateBuff(caster, infoBuff, false);
+	ACharacter* MyCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (MyCharacter != nullptr)
+	{
+		(Cast<ABaseCharacter>(MyCharacter))->HeroBuffController->CreateBuff(caster, infoBuff, false);
+	}
+
 	OnClicked_Delegate.ExecuteIfBound();
 }
 

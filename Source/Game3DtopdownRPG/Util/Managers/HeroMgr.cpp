@@ -210,7 +210,7 @@ void UHeroMgr::UnEquipHeroItemByClass(ABaseCharacter* hero)
 		FItemEquipmentInfoRecord* record = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(HeroInfo.m_Equip[equipIndex].m_ItemRecKey)));
 		if (nullptr == record) continue;
 		if (record->EquipPosition == EItemEquipPosition::Weapon) continue;
-		if (record->EquipPosition == EItemEquipPosition::All) continue;
+		if (record->HeroClass == EHeroClass::All) continue;
 
 		if (record->HeroClass != hero->GetCurrentHeroClass())
 		{

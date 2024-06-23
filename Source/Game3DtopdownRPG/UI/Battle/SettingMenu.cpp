@@ -51,6 +51,9 @@ void USettingMenu::OnBackButton()
 {
 	if (UIMgr != nullptr)
 		UIMgr->CloseUI(this);
+
+	if (UIMgr != nullptr)
+		UIMgr->OpenUI(EUIName::PauseMenu);
 }
 
 void USettingMenu::OnValueChangeSoundSFXVolume(float InValue)

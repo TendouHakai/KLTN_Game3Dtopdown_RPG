@@ -33,4 +33,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float BGMVolume;
+
+	// intro sceen
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsFirstTime;
 };

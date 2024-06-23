@@ -69,6 +69,7 @@ void UBuffStateComponent::UpdateBuffTimeInfo(UBaseBuff* BaseBuff)
 	{
 		if (true == BaseBuff->bIsPassiveBuff)
 		{
+			StopAnimation(BuffStateAnim);
 			BuffTime->SetText(FText::GetEmpty());
 		}
 		else

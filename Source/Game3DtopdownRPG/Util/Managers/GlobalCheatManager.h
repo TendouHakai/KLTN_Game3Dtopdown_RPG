@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/CheatManager.h"
 #include "Game3DtopdownRPG/Define/ItemStruct.h"
+#include "Game3DtopdownRPG/Battle/Buff/BuffStruct.h"
 #include "GlobalCheatManager.generated.h"
 
 UCLASS()
@@ -27,6 +28,9 @@ public:
 
 	UFUNCTION(Exec)
 	void MapClear(int32 StageReckey = 1);
+
+	UFUNCTION(Exec)
+	void AddBuff(EHeroBuffType bufftype = EHeroBuffType::None_Buff, int32 buffCondition = 0 , EBuffTargetType target = EBuffTargetType::Self, float duration = 1.0f, float bufffamount1 = 0.f, float buffamount2 = 0.f, float buffamount3 = 0.f);
 
 	void Endcheat();
 };
