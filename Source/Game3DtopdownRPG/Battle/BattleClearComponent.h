@@ -38,7 +38,7 @@ public:
 	void SetBattleClearStep(EBattleClearStep step);
 
 public:
-	ATeleportLevel* TeleportWin;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) ATeleportLevel* TeleportWin;
 	EBattleClearStep BattleClearStep;
 	ABattleGameMode* BattleGameMode;
 };

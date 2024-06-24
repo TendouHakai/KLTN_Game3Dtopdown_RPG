@@ -118,7 +118,7 @@ void UEquipmentSlotWidget::setImageIcon()
 		path = "/Game/UI/Sprites/Components/Icon/Glove.Glove";
 		break;
 	case EItemEquipPosition::Belt:
-		path = "/Game/UI/Sprites/Components/Icon/Belt.Belt";
+		path = "/Game/UI/Sprites/Components/Icon/belt-armor.belt-armor";
 		break;
 	case EItemEquipPosition::Backpack:
 		path = "/Game/UI/Sprites/Components/Icon/knapsack.knapsack";
