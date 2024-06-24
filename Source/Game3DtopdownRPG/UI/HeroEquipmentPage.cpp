@@ -341,6 +341,7 @@ void UHeroEquipmentPage::UpdateChildItemEquipment(UWidget* Child, int32 ChildDat
 	FGameItemEquipmentInfo info = m_CurrentItemEquipmentArray[ChildDataIdx];
 
 	InventoryContainer->SetInfo(info);
+	InventoryContainer->ShowHeroClass(true);
 
 	InventoryContainer->SetButtonEventEx(this);
 

@@ -23,6 +23,9 @@ void UInventoryEquipContainerWidget::CacheOwnUI()
 	OverlatInventoryLocation = GetOwnUI<UOverlay>(TEXT("Overlay_InventoryLocation"));
 	imageinventoryLocation = GetOwnUI<UImage>(TEXT("Image_InventoryLocation"));
 
+	OverlayHeroClass = GetOwnUI<UOverlay>(TEXT("Overlay_HeroClass"));
+	imageHeroClass = GetOwnUI<UImage>(TEXT("Image_HeroClass"));
+
 	if (gameItemInfo.m_ItemRecKey == 0) EmptyUI();
 }
 
@@ -41,6 +44,9 @@ void UInventoryEquipContainerWidget::SetInfo(FGameItemEquipmentInfo GameItemInfo
 	SetTextUpgrapeLevel(gameItemInfo.m_ItemUgrapeLevel);
 	SetFrameBackground(record->EquipmentGrape);
 	SetInventoryLocation(gameItemInfo.m_InventoryLocation);
+	OverlayHeroClass->SetVisibility(ESlateVisibility::Collapsed);
+	if (record->EquipPosition == EItemEquipPosition::Weapon)
+		SetHeroClass(record->HeroClass);
 }
 
 void UInventoryEquipContainerWidget::SetInfo(UInventoryEquipContainerWidget* InventoryContainerWidget)
@@ -53,6 +59,9 @@ void UInventoryEquipContainerWidget::SetInfo(UInventoryEquipContainerWidget* Inv
 	SetTextUpgrapeLevel(gameItemInfo.m_ItemUgrapeLevel);
 	SetFrameBackground(record->EquipmentGrape);
 	SetInventoryLocation(gameItemInfo.m_InventoryLocation);
+	OverlayHeroClass->SetVisibility(ESlateVisibility::Collapsed);
+	if (record->EquipPosition == EItemEquipPosition::Weapon)
+		SetHeroClass(record->HeroClass);
 }
 
 void UInventoryEquipContainerWidget::SetInfo(int32 itemreckey)
@@ -135,6 +144,23 @@ void UInventoryEquipContainerWidget::ShowInventoryLocation(bool IsShow)
 	else
 	{
 		OverlatInventoryLocation->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void UInventoryEquipContainerWidget::ShowHeroClass(bool IsShow)
+{
+	if (gameItemInfo.m_ItemRecKey == 0) return;
+	FItemEquipmentInfoRecord* record = GetMgr(UItemMgr)->GetItemEquipmentInfoRecord(FName(FString::FromInt(gameItemInfo.m_ItemRecKey)));
+	if (nullptr == record) return;
+	if (record->EquipPosition != EItemEquipPosition::Weapon) return;
+
+	if (IsShow)
+	{
+		OverlayHeroClass->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		OverlayHeroClass->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
 
@@ -259,5 +285,46 @@ void UInventoryEquipContainerWidget::SetInventoryLocation(EInventoryLocation loc
 	{
 		imageinventoryLocation->SetBrushFromTexture(TexIcon);
 		imageinventoryLocation->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+}
+
+void UInventoryEquipContainerWidget::SetHeroClass(EHeroClass heroclass)
+{
+	FString PathIcon = "";
+
+	switch (heroclass)
+	{
+	case EHeroClass::NoWeapon:
+		break;
+	case EHeroClass::SwordAndShield:
+		PathIcon = "/Game/UI/Sprites/Components/Icon/templar-shield.templar-shield";
+		break;
+	case EHeroClass::Bow:
+		PathIcon = "/Game/UI/Sprites/Components/Icon/high-shot.high-shot";
+		break;
+	case EHeroClass::DoubleSword:
+		PathIcon = "/Game/UI/Sprites/Components/Icon/dervish-swords.dervish-swords";
+		break;
+	case EHeroClass::MagicWand:
+		PathIcon = "/Game/UI/Sprites/Components/Icon/wizard-staff.wizard-staff";
+		break;
+	case EHeroClass::SingleSword:
+		PathIcon = "/Game/UI/Sprites/Components/Icon/broad-dagger.broad-dagger";
+		break;
+	default:
+		break;
+	}
+
+	UTexture2D* TexIcon = GetMgr(UAssetMgr)->LoadTexture2DFromPath(PathIcon);
+
+	if (nullptr == TexIcon)
+	{
+		imageHeroClass->SetVisibility(ESlateVisibility::Hidden);
+		return;
+	}
+	else
+	{
+		imageHeroClass->SetBrushFromTexture(TexIcon);
+		imageHeroClass->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 }

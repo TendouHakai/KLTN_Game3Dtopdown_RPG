@@ -99,7 +99,7 @@ void UInventory_ItemSell_Popup::OnTapSellButton()
 	if (Cast<UMsgBoxReward>(msg))
 	{
 		TArray<FGameItemInfo> arrays;
-		arrays.Emplace(FGameItemInfo(sellcount, 1001));
+		arrays.Emplace(FGameItemInfo(sellPrice, 1001));
 		Cast<UMsgBoxReward>(msg)->SetInfo(arrays);
 	}
 

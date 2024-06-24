@@ -9,6 +9,7 @@
 #include "Components/TextBlock.h"
 #include "Components/Overlay.h"
 #include "Game3DtopdownRPG/Define/ItemStruct.h"
+#include "Game3DtopdownRPG/DataTable/HeroTable.h"
 #include "InventoryEquipContainerWidget.generated.h"
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FEquipmentContainerTap_DelegateEx, int32, Output, UInventoryEquipContainerWidget*, Output02);
@@ -66,11 +67,13 @@ public:
 	void SetTextCountPerNumber(int32 number);
 	void SetTextCount(int32 number);
 	void ShowInventoryLocation(bool IsShow);
+	void ShowHeroClass(bool IsShow);
 protected:
 	void SetImageItem(FString ItemName);
 	void SetTextUpgrapeLevel(int32 level);
 	void SetFrameBackground(EItemGrade grade);
 	void SetInventoryLocation(EInventoryLocation location);
+	void SetHeroClass(EHeroClass heroclass);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void setColorBackground(EItemGrade grade);
@@ -88,6 +91,10 @@ protected:
 	// overlay Inventory location
 	UOverlay* OverlatInventoryLocation;
 	UImage* imageinventoryLocation;
+
+	// overlay Hero class
+	UOverlay* OverlayHeroClass;
+	UImage* imageHeroClass;
 
 	FGameItemEquipmentInfo gameItemInfo;
 	FItemEquipmentInfoRecord* equipmentItemInfoRecord;
