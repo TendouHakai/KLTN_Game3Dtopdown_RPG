@@ -9,6 +9,7 @@ USavedUserConfig::USavedUserConfig()
 	BGMVolume = 1.0f;
 	EffectSoundVolume = 1.0f;
 	IsFirstTime = true;
+	IsInitHero = false;
 }
 
 void USavedUserConfig::SaveUserCfgToFile(USavedUserConfig* Cfg)

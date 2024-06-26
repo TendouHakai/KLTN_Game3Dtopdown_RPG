@@ -24,6 +24,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SavedUserConfig")
 	static void InitUserCfgFile();
 
+	// Hero
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsInitHero;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FHeroInfo HeroInfo;
 
