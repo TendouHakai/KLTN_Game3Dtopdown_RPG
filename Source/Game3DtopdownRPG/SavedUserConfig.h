@@ -38,6 +38,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float BGMVolume;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int IndexGraphic;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int IndexScreenSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString strResolution;
+
 	// intro sceen
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsFirstTime;

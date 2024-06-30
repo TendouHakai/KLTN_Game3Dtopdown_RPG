@@ -81,6 +81,8 @@ void UInventoryEquipContainerWidget::EmptyUI()
 	SetImageItem("");
 	SetTextUpgrapeLevel(0);
 	SetFrameBackground(EItemGrade::Max);
+	ShowHeroClass(false);
+	ShowInventoryLocation(false);
 }
 
 void UInventoryEquipContainerWidget::OnTap()

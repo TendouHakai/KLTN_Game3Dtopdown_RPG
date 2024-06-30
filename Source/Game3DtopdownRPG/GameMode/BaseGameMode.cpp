@@ -40,7 +40,8 @@ void ABaseGameMode::InitInitialUI()
 void ABaseGameMode::OpenReservedLevel(const FName NameLevel, const FString Options)
 {
 	UIMgr->CloseAllUI();
-	UGameplayStatics::OpenLevel(GetWorld(), NameLevel, false, Options);
+	//UGameplayStatics::OpenLevel(GetWorld(), NameLevel, false, Options);
+	UGameplayStatics::OpenLevel(GetWorld(), NameLevel);
 }
 
 void ABaseGameMode::InitSoundClass()

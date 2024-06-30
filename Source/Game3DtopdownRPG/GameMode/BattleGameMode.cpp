@@ -20,6 +20,13 @@ void ABattleGameMode::BackToStartZone()
 		loadingWidget->SetInfoScene(FName("StartZone"), FString("?Game=/Game/Blueprints/Battle/BattleGameModeBP.BattleGameModeBP_C"));
 }
 
+void ABattleGameMode::BackToMainMenu()
+{
+	ULoadingWidget* loadingWidget = Cast<ULoadingWidget>(GetMgr(UUIBaseMgr)->OpenUI(EUIName::LoadingWidget));
+	if (loadingWidget != nullptr)
+		loadingWidget->SetInfoScene(FName("Login"), FString(""));
+}
+
 ABattleGameMode::ABattleGameMode()
 {
 

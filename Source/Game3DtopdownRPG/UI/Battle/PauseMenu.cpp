@@ -16,6 +16,7 @@ void UPauseMenu::CacheOwnUI()
 	BackButton = GetOwnUI<UUIBaseButton>(TEXT("UISquareButton_Back"));
 	InstructButton = GetOwnUI<UUIBaseButton>(TEXT("UISquareButton_Instruction"));
 	SettingButton = GetOwnUI<UUIBaseButton>(TEXT("UISquareButton_Setting"));
+	QuitButton = GetOwnUI<UUIBaseButton>(TEXT("UISquareButton_Quit"));
 
 	if (nullptr != ResumeButton)
 	{
@@ -37,6 +38,24 @@ void UPauseMenu::CacheOwnUI()
 		SettingButton->OnClicked_Delegate.BindUFunction(this, FName(TEXT("OnSettingButton")));
 	}
 
+	if (nullptr != QuitButton)
+	{
+		QuitButton->OnClicked_Delegate.BindUFunction(this, FName(TEXT("OnQuitButton")));
+	}
+
+	Update();
+}
+
+bool UPauseMenu::Initialize()
+{
+	bool Initialize = Super::Initialize();
+	return Initialize;
+}
+
+void UPauseMenu::Update()
+{
+	Super::Update();
+
 	if (GetMgr(UHeroMgr)->IsStartZone == true)
 	{
 		BackButton->SetVisibility(ESlateVisibility::Collapsed);
@@ -45,12 +64,6 @@ void UPauseMenu::CacheOwnUI()
 	{
 		BackButton->SetVisibility(ESlateVisibility::Visible);
 	}
-}
-
-bool UPauseMenu::Initialize()
-{
-	bool Initialize = Super::Initialize();
-	return Initialize;
 }
 
 void UPauseMenu::OnResumeButton()
@@ -88,6 +101,19 @@ void UPauseMenu::OnSettingButton()
 {
 	if (UIMgr != nullptr)
 		UIMgr->OpenUI(EUIName::SettingMenu);
+
+	if (UIMgr != nullptr)
+		UIMgr->CloseUI(this);
+}
+
+void UPauseMenu::OnQuitButton()
+{
+	ABattleGameMode* battlegamemode = Cast<ABattleGameMode>(GetGameModeAs(ABaseGameMode));
+
+	if (battlegamemode != nullptr)
+	{
+		battlegamemode->BackToMainMenu();
+	}
 
 	if (UIMgr != nullptr)
 		UIMgr->CloseUI(this);

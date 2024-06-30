@@ -10,6 +10,9 @@ USavedUserConfig::USavedUserConfig()
 	EffectSoundVolume = 1.0f;
 	IsFirstTime = true;
 	IsInitHero = false;
+	IndexGraphic = 3;
+	IndexScreenSpeed = 4;
+	strResolution = FString(TEXT("Full Screen"));
 }
 
 void USavedUserConfig::SaveUserCfgToFile(USavedUserConfig* Cfg)

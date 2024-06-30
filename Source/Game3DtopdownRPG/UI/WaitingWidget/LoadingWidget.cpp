@@ -39,6 +39,6 @@ FString ULoadingWidget::GetTextLoadingPercent()
 {
 	int percent = GetLoadingRatio() * 100;
 	percent = FMath::Clamp<int>(percent, 0, 100);
-	FString str = FString::Printf(TEXT("Loadind... %d"), percent);
-	return FString::Printf(TEXT("Loadind... %d"), percent);
+	FString str = FString::Printf(TEXT("Loading... %d"), percent);
+	return FString::Printf(TEXT("Loading... %d"), percent);
 }

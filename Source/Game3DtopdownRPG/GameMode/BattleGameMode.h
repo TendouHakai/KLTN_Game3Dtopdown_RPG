@@ -32,6 +32,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void BackToStartZone();
 
+	UFUNCTION(BlueprintCallable)
+	void BackToMainMenu();
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "BattleGameMode") void OnBeginProduction();
 
 protected:

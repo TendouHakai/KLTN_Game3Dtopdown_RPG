@@ -15,15 +15,18 @@ class GAME3DTOPDOWNRPG_API UPauseMenu : public UUIWidget
 public:
 	virtual void CacheOwnUI() override;
 	virtual bool Initialize() override;
+	virtual void Update() override;
 
 	UFUNCTION() void OnResumeButton();
 	UFUNCTION() void OnBackButton();
 	UFUNCTION() void OnInstructionButton();
 	UFUNCTION() void OnSettingButton();
+	UFUNCTION() void OnQuitButton();
 
 protected:
 	UUIBaseButton* ResumeButton;
 	UUIBaseButton* BackButton;
 	UUIBaseButton* InstructButton;
 	UUIBaseButton* SettingButton;
+	UUIBaseButton* QuitButton;
 };

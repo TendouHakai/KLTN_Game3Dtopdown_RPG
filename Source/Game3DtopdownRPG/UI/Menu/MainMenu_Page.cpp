@@ -5,6 +5,7 @@
 #include "Game3DtopdownRPG/UI/WaitingWidget/LoadingWidget.h"
 #include "Game3DtopdownRPG/GlobalGetter.h"
 #include "Game3DtopdownRPG/SavedUserConfig.h"
+#include "Kismet/GameplayStatics.h"
 
 bool UMainMenu_Page::Initialize()
 {
@@ -65,6 +66,14 @@ void UMainMenu_Page::OnTapOptionsBtn()
 
 void UMainMenu_Page::OnTapQuitBtn()
 {
-
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(World, 0);
+		if (PlayerController)
+		{
+			UKismetSystemLibrary::QuitGame(World, PlayerController, EQuitPreference::Quit, true);
+		}
+	}
 }
 
